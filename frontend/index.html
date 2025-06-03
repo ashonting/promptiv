@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Promptiv – Unlock Your Prompt’s Full Potential</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO & OG -->
+  <meta name="description" content="Promptiv analyzes your prompt’s intent, rewrites it from three expert perspectives, and connects you with the best LLM for the job—instantly.">
+  <meta property="og:title" content="Promptiv – Unlock Your Prompt’s Full Potential">
+  <meta property="og:description" content="Promptiv rewrites your prompts from three expert perspectives and matches you to the best AI for the job.">
+  <meta property="og:image" content="/static/logo.png">
+  <meta property="og:url" content="https://promptiv.io/">
+  <meta name="theme-color" content="#3264ff">
+  <link rel="icon" type="image/png" href="/static/logo.png">
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="/static/style.css?v=2">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav-row">
+      <div class="branding">
+        <img src="/static/logo.png" alt="Promptiv logo" class="brand-logo">
+        <span class="brand-name">Promptiv</span>
+      </div>
+      <nav class="nav-links">
+        <a href="/pricing">Pricing</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/refund-policy">Refund Policy</a>
+      </nav>
+      <button id="dark-mode-toggle" class="dark-mode-btn" title="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="hero">
+      <h1 class="headline">Unlock Your Prompt’s Full Potential</h1>
+      <p class="subheadline">
+        Promptiv analyzes your prompt’s intent, rewrites it from three expert perspectives, and connects you with the best LLM for the job—instantly.
+      </p>
+      <div class="llm-info-row">
+        <span>AI Models Supported:</span>
+        <span id="model-count" class="llm-count">12</span>
+        <span id="carousel-model-name" class="llm-model-name">Claude 4 Sonnet</span>
+      </div>
+    </section>
+    <section class="prompt-section">
+      <form id="prompt-form" autocomplete="off">
+        <div class="prompt-card">
+          <textarea id="prompt" placeholder="Type your AI prompt here..." rows="4" required></textarea>
+          <button type="button" id="submit" class="main-btn">Upgrade Prompt</button>
+        </div>
+        <div class="spinner" id="spinner" style="display:none;"></div>
+        <div id="error-message" class="error-message"></div>
+      </form>
+    </section>
+    <section id="result" class="results-section"></section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <span>© 2025 Promptiv. All rights reserved.</span>
+      <span class="footer-links">
+        <a href="/pricing">Pricing</a> |
+        <a href="/terms">Terms</a> |
+        <a href="/privacy">Privacy Policy</a> |
+        <a href="/refund-policy">Refund Policy</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/static/script.js?v=2"></script>
+</body>
+</html>

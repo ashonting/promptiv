@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    restart: always        # <--- This line makes it auto-restart
+    environment:
+      - USE_DUMMY_USER=true
+      - PREMIUM_ENABLED=true
+      - PREMIUM_FALLBACK_MODELS=gpt-4,gpt-3.5-turbo
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+    # ports:                # (Host mode; this is still commented out as before)
+    #   - "8000:8000"
