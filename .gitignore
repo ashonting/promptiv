@@ -1,0 +1,57 @@
+# --- 🔐 Environment Variables ---
+.env
+*.env
+**/.env
+**/.env.*
+
+# --- 🐍 Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# --- 🐳 Docker ---
+*.pid
+*.pid.lock
+
+# --- 🧪 Test Caches ---
+.tox/
+.nox/
+coverage.*
+htmlcov/
+.cache/
+pytest_cache/
+
+# --- 🧪 Local Dev ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# --- 📦 Python Environments ---
+venv/
+.env/
+env/
+ENV/
+*.egg-info/
+
+# --- 🗂️ Project Artifacts ---
+*.sqlite3
+*.db
+*.dump
+*.sql
+*.bak
+*.tar.gz
+*.tgz
+*.zip
+
+# --- 🧾 Promptiv Specific ---
+promptiv_backend.log
+frontend/dist/
+frontend/node_modules/
+backend/.env
+frontend/.env
+supabase/config.toml
+*.local
+*.example-backup
