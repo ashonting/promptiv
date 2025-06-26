@@ -1,0 +1,101 @@
+.
+├── .env
+├── .env.example
+├── .gitignore
+├── .pytest_cache
+│   ├── .gitignore
+│   ├── CACHEDIR.TAG
+│   ├── README.md
+│   └── v
+│       └── cache
+│           ├── lastfailed
+│           ├── nodeids
+│           └── stepwise
+├── Dockerfile
+├── README.md
+├── all_code_dump.txt
+├── backend
+│   ├── __init__.py
+│   ├── auth.py
+│   ├── database.py
+│   ├── main.py
+│   ├── main.py.save
+│   ├── openai_utils.py
+│   ├── requirements.txt
+│   ├── routers
+│   │   ├── __init__.py
+│   │   └── rewrite.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   ├── openai_utils.py
+│   │   ├── rewrite_service.py
+│   │   ├── token_tracker.py
+│   │   └── user_service.py
+│   ├── test_fastapi_clean.py
+│   └── utils
+│       ├── __init__.py
+│       └── feature_flags.py
+├── docker-compose.yml
+├── frontend
+│   ├── app.py
+│   ├── base-template.html
+│   ├── dashboard
+│   │   ├── .gitignore
+│   │   ├── README.md
+│   │   ├── dist
+│   │   │   ├── assets
+│   │   │   │   └── index-DYksxcwj.js
+│   │   │   ├── index.html
+│   │   │   └── vite.svg
+│   │   ├── eslint.config.js
+│   │   ├── index.html
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── public
+│   │   │   └── vite.svg
+│   │   ├── src
+│   │   │   ├── App.css
+│   │   │   ├── App.jsx
+│   │   │   ├── AuthForm.jsx
+│   │   │   ├── PromptHistory.jsx
+│   │   │   ├── assets
+│   │   │   │   └── react.svg
+│   │   │   ├── index.css
+│   │   │   ├── main.jsx
+│   │   │   └── supabaseClient.js
+│   │   └── vite.config.js
+│   ├── dashboard-dist
+│   │   ├── assets
+│   │   │   └── index-VtcY5lum.js
+│   │   ├── index.html
+│   │   └── vite.svg
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── login.html
+│   ├── logo.png
+│   ├── logo.svg
+│   ├── main.js
+│   ├── og-image.png
+│   ├── package-lock.json
+│   ├── pricing.html
+│   ├── privacy.html
+│   ├── refund-policy.html
+│   ├── requirements.txt
+│   ├── script.js
+│   ├── signup.html
+│   ├── style.css
+│   └── terms.html
+├── project_filetree.txt
+├── prompt_models.py
+├── promptiv_backend.log
+├── requirements.txt
+├── shared
+│   └── config.py
+├── static
+│   └── script.js
+├── sync-live.sh
+└── tests
+    ├── __init__.py
+    └── test_api.py
+
+19 directories, 79 files

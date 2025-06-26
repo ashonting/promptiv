@@ -1,0 +1,21 @@
+# backend/requirements.txt
+
+fastapi==0.110.0
+slowapi==0.1.9
+uvicorn==0.29.0
+pydantic==2.6.4
+black==24.3.0
+flake8==7.0.0
+isort==5.13.2
+pytest==8.1.1
+starlette==0.36.3
+openai==1.82.0
+# Use a compatible httpx version (supabase needs httpx>=0.26,<0.29,
+# and openai wants httpx>=0.23.0,<1.0)
+httpx==0.27.2
+
+# Pin python-dotenv as well
+python-dotenv==1.1.0
+
+# Supabase client
+supabase==2.15.2

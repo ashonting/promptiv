@@ -1,0 +1,119 @@
+.
+├── .env
+├── .gitignore
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── all_code_dump.txt
+├── all_file_contents.txt
+├── all_files.txt
+├── backend
+│   ├── .env.example
+│   ├── .env.exapmle
+│   ├── __init__.py
+│   ├── auth.py
+│   ├── database.py
+│   ├── main.py
+│   ├── main.py.save
+│   ├── models
+│   │   ├── __init__.py
+│   │   └── rewrite_models.py
+│   ├── requirements.txt
+│   ├── routers
+│   │   ├── __init__.py
+│   │   └── rewrite.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   ├── openai_utils.py
+│   │   ├── paddle_service.py
+│   │   ├── rewrite_service.py
+│   │   ├── token_tracker.py
+│   │   ├── user_service.py
+│   │   └── webhook_service.py
+│   ├── test_fastapi_clean.py
+│   └── utils
+│       ├── __init__.py
+│       └── feature_flags.py
+├── docker-compose.yml
+├── file_structure.txt
+├── file_tree.txt
+├── frontend
+│   ├── app.py
+│   ├── base-template.html
+│   ├── dashboard
+│   │   ├── .env
+│   │   ├── .gitignore
+│   │   ├── README.md
+│   │   ├── dist
+│   │   │   ├── .vite
+│   │   │   │   └── manifest.json
+│   │   │   ├── assets
+│   │   │   │   └── index-CQycSvd4.js
+│   │   │   ├── index.html
+│   │   │   └── vite.svg
+│   │   ├── eslint.config.js
+│   │   ├── index.html
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── public
+│   │   │   └── vite.svg
+│   │   ├── src
+│   │   │   ├── App.css
+│   │   │   ├── App.jsx
+│   │   │   ├── AuthForm.jsx
+│   │   │   ├── PromptHistory.jsx
+│   │   │   ├── assets
+│   │   │   │   └── react.svg
+│   │   │   ├── index.css
+│   │   │   ├── main.jsx
+│   │   │   └── supabaseClient.js
+│   │   └── vite.config.js
+│   ├── dashboard-dist
+│   │   ├── assets
+│   │   │   └── index-VtcY5lum.js
+│   │   ├── index.html
+│   │   └── vite.svg
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── login.html
+│   ├── logo.png
+│   ├── logo.svg
+│   ├── og-image.png
+│   ├── package-lock.json
+│   ├── pricing.html
+│   ├── privacy.html
+│   ├── refund-policy.html
+│   ├── requirements.txt
+│   ├── script.js
+│   ├── signup.html
+│   ├── style.css
+│   └── terms.html
+├── full_schema.sql
+├── project_filetree.txt
+├── project_tree.txt
+├── prompt_models.py
+├── ql
+├── redeploy.sh
+├── requirements.txt
+├── schema.sql
+├── shared
+│   └── config.py
+├── static
+│   └── script.js
+├── supabase
+│   ├── .gitignore
+│   ├── .temp
+│   │   ├── cli-latest
+│   │   ├── gotrue-version
+│   │   ├── pooler-url
+│   │   ├── postgres-version
+│   │   ├── project-ref
+│   │   └── rest-version
+│   └── config.toml
+├── sync-live.sh
+├── tables_ddl.sql
+└── tests
+    ├── __init__.py
+    └── test_api.py
+
+20 directories, 96 files

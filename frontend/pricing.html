@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pricing – Promptiv</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Promptiv pricing – compare plans, free and pro options.">
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-row">
+      <div class="branding">
+        <a href="/"><img src="/static/logo.svg" alt="Promptiv Logo" class="brand-logo" /></a>
+        <a href="/" class="brand-name">Promptiv</a>
+      </div>
+      <nav class="nav-links">
+        <a href="/pricing">Pricing</a>
+        <a href="/login">Log In</a>
+        <a href="/signup">Sign Up</a>
+      </nav>
+      <button id="dark-mode-toggle" class="dark-mode-btn">🌙</button>
+    </div>
+  </header>
+  <main class="main-content">
+    <div class="centered-content" style="margin-bottom: 2.5rem;">
+      <h1>Pricing</h1>
+      <p style="font-size:1.1rem;margin-top:-0.5rem;margin-bottom:2rem;">
+        Start for free—upgrade any time for unlimited breakthroughs.<br>
+        <span style="color:var(--muted);font-size:0.99em;">One free expert rewrite per device. Sign up for more.</span>
+      </p>
+      <div class="pricing-cards-row" style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;">
+        <!-- Basic Plan -->
+        <div class="pricing-card">
+          <h2>Basic</h2>
+          <div class="price">$0</div>
+          <div class="subtext">Free forever</div>
+          <ul>
+            <li>✓ 1 expert rewrite per device</li>
+            <li>✓ Sign up for 3/month (email required)</li>
+            <li>✓ Try every feature before upgrading</li>
+            <li>✓ No credit card required</li>
+          </ul>
+          <a href="/signup" class="pricing-btn basic-btn">Get Started Free</a>
+        </div>
+        <!-- Pro Plan -->
+        <div class="pricing-card featured">
+          <h2>Pro</h2>
+          <div class="price">$4.99<small>/month</small></div>
+          <div class="subtext">30 uses per month</div>
+          <ul>
+            <li>✓ 30 expert-level rewrites monthly</li>
+            <li>✓ Access all 3 rewrites (concise, analytical, creative)</li>
+            <li>✓ Priority queue and support</li>
+            <li>✓ Upgrade, downgrade, or cancel any time</li>
+          </ul>
+          <a href="/signup" class="pricing-btn pro-btn">Upgrade Now</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>Is there a free trial?</h3>
+          <p>Yes! Every device gets one free expert rewrite. Sign up for a free account for more (no credit card required).</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I upgrade, downgrade, or cancel anytime?</h3>
+          <p>Absolutely. Manage your subscription at any time in your dashboard. Upgrades and downgrades apply immediately, and cancellations stop future billing with no penalty.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How does billing work?</h3>
+          <p>Pro is billed monthly via Paddle (Visa, Mastercard, Amex, PayPal, and more). No payment details are stored by Promptiv.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What’s an “expert rewrite”?</h3>
+          <p>Each prompt you submit gets three unique rewrites from specialized models—detailed, analytical, and creative—plus guidance on which is best for your goals.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I use my own OpenAI or API keys?</h3>
+          <p>Not at this time. Promptiv covers all API costs as part of your subscription.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="footer-row">
+      <div class="footer-links">
+        <a href="/">Home</a> |
+        <a href="/pricing">Pricing</a> |
+        <a href="/terms">Terms of Service</a> |
+        <a href="/privacy">Privacy Policy</a> |
+        <a href="/refund-policy">Refund Policy</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2025 Promptiv. All rights reserved.
+      </div>
+    </div>
+  </footer>
+  <script src="/static/script.js"></script>
+</body>
+</html>

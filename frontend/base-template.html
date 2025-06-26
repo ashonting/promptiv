@@ -1,0 +1,55 @@
+<!--
+  base-template.html (REFERENCE ONLY)
+  This is the canonical HTML structure for Promptiv static pages.
+  Always copy this when creating a new page. DO NOT serve directly.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PAGE_TITLE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PAGE_DESCRIPTION">
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-row">
+      <div class="branding">
+        <a href="/"><img src="/static/logo.png" alt="Promptiv Logo" class="brand-logo" /></a>
+        <a href="/" class="brand-name">Promptiv</a>
+      </div>
+      <nav class="nav-links">
+        <a href="/pricing">Pricing</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/refund-policy">Refund Policy</a>
+      </nav>
+      <button id="dark-mode-toggle" class="dark-mode-btn">🌙</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- === PAGE CONTENT GOES HERE === -->
+    PAGE_CONTENT
+  </main>
+
+  <footer class="footer">
+    <div class="footer-row">
+      <div class="footer-links">
+        <a href="/">Home</a> |
+        <a href="/pricing">Pricing</a> |
+        <a href="/terms">Terms of Service</a> |
+        <a href="/privacy">Privacy Policy</a> |
+        <a href="/refund-policy">Refund Policy</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2025 Promptiv. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

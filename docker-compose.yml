@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - USE_DUMMY_USER=false
+      - PREMIUM_ENABLED=true
+      - PREMIUM_FALLBACK_MODELS=gpt-4,gpt-3.5-turbo
+    ports:
+      - "8000:8000"
+    volumes:
+      - /srv/www/promptiv/dashboard:/app/frontend/dashboard/dist

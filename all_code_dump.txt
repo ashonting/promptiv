@@ -1,0 +1,642 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+
+    # Explicitly pass each variable from your .env (or hardcode true/false)
+    environment:
+      - USE_DUMMY_USER=true
+      - PREMIUM_ENABLED=true
+      - PREMIUM_FALLBACK_MODELS=gpt-4,gpt-3.5-turbo
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+
+    # (Since you’re in host mode, you don’t need ports:)
+    # ports:
+    #   - "8000:8000"
+# Use a slim Python image
+FROM python:3.11-slim
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy and install backend dependencies
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire project directory (backend, shared, test files, etc.)
+COPY . .
+
+# Expose FastAPI's default port
+EXPOSE 8000
+
+# CMD to run tests (use uvicorn here to run the actual app)
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+OPENAI_API_KEY=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
+SUPABASE_URL=https://qiocgpxnkxquzlprvrga.supabase.co
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpb2NncHhua3hxdXpscHJ2cmdhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODU0Njc3MCwiZXhwIjoyMDY0MTIyNzcwfQ.fk6OA8nNVZXj4HjZ_W-VU-Kyt0OYyfDIcw6gkjx2IuA
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpb2NncHhua3hxdXpscHJ2cmdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NDY3NzAsImV4cCI6MjA2NDEyMjc3MH0.OqPrmTRWXmRmmuiuOSOo7g3iDVNbOxDRYvSXRXEcZTU
+PREMIUM_FALLBACK_MODELS=gpt-4,gpt-3.5-turbo
+USE_DUMMY_USER=true
+PREMIUM_ENABLED=true
+# backend/auth.py
+
+import os
+from typing import Optional
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from supabase import create_client
+
+# Initialize HTTPBearer and Supabase client
+security = HTTPBearer()
+supabase = create_client(
+    os.getenv("SUPABASE_URL"),
+    os.getenv("SUPABASE_SERVICE_KEY")
+)
+
+def get_current_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = None
+):
+    """
+    If USE_DUMMY_USER=true is set in the environment, return a dummy premium user.
+    Otherwise, perform normal Supabase JWT validation and profile lookup.
+    """
+
+    # 1) If dummy mode is enabled, short-circuit and return a fake premium user.
+    if os.getenv("USE_DUMMY_USER", "false").lower() == "true":
+        return {
+            "id":   "00000000-0000-0000-0000-000000000000",  # Dummy UUID
+            "tier": "premium"
+        }
+
+    # 2) In non-dummy mode, enforce HTTPBearer auth. Manually call the security dependency:
+    if credentials is None:
+        # No credentials were passed in, so re-run the HTTPBearer dependency to raise the proper error:
+        credentials = security.__call__(None)  # type: ignore
+
+    # 3) Now that we have credentials, ensure it’s a Bearer token
+    if credentials.scheme.lower() != "bearer":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication scheme."
+        )
+
+    jwt_token = credentials.credentials
+
+    # 4) Validate JWT with Supabase Auth
+    user_resp = supabase.auth.api.get_user(jwt_token)
+    if user_resp.user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token."
+        )
+
+    # 5) Look up the user's tier in your profiles table
+    profile_resp = (
+        supabase
+        .table("profiles")
+        .select("id,tier")
+        .eq("id", user_resp.user.id)
+        .single()
+        .execute()
+    )
+
+    if profile_resp.error or profile_resp.data is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch user profile."
+        )
+
+    return {
+        "id":   profile_resp.data["id"],
+        "tier": profile_resp.data["tier"]
+    }
+# backend/main.py
+
+import os
+import logging
+from pathlib import Path
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+
+from backend.openai_utils import rewrite_basic, rewrite_prompt
+
+# ——— Initialize FastAPI ——————————————
+app = FastAPI()
+
+# ——— CORS ——————————————
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # tighten in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ——— Static Files ——————————————
+# Serve frontend assets under /static
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+# Serve index.html at root
+@app.get("/", response_class=HTMLResponse)
+def serve_index():
+    return Path("frontend/index.html").read_text()
+
+
+# ——— Rewrite Endpoint ——————————————
+@app.post("/api/rewrite")
+async def rewrite_endpoint(request: Request):
+    try:
+        body = await request.json()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Could not parse JSON: {e}")
+
+    prompt_text = body.get("prompt")
+    tier_value = body.get("tier", "basic").lower()
+
+    if not prompt_text or not isinstance(prompt_text, str):
+        raise HTTPException(status_code=422, detail="Field 'prompt' is required and must be a string.")
+
+    # Dummy user (premium)
+    user = {"id": "00000000-0000-0000-0000-000000000000", "tier": "premium"}
+
+    # Run premium logic if allowed
+    if tier_value == "premium" and os.getenv("PREMIUM_ENABLED", "false").lower() == "true":
+        return rewrite_prompt({"prompt": prompt_text, "tier": tier_value}, user)
+
+    # Otherwise, run basic logic
+    class Dummy:
+        def __init__(self, p): self.prompt = p
+    return rewrite_basic(Dummy(prompt_text), user)
+from pydantic import BaseModel
+
+class PromptRequest(BaseModel):
+    prompt: str
+    tier: str = "basic"
+class PromptResponse(BaseModel):
+    rewritten_prompt: str
+    generic_tip: str
+import os
+import json
+from openai import OpenAI
+from supabase import create_client
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Initialize OpenAI client
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise EnvironmentError("The OPENAI_API_KEY environment variable is not set.")
+client = OpenAI(api_key=api_key)
+
+# Initialize Supabase client
+supabase = create_client(
+    os.getenv("SUPABASE_URL"),
+    os.getenv("SUPABASE_SERVICE_KEY")
+)
+
+FALLBACK_MODELS = os.getenv("PREMIUM_FALLBACK_MODELS", "gpt-4,gpt-3.5-turbo").split(",")
+
+# Basic rewrite logic
+def rewrite_basic(prompt_request, user):
+    original = prompt_request.prompt
+    improved = f"Improved: {original}"
+    tokens_used = 50
+    return {"original": original, "improved": improved, "tokens_used": tokens_used}
+
+# Premium system prompt
+SYSTEM_PROMPT = (
+    "You are a world-class AI prompt refinement strategist. You transform vague or generic prompts into three powerful rewrites, each targeting a distinct thinking style.\n"
+    "Only output a single JSON object, formatted like this:\n"
+    "{\n"
+    "  \"variants\": [\n"
+    "    {\"style\": \"concise\", \"prompt\": \"...\"},\n"
+    "    {\"style\": \"creative\", \"prompt\": \"...\"},\n"
+    "    {\"style\": \"analytical\", \"prompt\": \"...\"}\n"
+    "  ]\n"
+    "}\n\n"
+    "\ud83d\udd39 Concise:\n"
+    "  - Use precise, efficient language with strong verbs.\n"
+    "  - Clarify any ambiguity or lack of direction in the original.\n"
+    "  - Assume the user values brevity and clarity.\n\n"
+    "\ud83d\udd39 Creative:\n"
+    "  - Reframe the original prompt from a completely new angle or context.\n"
+    "  - Do NOT use metaphors or fictional personas.\n"
+    "  - Instead, introduce surprising perspectives the user may not have considered (e.g., a system-level view, a cross-discipline comparison, a trend shift).\n\n"
+    "\ud83d\udd39 Analytical:\n"
+    "  - Deconstruct the problem using a strategic lens.\n"
+    "  - Use keywords like 'evaluate', 'optimize', 'structure', 'variables'.\n"
+    "  - Assume the user wants insight into systems, trade-offs, or mechanisms.\n\n"
+    "\ud83e\udde0 Context Awareness:\n"
+    "  - Before rewriting, infer the user's tone (e.g., curious, frustrated, ambitious) and reflect it subtly in the rewrite.\n"
+    "  - Match emotional tone where appropriate, while improving clarity and direction.\n\n"
+    "\u26a0\ufe0f DO NOT:\n"
+    "- Include explanations, lessons, or non-JSON text.\n"
+    "- Use markdown or code blocks.\n"
+    "- Repeat exact phrases from the original across all variants.\n\n"
+    "Respond only with valid JSON in the required format—nothing else."
+)
+
+def rewrite_prompt(prompt_request, user):
+    user_msg = prompt_request.prompt if hasattr(prompt_request, "prompt") else prompt_request["prompt"]
+
+    for model in ["gpt-4o"] + FALLBACK_MODELS:
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_msg}
+                ],
+                temperature=0.7
+            )
+            content = resp.choices[0].message.content
+            usage = resp.usage
+            break
+        except Exception:
+            if model == FALLBACK_MODELS[-1]:
+                raise
+            continue
+
+    text = content.strip()
+    if text.startswith("```"):
+        parts = text.split("```")
+        if len(parts) >= 2:
+            text = parts[1].strip()
+        else:
+            text = text[3:-3].strip()
+
+    if not text.startswith("{"):
+        brace_idx = text.find("{")
+        if brace_idx != -1:
+            text = text[brace_idx:].strip()
+
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to parse JSON from model response:\n---raw---\n{text}\n---error---\n{e}")
+
+    DUMMY_ID = "00000000-0000-0000-0000-000000000000"
+    if user.get("id") != DUMMY_ID:
+        history_resp = supabase.table("prompt_history").insert({
+            "user_id": user["id"],
+            "input": user_msg,
+            "variants": parsed["variants"],
+            "lesson": parsed.get("lesson", ""),
+            "prompt_tokens": usage.prompt_tokens,
+            "completion_tokens": usage.completion_tokens,
+            "total_tokens": usage.total_tokens
+        }).execute()
+        history_id = history_resp.data[0]["id"]
+        supabase.table("token_usage").insert({
+            "history_id": history_id,
+            "prompt_tokens": usage.prompt_tokens,
+            "completion_tokens": usage.completion_tokens,
+            "total_tokens": usage.total_tokens
+        }).execute()
+
+    return {"variants": parsed["variants"], "lesson": parsed.get("lesson", "")}
+
+def rewrite_prompt(prompt_request, user):
+    if user.get("tier") == "premium" and os.getenv("PREMIUM_ENABLED", "false").lower() == "true":
+        return rewrite_prompt(prompt_request, user)
+    return rewrite_basic(prompt_request, user)
+# backend/requirements.txt
+
+fastapi==0.110.0
+uvicorn==0.29.0
+pydantic==2.6.4
+black==24.3.0
+flake8==7.0.0
+isort==5.13.2
+pytest==8.1.1
+starlette==0.36.3
+openai==0.28.0
+# Use a compatible httpx version (supabase needs httpx>=0.26,<0.29,
+# and openai wants httpx>=0.23.0,<1.0)
+httpx==0.27.2
+
+# Pin python-dotenv as well
+python-dotenv==1.1.0
+
+# Supabase client
+supabase==2.15.2
+# backend/test_fastapi_clean.py
+
+from fastapi.testclient import TestClient
+from backend.main import app
+
+client = TestClient(app)
+
+def test_rewrite_unauthorized():
+    response = client.post("/api/rewrite", json={"prompt": "This is a test prompt."})
+    assert response.status_code == 401  # Because no auth is passed in MVP version
+from fastapi import APIRouter, HTTPException
+from backend.models.prompt_models import PromptRequest, PromptResponse
+from backend.services.rewrite_service import rewrite_prompt
+import logging
+
+router = APIRouter()
+logger = logging.getLogger(__name__)
+
+@router.post("/api/rewrite", response_model=PromptResponse)
+def rewrite(prompt_request: PromptRequest):
+    """
+    Accept a prompt from the user and return a rewritten prompt with a generic tip.
+    All errors are returned as friendly JSON.
+    """
+    user = {"username": "dev"}  # mock for development
+    plan = "basic"  # In the future, derive from user profile
+
+    try:
+        logger.info(f"[Promptiv] User {user['username']} submitted prompt: {prompt_request.prompt}")
+
+        # Use service logic (handles OpenAI + parsing)
+        result = rewrite_prompt(prompt_request, user, plan)
+        improved_prompt = result.get("rewritten_prompt", "")
+        generic_tip = result.get("generic_tip", "")
+
+        return PromptResponse(
+            rewritten_prompt=improved_prompt,
+            generic_tip=generic_tip,
+        )
+
+    except ValueError as ve:
+        logger.warning(f"[Promptiv] Value error: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
+
+    except Exception as e:
+        logger.error(f"[Promptiv] Server error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Server error. Please try again.")
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Promptiv – Premium Prompt Refinement</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:,">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6fb;
+      color: #1f2a48;
+    }
+    header {
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 1rem 2rem;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2c47e8;
+    }
+    .main-container {
+      max-width: 700px;
+      margin: 3rem auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .subline {
+      text-align: center;
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 2rem;
+    }
+    textarea {
+      width: 100%;
+      padding: 1.3rem 1.1rem;
+      font-size: 1.05rem;
+      font-weight: 500;
+      line-height: 1.6;
+      border-radius: 10px;
+      border: 1px solid #cdd6e0;
+      background-color: #f5f8fe;
+      color: #1f2a48;
+      resize: vertical;
+      min-height: 130px;
+      transition: all 0.2s ease;
+    }
+    textarea:focus {
+      background-color: #fff;
+      border-color: #3c5ee3;
+      outline: none;
+    }
+    .submit-button {
+      width: 100%;
+      margin-top: 1rem;
+      background: linear-gradient(90deg, #2c47e8, #3b64f7);
+      color: white;
+      border: none;
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .submit-button:hover {
+      background: #2440b3;
+    }
+    #spinner {
+      display: none;
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+    #spinner div {
+      border: 4px solid #e0e0e0;
+      border-top: 4px solid #2c47e8;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 0.9s linear infinite;
+      margin: auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    #error-message {
+      color: #e63946;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+    .results-container {
+      margin-top: 2rem;
+    }
+    .variant {
+      background-color: #f3f6ff;
+      padding: 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    }
+    .variant h3 {
+      margin-bottom: 0.5rem;
+      color: #2c47e8;
+      font-size: 1.2rem;
+    }
+    .variant .meta {
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .variant p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.875rem;
+      padding: 2rem 0;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header><div class="logo">Promptiv</div></header>
+  <main class="main-container">
+    <h1>Better Prompts. Better Results.</h1>
+    <p class="subline">Refine your prompt. Transform your output. Learn how to prompt like a pro.</p>
+    <textarea id="prompt" placeholder="Type your AI prompt here..."></textarea>
+    <button class="submit-button" id="submit">Upgrade Prompt</button>
+    <div id="error-message"></div>
+    <div id="spinner"><div></div></div>
+    <div id="result" class="results-container"></div>
+  </main>
+  <footer>&copy; 2025 Promptiv. All rights reserved.</footer>
+<script src="/static/script.js"></script>
+</body>
+</html>
+// frontend/script.js
+
+const PREMIUM_ENABLED = true;
+
+window.addEventListener("DOMContentLoaded", () => {
+  const promptEl = document.getElementById("prompt");
+  const submitBtn = document.getElementById("submit");
+  const errorEl = document.getElementById("error-message");
+  const resultEl = document.getElementById("result");
+  const spinnerEl = document.getElementById("spinner");
+
+  function showSpinner() { spinnerEl.style.display = "block"; }
+  function hideSpinner() { spinnerEl.style.display = "none"; }
+
+  submitBtn.addEventListener("click", async () => {
+    errorEl.textContent = "";
+    resultEl.innerHTML = "";
+    const promptText = promptEl.value.trim();
+    if (!promptText) {
+      errorEl.textContent = "Please enter a prompt.";
+      return;
+    }
+    const tier = PREMIUM_ENABLED ? "premium" : "basic";
+    showSpinner();
+    const startTime = Date.now();
+    let minDelay = 700; // ms
+    try {
+      const res = await fetch(`/api/rewrite?tier=${tier}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: promptText, tier })
+      });
+      if (!res.ok) throw new Error(res.statusText);
+      const data = await res.json();
+      const elapsed = Date.now() - startTime;
+      if (elapsed < minDelay) await new Promise(r => setTimeout(r, minDelay - elapsed));
+      hideSpinner();
+
+      if (tier === "premium" && Array.isArray(data.variants)) {
+        let variantsHtml = data.variants.map(v => `
+          <div class="variant">
+            <h3>${capitalize(v.style)} Variant</h3>
+            <div class="meta">
+              Use Case: ${v.meta?.good_for || "—"} | 
+              Clarity: ${v.meta?.clarity || "—"} | 
+              Complexity: ${v.meta?.complexity || "—"}
+            </div>
+            <p>${v.prompt}</p>
+            <div class="meta"><em>Why this works:</em> ${v.meta?.why_this_works || "—"}</div>
+          </div>
+        `).join("");
+        const html = `
+          <div>
+            ${variantsHtml}
+          </div>
+        `;
+        resultEl.innerHTML = html;
+      } else {
+        resultEl.innerHTML = `
+          <div class="variant">
+            <h3>Improved Prompt</h3>
+            <p>${data.improved || data.improved_prompt}</p>
+          </div>
+        `;
+      }
+
+    } catch (err) {
+      hideSpinner();
+      resultEl.innerHTML = '';
+      errorEl.textContent = "Something went wrong: " + (err.message || "Unknown error");
+    }
+  });
+
+  function capitalize(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+});
+from fastapi.testclient import TestClient
+from backend.main import app
+
+client = TestClient(app)
+
+def test_rewrite_endpoint():
+    response = client.post("/api/rewrite", json={"prompt": "Hello GPT!"})
+    assert response.status_code == 200
+    data = response.json()
+    assert "improved" in data
+    assert data["original"] == "Hello GPT!"
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.pyo
+*.pyc
+# Virtual environments
+venv/
+env/
+
+# Environment variables
+.env
+
+# macOS
+.DS_Store
+
+# Streamlit cache
+.streamlit/
+
+# VSCode
+.vscode/

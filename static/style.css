@@ -1,0 +1,230 @@
+/* static/style.css */
+
+/* ----------------------------------------
+   CSS Variables & Dark Mode
+---------------------------------------- */
+:root {
+  --bg: #f9fafb;
+  --text: #1f2937;
+  --muted: #6b7280;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #191c26;
+    --text: #f7fafc;
+    --muted: #8a94a7;
+  }
+}
+
+/* ----------------------------------------
+   Base Styles
+---------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, Arial, sans-serif;
+  line-height: 1.5;
+}
+body.dark {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ----------------------------------------
+   Prompt Form Elements
+---------------------------------------- */
+#prompt,
+textarea,
+input[type="text"],
+button.cta-button {
+  font-family: inherit;
+}
+#prompt {
+  width: 100%;
+  min-height: 80px;
+  padding: .8rem 1rem;
+  border: 1px solid var(--muted);
+  border-radius: .75em;
+  background: #fff;
+  color: var(--text);
+  resize: vertical;
+}
+body.dark #prompt {
+  background: #1b2233;
+  border-color: var(--muted);
+  color: var(--text);
+}
+button.cta-button {
+  display: block;
+  width: 100%;
+  padding: .9rem;
+  margin-top: 1rem;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: .75em;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.cta-button:hover {
+  background: #2563eb;
+}
+
+/* ----------------------------------------
+   Variant Cards
+---------------------------------------- */
+.variant-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px rgba(40,54,100,0.07);
+  margin: 1.5rem 0;
+  padding: 1.2rem;
+  color: var(--text);
+}
+body.dark .variant-card {
+  background: #23273b;
+  color: var(--text);
+}
+.variant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .75em;
+}
+.variant-badge {
+  position: relative;
+  padding: .25em .75em;
+  border-radius: .65em;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: #eff6ff;
+  color: #3b82f6;
+}
+.variant-badge::after {
+  content: " Variant";
+  font-weight: 600;
+}
+.variant-badge.concise-badge   { background: #bcc8fa; }
+.variant-badge.analytical-badge{ background: #cbf4e1; }
+.variant-badge.creative-badge  { background: #ffe3c0; }
+
+/* Meta row */
+.variant-meta {
+  font-size: .95rem;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75em;
+  margin-bottom: .75em;
+}
+.variant-meta .meta-label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Prompt text */
+.variant-prompt {
+  background: #f9fafb;
+  padding: .85em 1em;
+  border-radius: .65em;
+  font-size: 1.04rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: var(--text);
+}
+body.dark .variant-prompt {
+  background: #1b2233;
+  color: var(--text);
+}
+
+/* Why this works */
+.variant-why {
+  font-size: .95rem;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-top: .75em;
+}
+
+/* Actions row */
+.variant-actions {
+  display: flex;
+  gap: .5em;
+}
+.copy-btn,
+.open-llm-btn {
+  padding: .5em 1em;
+  border: none;
+  border-radius: .65em;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #3b82f6;
+  color: #fff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+}
+.copy-btn:hover,
+.open-llm-btn:hover {
+  background: #2563eb;
+}
+
+/* Spinner & Error */
+.spinner {
+  border: 3px solid #eff6ff;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 1rem auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.error-message {
+  color: #ff4848;
+  margin-top: .5rem;
+  font-size: .95rem;
+}
+
+/* ----------------------------------------
+   Modal Centering
+---------------------------------------- */
+.modal-backdrop {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items:center; justify-content:center;
+  z-index:9999;
+}
+.modal {
+  background: #fff;
+  padding: 1.8rem;
+  border-radius: 1rem;
+  max-width: 420px; width:90%;
+  box-shadow: 0 2px 24px rgba(40,54,100,0.1);
+  color: var(--text);
+}
+body.dark .modal {
+  background: #23273b;
+  color: var(--text);
+}
+
+/* ----------------------------------------
+   Responsive Overrides
+---------------------------------------- */
+@media (max-width: 700px) {
+  .variant-card { padding: 1rem; }
+  .variant-header { flex-direction: column; align-items: flex-start; gap: .5em; }
+  .variant-prompt { font-size: 1rem; }
+  .variant-meta { font-size: .9rem; }
+  .copy-btn,
+  .open-llm-btn { flex: 1; justify-content: center; }
+}

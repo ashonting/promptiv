@@ -1,0 +1,85 @@
+.
+├── Dockerfile
+├── README.md
+├── __pycache__
+├── all_code_dump.txt
+├── all_file_contents.txt
+├── all_files.txt
+├── backend
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-310.pyc
+│   │   ├── __init__.cpython-311.pyc
+│   │   ├── auth.cpython-311.pyc
+│   │   ├── main.cpython-310.pyc
+│   │   └── main.cpython-311.pyc
+│   ├── auth.py
+│   ├── database.py
+│   ├── main.py
+│   ├── main.py.save
+│   ├── openai_utils.py
+│   ├── requirements.txt
+│   ├── routers
+│   │   ├── __init__.py
+│   │   └── rewrite.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   ├── openai_utils.py
+│   │   ├── paddle_service.py
+│   │   ├── rewrite_service.py
+│   │   ├── token_tracker.py
+│   │   ├── user_service.py
+│   │   └── webhook_service.py
+│   ├── test_fastapi_clean.py
+│   └── utils
+│       ├── __init__.py
+│       └── feature_flags.py
+├── docker-compose.yml
+├── frontend
+│   ├── app.py
+│   ├── base-template.html
+│   ├── dashboard
+│   │   ├── README.md
+│   │   ├── eslint.config.js
+│   │   ├── index.html
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── public
+│   │   ├── src
+│   │   └── vite.config.js
+│   ├── dashboard-dist
+│   │   ├── assets
+│   │   ├── index.html
+│   │   └── vite.svg
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── login.html
+│   ├── logo.png
+│   ├── logo.svg
+│   ├── main.js
+│   ├── og-image.png
+│   ├── package-lock.json
+│   ├── pricing.html
+│   ├── privacy.html
+│   ├── refund-policy.html
+│   ├── requirements.txt
+│   ├── script.js
+│   ├── signup.html
+│   ├── style.css
+│   └── terms.html
+├── project_filetree.txt
+├── project_tree.txt
+├── prompt_models.py
+├── promptiv_backend.log
+├── requirements.txt
+├── shared
+│   └── config.py
+├── static
+│   └── script.js
+├── sync-live.sh
+└── tests
+    ├── __init__.py
+    └── test_api.py
+
+16 directories, 66 files

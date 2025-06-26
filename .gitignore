@@ -55,3 +55,4 @@ frontend/.env
 supabase/config.toml
 *.local
 *.example-backup
+dev-tests/
