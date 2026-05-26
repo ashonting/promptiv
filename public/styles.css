@@ -387,3 +387,266 @@ textarea.text-input { min-height: 64px; resize: vertical; }
   .ex-card { opacity: 0 !important; transform: none !important; transition: none !important; }
   .ex-card[data-card-idx="0"] { opacity: 1 !important; }
 }
+
+/* ---------------- /go page ---------------- */
+
+.brand-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.go-main {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding-top: 16px;
+}
+
+.go-hero {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.go-form {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-label {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.form-label > span { font-weight: 500; }
+
+.form-label select, .form-label input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+.form-label select:focus, .form-label input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.trip-nights {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: var(--color-text-secondary);
+  font-size: 13.5px;
+}
+.trip-nights legend {
+  padding: 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.trip-nights label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.vibe-chips {
+  border: none;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.vibe-chips legend {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+.chip {
+  border: 1px solid var(--color-border);
+  padding: 7px 13px;
+  border-radius: 100px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.chip input { display: none; }
+.chip:has(input:checked) {
+  border-color: var(--color-accent);
+  color: var(--color-accent-bright);
+  background: rgba(167,139,250,0.10);
+}
+
+/* ----- Result cards ----- */
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.trip-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.card-head h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+.card-price {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  color: var(--color-accent-bright);
+}
+.card-meta {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+.card-catch {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14.5px;
+  color: var(--color-accent-bright);
+  margin: 0;
+  padding: 10px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+.card-details div { display: flex; gap: 6px; }
+.card-details dt {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  color: var(--color-text-faint);
+  flex-basis: 100px;
+}
+.card-details dd { margin: 0; }
+.card-link {
+  margin-top: 6px;
+  color: var(--color-accent);
+  font-size: 13.5px;
+  text-decoration: none;
+}
+.card-link:hover { color: var(--color-accent-bright); }
+
+.empty-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* ----- Notify strip ----- */
+
+.notify-strip {
+  border-top: 1px solid var(--color-border);
+  padding-top: 24px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+.notify-form {
+  margin-top: 12px;
+  display: inline-flex;
+  gap: 8px;
+}
+.notify-form input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--color-text-primary);
+  font-size: 13.5px;
+  min-width: 220px;
+}
+.btn-secondary {
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent-bright);
+  border-radius: 10px;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.btn-secondary:hover { background: rgba(167,139,250,0.10); }
+
+/* ----- Email gate modal ----- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,14,0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.modal-overlay[hidden] { display: none; }
+.modal {
+  background: #0e0e16;
+  border: 1px solid var(--color-card-border);
+  border-radius: 14px;
+  padding: 32px 30px;
+  max-width: 420px;
+  width: calc(100% - 32px);
+  text-align: left;
+}
+.modal input[type=email] {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--color-text-primary);
+}
