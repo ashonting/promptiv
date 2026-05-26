@@ -115,6 +115,27 @@ certbot --nginx -d promptiv.io -d www.promptiv.io
 nginx -t && systemctl reload nginx
 ```
 
+### 11b. Self-host GSAP for production
+
+Before going live, replace the jsDelivr CDN script with a self-hosted copy to remove the third-party dependency.
+
+```bash
+# On server:
+cd /srv/promptiv/public
+mkdir -p vendor
+curl -sL https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js -o vendor/gsap-3.12.5.min.js
+# Verify size — should be ~70KB
+ls -la vendor/gsap-3.12.5.min.js
+
+# Update the script tag in index.html:
+sed -i 's|<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="[^"]*" crossorigin="anonymous"></script>|<script src="/vendor/gsap-3.12.5.min.js"></script>|' /srv/promptiv/public/index.html
+
+# Verify the change:
+grep gsap /srv/promptiv/public/index.html
+```
+
+After this, the page has no third-party network dependencies at runtime.
+
 ### 12. Smoke test
 
 ```bash

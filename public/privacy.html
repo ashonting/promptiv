@@ -24,7 +24,7 @@
     <p>If you sign up to be notified about Promptiv, we collect:</p>
     <ul>
       <li>The email address you submit</li>
-      <li>A hashed (one-way SHA-256) version of your IP, used only to dedupe duplicate signups</li>
+      <li>A keyed (HMAC-SHA-256) hash of your IP, used only to dedupe duplicate signups</li>
       <li>The referrer URL if your browser sends one</li>
       <li>Optional answers you provide on the post-signup screen (budget bucket, home airport, biggest travel frustration)</li>
     </ul>

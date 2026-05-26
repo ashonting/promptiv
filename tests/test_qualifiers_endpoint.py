@@ -5,7 +5,7 @@ from server import db
 
 def _create_signup(client, email="x@example.com"):
     with patch("server.email_client.send_confirmation", return_value={"id": "msg"}):
-        resp = client.post("/api/signup", json={"email": email})
+        resp = client.post("/api/signup", json={"email": email}, headers={"Accept": "application/json"})
     return resp.get_json()["signup_id"]
 
 
