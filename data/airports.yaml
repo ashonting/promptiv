@@ -1,0 +1,95 @@
+- iata: JFK
+  city: New York
+  state: NY
+  region_us: Northeast
+  lat: 40.6413
+  lng: -73.7781
+  rank_us: 1
+
+- iata: LAX
+  city: Los Angeles
+  state: CA
+  region_us: West
+  lat: 33.9416
+  lng: -118.4085
+  rank_us: 2
+
+- iata: ATL
+  city: Atlanta
+  state: GA
+  region_us: Southeast
+  lat: 33.6407
+  lng: -84.4277
+  rank_us: 3
+
+- iata: DFW
+  city: Dallas
+  state: TX
+  region_us: South
+  lat: 32.8998
+  lng: -97.0403
+  rank_us: 4
+
+- iata: ORD
+  city: Chicago
+  state: IL
+  region_us: Midwest
+  lat: 41.9742
+  lng: -87.9073
+  rank_us: 5
+
+- iata: MIA
+  city: Miami
+  state: FL
+  region_us: Southeast
+  lat: 25.7959
+  lng: -80.2870
+  rank_us: 6
+
+- iata: SEA
+  city: Seattle
+  state: WA
+  region_us: West
+  lat: 47.4502
+  lng: -122.3088
+  rank_us: 7
+
+- iata: DEN
+  city: Denver
+  state: CO
+  region_us: West
+  lat: 39.8561
+  lng: -104.6737
+  rank_us: 8
+
+- iata: IAH
+  city: Houston
+  state: TX
+  region_us: South
+  lat: 29.9902
+  lng: -95.3368
+  rank_us: 9
+
+- iata: SFO
+  city: San Francisco
+  state: CA
+  region_us: West
+  lat: 37.6213
+  lng: -122.3790
+  rank_us: 10
+
+- iata: BOS
+  city: Boston
+  state: MA
+  region_us: Northeast
+  lat: 42.3656
+  lng: -71.0096
+  rank_us: 11
+
+- iata: BNA
+  city: Nashville
+  state: TN
+  region_us: Southeast
+  lat: 36.1245
+  lng: -86.6782
+  rank_us: 12
