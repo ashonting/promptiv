@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Promptiv — Where can you go?</title>
+  <meta name="description" content="Tell us your budget and dates. We'll show you where it can take you, and what the catch is." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="aurora"></div>
+
+  <div class="frame">
+    <header class="top-bar">
+      <div class="brand"><a href="/" class="brand-link">Promptiv<span class="brand-dot"></span></a></div>
+      <div class="top-status">v1 — Beta</div>
+    </header>
+
+    <main class="go-main">
+      <section class="go-hero">
+        <div class="eyebrow"><span>Trip Discovery</span></div>
+        <h1 class="display">Where can your budget take you?</h1>
+
+        <form id="go-form" class="go-form">
+          <div class="form-row">
+            <label class="form-label">
+              <span>From</span>
+              <select id="origin" name="origin_iata" required>
+                <option value="">Pick an airport</option>
+                <option value="JFK">JFK · New York</option>
+                <option value="LAX">LAX · Los Angeles</option>
+                <option value="ATL">ATL · Atlanta</option>
+                <option value="DFW">DFW · Dallas</option>
+                <option value="ORD">ORD · Chicago</option>
+                <option value="MIA">MIA · Miami</option>
+                <option value="SEA">SEA · Seattle</option>
+                <option value="DEN">DEN · Denver</option>
+                <option value="IAH">IAH · Houston</option>
+                <option value="SFO">SFO · San Francisco</option>
+                <option value="BOS">BOS · Boston</option>
+                <option value="BNA">BNA · Nashville</option>
+              </select>
+            </label>
+
+            <label class="form-label">
+              <span>Budget (USD)</span>
+              <input id="budget" name="budget_usd" type="number" min="100" max="5000" value="500" required>
+            </label>
+          </div>
+
+          <div class="form-row">
+            <fieldset class="trip-nights">
+              <legend>Trip length</legend>
+              <label><input type="radio" name="trip_nights" value="5"> Short (5 nights)</label>
+              <label><input type="radio" name="trip_nights" value="7" checked> Medium (7 nights)</label>
+              <label><input type="radio" name="trip_nights" value="10"> Long (10 nights)</label>
+            </fieldset>
+          </div>
+
+          <fieldset class="vibe-chips">
+            <legend>Vibes (optional)</legend>
+            <label class="chip"><input type="checkbox" name="vibes" value="beach"> beach</label>
+            <label class="chip"><input type="checkbox" name="vibes" value="city"> city</label>
+            <label class="chip"><input type="checkbox" name="vibes" value="nature"> nature</label>
+            <label class="chip"><input type="checkbox" name="vibes" value="food"> food</label>
+            <label class="chip"><input type="checkbox" name="vibes" value="nightlife"> nightlife</label>
+            <label class="chip"><input type="checkbox" name="vibes" value="history"> history</label>
+            <label class="chip"><input type="checkbox" name="vibes" value="off-grid"> off-grid</label>
+          </fieldset>
+
+          <button type="submit" class="btn">Where can I go?</button>
+        </form>
+      </section>
+
+      <section id="results" class="results" hidden></section>
+
+      <section id="empty-state" class="empty-state" hidden>
+        <p>No matches at that budget. Try a higher budget, a different trip length, or remove a vibe filter.</p>
+      </section>
+
+      <section class="notify-strip">
+        <p>Want a heads-up when prices shift on the trips you've explored?</p>
+        <form id="notify-form" class="notify-form" action="/api/signup" method="POST">
+          <input type="email" name="email" placeholder="your email" required>
+          <button type="submit" class="btn-secondary">Notify me</button>
+        </form>
+      </section>
+    </main>
+
+    <div id="email-gate" class="modal-overlay" hidden>
+      <div class="modal">
+        <h2 class="ack">You're onto something.</h2>
+        <p class="lead-in">You've run 5 searches. Drop an email and we'll send the next batch when prices shift on the trips you've explored.</p>
+        <form id="gate-form" action="/api/signup" method="POST">
+          <input type="email" name="email" placeholder="your email" required>
+          <div class="actions">
+            <button type="submit" class="done-btn">Save my searches</button>
+            <button type="button" id="gate-dismiss" class="skip-link">No thanks</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer class="footer">© 2026 Promptiv · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

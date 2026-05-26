@@ -83,6 +83,10 @@ def create_app() -> Flask:
     def thanks_page():
         return send_from_directory(str(public_dir), "thanks.html")
 
+    @app.route("/go")
+    def go_page():
+        return send_from_directory(str(public_dir), "go.html")
+
     @app.route("/api/healthz")
     def healthz():
         import sqlite3
