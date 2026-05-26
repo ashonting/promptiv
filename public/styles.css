@@ -91,7 +91,7 @@ body { min-height: 100vh; display: flex; align-items: center; justify-content: c
     row-gap: 0;
     min-height: 0;
   }
-  .status-label { grid-area: status; margin: 0 0 40px; font-size: 13px; }
+  .status-label { grid-area: status; margin: 0 0 56px; font-size: clamp(2.4rem, 4vw, 3.6rem); }
   .wordmark   { grid-area: wordmark; margin-bottom: 72px; font-size: 18px; }
   .headline   { grid-area: headline; margin: 0 0 22px; font-size: 56px; line-height: 1.05; }
   .subhead    { grid-area: subhead;  margin: 0; font-size: 17px; max-width: 100%; }
@@ -114,13 +114,16 @@ body { min-height: 100vh; display: flex; align-items: center; justify-content: c
 }
 
 .status-label {
-  font-size: 12px;
-  font-weight: 500;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
   color: var(--color-accent);
-  opacity: 0.8;
+  opacity: 0.9;
   text-align: center;
-  margin: 0 0 36px;
-  letter-spacing: 0.04em;
+  margin: 0 0 48px;
 }
 
 .wordmark {
