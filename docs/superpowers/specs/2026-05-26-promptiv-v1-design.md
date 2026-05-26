@@ -18,16 +18,17 @@ Existing tools require the user to already know the destination (Google Flights)
 
 - 100 destinations curated with full structured data + catch text
 - 12 origin airports covered (~70% of US flyers)
-- 1,200 origin/destination route pairs with route-specific catch overlays where relevant
-- ~1,400 programmatic SEO pages indexed within 30 days of launch
+- ~50 origin/destination route pairs with route-specific catch overlays (only the routes that genuinely surface in /go results)
 - Interactive /go workflow returns 5-8 ranked trip cards in <500ms (using cached prices)
 - Nightly fli refresh completes in <8 hours, <5% route failure rate
-- Email capture rate >25% on session-end (5 free searches before gate)
+- Email capture rate >25% at the 5-search gate
+- A reasonable share of visitors run >1 search (sticky tool hypothesis validates)
 
 ### Non-goals for v1
 
+- **Programmatic SEO pages** (deferred to v1.1, see §9)
 - Booking (always deep-links to Google Flights)
-- Pro tier ($7/mo paid plan) — deferred to v1.1
+- Pro tier ($7/mo paid plan) (deferred to v1.1)
 - Hotels, cars, activities
 - Mobile native app
 - Multi-passenger or family trip planning
@@ -81,35 +82,7 @@ Existing tools require the user to already know the destination (Google Flights)
 6. Session counter increments. If >= 5, next submit triggers email gate.
 ```
 
-### Flow B: Programmatic SEO landing
-
-```
-1. User arrives from search (e.g., "cheap trips from Nashville under 500")
-2. Lands on /from/bna/under/500
-3. Sees ranked list of top 12-20 destinations matching that origin + budget
-4. Each list item is a card with the catch text
-5. Internal links to:
-   - /from/bna/beach (vibe variant)
-   - /destination/cdmx/from/bna (single-destination deep page)
-   - /from/lax/under/500 (sibling-origin comparison)
-6. CTA: "Try the full search →" → /go with origin prefilled
-```
-
-### Flow C: Single-destination deep page
-
-```
-1. User arrives at /destination/cdmx/from/bna
-2. Sees one destination with:
-   - Headline: "Mexico City from Nashville"
-   - Cheapest 5/7/10-night options from cache
-   - Full base_catch + route_catch_text
-   - Best months to go
-   - Vibe tags
-   - Avg daily cost (food/lodging on the ground)
-3. CTA: "Find your dates →" → Google Flights deep link
-```
-
-### Flow D: Email gate
+### Flow B: Email gate
 
 ```
 1. User submits 5th /go search in session (tracked via session cookie + searches table)
@@ -140,7 +113,7 @@ Existing tools require the user to already know the destination (Google Flights)
 ```
 ~/promptiv/
 ├── server/
-│   ├── app.py                   (existing, gains /go, /from, /destination routes)
+│   ├── app.py                   (existing, gains /go route + /api/go endpoint)
 │   ├── db.py                    (existing, gains queries for new tables)
 │   ├── email_client.py          (existing, unchanged)
 │   ├── migrations.py            (existing, gains new tables)
@@ -148,18 +121,15 @@ Existing tools require the user to already know the destination (Google Flights)
 │   ├── ranking.py               (NEW: scoring formula)
 │   ├── fli_client.py            (NEW: wrapper around fli Python package)
 │   ├── price_refresh.py         (NEW: cron entry point)
-│   ├── seo_pages.py             (NEW: programmatic page rendering)
 │   └── catch.py                 (NEW: compose base_catch + route_catch_text)
 ├── data/
 │   ├── airports.yaml            (NEW: 12 hubs, hand-curated)
 │   ├── destinations.yaml        (NEW: 100 destinations, hand-curated)
-│   └── routes.yaml              (NEW: route_catch_text overrides where relevant, <300 entries)
+│   └── routes.yaml              (NEW: ~50 route_catch_text overrides for high-surface routes)
 ├── public/
 │   ├── go.html                  (NEW: interactive search form + results)
-│   ├── seo-list.html            (NEW: template for /from/<airport>/under/<budget> etc.)
-│   ├── seo-destination.html     (NEW: template for /destination/<dest>/from/<airport>)
-│   ├── index.html               (existing teaser, becomes landing page with /go CTA)
-│   ├── styles.css               (existing, gains styles for new templates)
+│   ├── index.html               (existing teaser, updated to drive to /go)
+│   ├── styles.css               (existing, gains /go styles)
 │   └── app.js                   (existing, gains /go form handler)
 ├── deploy/
 │   ├── promptiv-refresh.service (NEW: systemd unit for cron)
@@ -172,10 +142,8 @@ Existing tools require the user to already know the destination (Google Flights)
 ```
 Browser → nginx → gunicorn → Flask
                               ↓
-                              ├── /              → index.html (teaser landing)
+                              ├── /              → index.html (landing, links to /go)
                               ├── /go            → go.html + POST /api/go
-                              ├── /from/<a>/...  → seo_pages.render_list()
-                              ├── /destination/.. → seo_pages.render_destination()
                               ├── /api/signup    → existing
                               └── /api/healthz   → existing
 
@@ -470,108 +438,13 @@ def compose_catch(destination, route):
 
 ---
 
-## 9. Programmatic SEO pages
+## 9. SEO pages (deferred to v1.1)
 
-### URL patterns
+**Not in v1 scope.** SEO pages were considered and intentionally deferred after the tool-vs-SEO scope check on 2026-05-26.
 
-| Pattern | Example | Page count | Source data |
-|---|---|---|---|
-| `/from/<airport>/under/<budget>` | `/from/bna/under/500` | 12 origins × 8 budget tiers = 96 | price_snapshots filtered |
-| `/from/<airport>/<vibe>` | `/from/bna/beach` | 12 origins × 7 vibes = 84 | destinations filtered |
-| `/destination/<dest>/from/<airport>` | `/destination/cdmx/from/bna` | 12 × 100 = 1,200 | route + dest + snapshots |
+The reasoning: the tool is the riskier assumption AND the unique positioning. Going.com and Skyscanner already have content arms; nobody owns the interactive "where can I take this budget" workflow. v1 ships the tool, proves people actually use it, then v1.1 layers SEO pages informed by what /go data tells us (which destinations resonate, which catches drive clicks, what queries people actually run).
 
-Budget tiers for the budget URL: 200, 300, 400, 500, 700, 1000, 1500, 2000.
-
-**Total: ~1,380 pages.**
-
-### Page template structure (list pages)
-
-```html
-<h1>Where can $500 take you from Nashville?</h1>
-<p class="lede">12 destinations from BNA within budget, ranked by Promptiv.
-Prices refreshed nightly, last update <time>2 hours ago</time>.</p>
-
-<ol class="trip-list">
-  <li>... card per destination ...</li>
-</ol>
-
-<aside class="related">
-  <h2>Try a different angle</h2>
-  <a href="/from/bna/under/700">Stretch to $700 from Nashville</a>
-  <a href="/from/bna/beach">Just beach trips from Nashville</a>
-  <a href="/from/atl/under/500">$500 from Atlanta (compare)</a>
-  <a href="/from/bna/under/300">Domestic under $300 from Nashville</a>
-</aside>
-
-<div class="cta">
-  <a href="/go?from=BNA&budget=500">Run a custom search →</a>
-</div>
-```
-
-### Page template structure (destination pages)
-
-```html
-<h1>Mexico City from Nashville</h1>
-<p class="lede">Cheapest 5/7/10-night round-trips from BNA, refreshed nightly.</p>
-
-<div class="prices">
-  <div>5 nights from <strong>$298</strong> (Feb 12-17)</div>
-  <div>7 nights from <strong>$342</strong> (Feb 19-26)</div>
-  <div>10 nights from <strong>$389</strong> (Mar 4-14)</div>
-</div>
-
-<section class="catch">
-  <h2>What's the catch?</h2>
-  <p>[base_catch + route_catch_text composed]</p>
-</section>
-
-<section class="meta">
-  <h2>The details</h2>
-  - Best months: Mar-May, Oct-Nov
-  - Daily budget: ~$60 food + lodging
-  - Passport required: yes
-  - Visa: no (US passport)
-  - Safety: tier 2 (use standard urban awareness)
-  - Vibes: city, food, history
-</section>
-
-<aside class="related">
-  <h2>Compare</h2>
-  <a href="/destination/cdmx/from/lax">CDMX from LAX</a>
-  <a href="/destination/cdmx/from/dfw">CDMX from DFW</a>
-  <a href="/from/bna/under/500">Other $500 trips from BNA</a>
-</aside>
-
-<div class="cta">
-  <a href="https://www.google.com/travel/flights?q=Flights%20to%20Mexico%20City%20from%20Nashville">
-    See on Google Flights →
-  </a>
-</div>
-```
-
-### Sitemap
-
-- `/sitemap.xml` generated dynamically by Flask
-- Lists all 1,380 SEO pages + /go + /
-- changefreq=daily, priority=0.8 for SEO pages
-- Submit to Google Search Console at launch
-
-### Caching strategy
-
-- SEO pages: `Cache-Control: public, max-age=3600` (1h browser cache)
-- ETag based on `max(fetched_at) for destinations on page`
-- nginx caches responses for 5 min in front of Flask (configured in `nginx-promptiv.conf`)
-- Cache invalidates naturally each night after price refresh
-
-### Internal linking strategy
-
-Each SEO page has 4-6 internal links chosen by:
-- Same-origin sibling pages (budget tier ± 1)
-- Same-origin vibe variant
-- Cross-origin comparison (same budget, different origin)
-- Same-destination deep pages
-
-Goal: every destination should be reachable in ≤3 clicks from any landing page.
+Original v1 SEO design (1,380 pages across three URL patterns: `/from/<airport>/under/<budget>`, `/from/<airport>/<vibe>`, `/destination/<dest>/from/<airport>`) is preserved in git history (commit f85ff08, this same file pre-edit) for the v1.1 plan to reference.
 
 ---
 
@@ -681,7 +554,7 @@ Adam edits two files in `~/promptiv/data/`:
 # ... 98 more
 ```
 
-**routes.yaml** (~300 entries, route-specific catch overrides, only where origin matters)
+**routes.yaml** (~50 entries, route-specific catch overrides for high-surface routes only)
 ```yaml
 - origin: BNA
   dest: NRT
@@ -693,8 +566,10 @@ Adam edits two files in `~/promptiv/data/`:
   catch: |
     BNA->CDG cheap flights are JFK-CDG redeyes, expect 14h+ total.
 
-# ... ~298 more
+# ... ~48 more
 ```
+
+Targeted route_catch_text additions: pick the ~50 (origin, dest) pairs that most often surface as top-ranked /go results AND where the origin meaningfully changes the catch (long routings, layover patterns, season offsets). All other routes use only `destinations.base_catch`.
 
 ### Loader
 
@@ -741,27 +616,25 @@ Suggested mix to draft during curation (not binding, adjustable):
 
 ---
 
-## 12. 4-week rollout plan
+## 12. 3-week rollout plan
 
 ### Week 1 (May 27 - Jun 2)
 
 **Backend:**
 - Migrations for 5 new tables
-- airports.yaml with 12 hubs (Adam writes this; one sitting)
-- destinations.yaml schema documented, first 30 destinations stubbed (structured fields only, catch text placeholder)
-- `server/destinations.py` YAML loader
+- airports.yaml with 12 hubs
+- destinations.yaml schema documented, first 30 destinations stubbed (structured fields only)
+- `server/destinations.py` YAML loader (idempotent upsert)
 - `server/fli_client.py` wrapper with mocked-for-testing mode
-- `server/price_refresh.py` cron entry point + systemd unit (deployable but not running yet)
+- `server/price_refresh.py` cron entry point + systemd unit (deployable but not enabled yet)
+- **fli sanity spike** (early week 1, before anything else): hit fli with 1 origin × 5 real destinations × 3 trip lengths. Confirm reverse-engineering still works end-to-end. If broken, escalate before further investment.
 - Tests: schema migration, YAML loader idempotency, fli_client mock responses
 
 **Adam curation:**
 - airports.yaml (12 entries, ~30 min)
-- destinations.yaml structured fields for ~30 destinations (~3h with ChatGPT assist)
+- destinations.yaml structured fields for ~40 destinations (~4h with ChatGPT assist)
 
-**Frontend:**
-- No changes yet
-
-**Deliverable end of week 1:** schema in place, 30 destinations loaded, fli cron infrastructure tested with mocks.
+**Deliverable end of week 1:** schema in place, 40 destinations loaded, fli cron infrastructure tested with mocks, fli sanity spike confirmed.
 
 ### Week 2 (Jun 3 - Jun 9)
 
@@ -769,76 +642,56 @@ Suggested mix to draft during curation (not binding, adjustable):
 - POST /api/go endpoint
 - `server/ranking.py` with formula from §7
 - `server/catch.py` compose logic
-- fli cron goes live (first real call to fli with 30 destinations × 12 origins × 3 nights = ~1,080 calls, ~2h)
+- fli cron goes live (first real production call to fli, ~3,600 calls/night)
 - Tests: ranking edge cases, catch composition, /api/go integration
 
 **Adam curation:**
-- destinations.yaml structured fields for 30 more (running total: 60)
-- Catch text for first 30 destinations (~5h)
+- destinations.yaml structured fields for 40 more (running total: 80)
+- Catch text for first 50 destinations (~8h)
 
 **Frontend:**
-- /go page: form + results
+- /go page: form (airport dropdown, budget input, trip-length 3-button, vibe chips) + results grid
 - Card component (matches §8 visual)
-- Card rotation logic from teaser carries over for empty state
-- Adapts current centered-editorial aesthetic
+- Inherits centered-editorial aesthetic from teaser (aurora, Instrument Serif, Inter)
 
-**Deliverable end of week 2:** /go works end-to-end with 60 destinations, real prices, first 30 have catch text.
+**Deliverable end of week 2:** /go works end-to-end with 80 destinations, real cached prices, first 50 have catch text.
 
 ### Week 3 (Jun 10 - Jun 16)
 
 **Backend:**
-- `server/seo_pages.py`: render_list and render_destination
-- Route handlers: /from/<airport>/under/<budget>, /from/<airport>/<vibe>, /destination/<dest>/from/<airport>
-- /sitemap.xml dynamic generator
-- nginx config update for new routes
-- Tests: SEO page generation, sitemap structure, edge cases (no results, missing destination)
-
-**Adam curation:**
-- destinations.yaml structured fields for final 40 (running total: 100)
-- Catch text for next 50 destinations (running total: 80)
-- routes.yaml first 100 route_catch_text overrides (the ones that matter most)
-
-**Frontend:**
-- seo-list.html and seo-destination.html templates
-- Catch display refinement
-- Mobile optimization pass
-- Internal linking style
-
-**Deliverable end of week 3:** All 1,380 SEO pages render. 100 destinations loaded, 80 have catch text.
-
-### Week 4 (Jun 17 - Jun 23)
-
-**Backend:**
 - Email gate logic (session counter + modal trigger)
+- Quiet "notify me" CTA in /go footer (always visible, secondary acquisition path)
 - Welcome email template via Resend
-- E2E tests (Playwright) for /go flow, email gate, SEO page navigation
+- E2E tests (Playwright) for /go flow + email gate
 - Monitoring: /api/healthz extended with last_refresh_at, snapshot_count
-- Production deploy: rsync, restart promptiv.service, enable systemd timer for refresh
+- Production deploy: rsync, restart promptiv.service, enable systemd timer for nightly refresh
 
 **Adam curation:**
-- Final 20 catch texts (running total: 100)
-- routes.yaml final ~200 entries
+- Final 20 destinations (running total: 100)
+- Catch text for remaining 50 destinations (running total: 100)
+- routes.yaml: ~50 high-surface route_catch_text overrides
 
 **Frontend:**
-- Final mobile polish
 - Email gate modal
-- Landing page (existing teaser) gets updated to drive to /go
+- Mobile polish pass
+- Landing page (existing teaser) updated to drive primary CTA to /go
 
-**Deliverable end of week 4:** Promptiv v1 live on promptiv.io with all 100 destinations, full catch text, email gate, SEO pages indexed. Submit sitemap to Google Search Console.
+**Deliverable end of week 3:** Promptiv v1 live on promptiv.io. All 100 destinations + catch text + email gate. Ship to sell.
 
-### Launch day (Jun 23 or later)
+### Launch day (Jun 16 or later)
 
 - Run final fli refresh manually to ensure fresh prices
-- Smoke test all flows
-- Submit sitemap.xml to Google Search Console
-- Post to r/Shoestring, r/SoloTravel with one organic answer (no spam)
-- Tweet/email launch announcement (Adam's network)
-- Monitor /api/healthz, error logs, Resend deliverability
+- Smoke test /go end-to-end on mobile and desktop
+- Verify email gate triggers and welcome email sends
+- Tweet/email launch announcement (Adam's network only — no broad marketing yet)
+- Monitor /api/healthz, error logs, Resend deliverability, /go submission rate
+- **Hold marketing push until tool data validates** (people use it more than once, share it, sign up at >25%)
 
 ---
 
 ## 13. Out of scope for v1
 
+- **Programmatic SEO pages** (v1.1, see §9 for the deferred design)
 - User accounts, saved trips, trip boards (v1.1)
 - Pro tier ($7/mo) (v1.1)
 - Affiliate booking links (v1.1 if traffic justifies)
@@ -869,8 +722,8 @@ Suggested mix to draft during curation (not binding, adjustable):
 | fli breaks during v1 build | Medium | High | Week 1 spike validates fli works. SerpAPI as backup ($50/mo). Architecture isolates fli to one module. |
 | Google rate-limits fli at higher volume | Medium | High | 6s between calls. Cron runs once nightly. If blocked, prices go stale but app stays up. |
 | Catch text quality varies | High | Medium | Hand-curated per destination. Voice guide in §8. Adam writes all of them (no delegation). |
-| SEO pages get thin-content penalty | Low | Medium | Catch text + real cached prices + internal linking = substantive content. Not template-only. |
-| 4-week timeline slips | High | Low | Curation is the bottleneck. Can ship with 60 destinations in week 4 and add 40 post-launch (still hits SEO scale). |
+| 3-week timeline slips | High | Low | Curation is the bottleneck. Can ship with 60-70 destinations and add the rest in weeks 4-5. /go still works at any destination count. |
+| Tool gets low engagement on launch | Medium | High | This IS the validation signal. If <1 search per visitor average after 2 weeks, the tool hypothesis is wrong and we revisit before investing in SEO. |
 | Email deliverability via Resend | Low | Medium | Resend already verified for distillworks.com. Welcome email tested. |
 | Cron doesn't fire (systemd issue) | Low | Medium | Healthcheck monitors last_refresh_at. External uptime monitor (UptimeRobot free tier) pings /api/healthz. |
 | Disk fills from price_snapshots | Low | Low | 14-day retention + monthly VACUUM. ~300MB steady state. |
@@ -882,20 +735,20 @@ Suggested mix to draft during curation (not binding, adjustable):
 - [ ] 100 destinations in destinations.yaml with structured fields
 - [ ] 100 destinations with hand-written base_catch text
 - [ ] 12 airports in airports.yaml
-- [ ] ~300 route_catch_text overrides in routes.yaml (most-traveled routes)
+- [ ] ~50 route_catch_text overrides in routes.yaml (high-surface routes only)
 - [ ] All 5 new SQLite tables created via migration
+- [ ] fli sanity spike confirms reverse-engineering still works (week 1)
 - [ ] fli cron runs nightly, completes in <8h, <5% failure rate
 - [ ] /go workflow returns 5-8 cards in <500ms
-- [ ] All ~1,380 SEO pages render without 500 errors
-- [ ] sitemap.xml submitted to Google Search Console
 - [ ] Email gate triggers at 6th search per session
+- [ ] Always-visible secondary "notify me" CTA in /go footer
 - [ ] Welcome email sends within 1 min of signup
 - [ ] /api/healthz reports DB ok, last_refresh_at, snapshot count
 - [ ] All E2E tests pass (Playwright)
 - [ ] Mobile UX tested on actual phone
 - [ ] Production deployed to promptiv.io
-- [ ] Existing teaser landing page updated to drive to /go
-- [ ] One organic Reddit answer posted to r/SoloTravel using real Promptiv results
+- [ ] Existing teaser landing page updated to drive primary CTA to /go
+- [ ] Personal-network launch announcement sent (no broad marketing until tool data validates)
 
 ---
 
