@@ -70,5 +70,5 @@ def test_healthz_returns_ok(client):
     resp = client.get("/api/healthz")
     assert resp.status_code == 200
     data = resp.get_json()
-    assert data["status"] == "ok"
+    assert data["status"] == "healthy"
     assert "signups" in data
