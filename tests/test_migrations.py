@@ -61,3 +61,43 @@ def test_email_uniqueness_enforced(temp_db_path):
     except sqlite3.IntegrityError:
         pass
     conn.close()
+
+
+def test_init_schema_creates_v1_tables(temp_db_path):
+    """All 5 v1 tables exist after init_schema."""
+    import sqlite3
+    from server.migrations import init_schema
+
+    init_schema(temp_db_path)
+    conn = sqlite3.connect(temp_db_path)
+    try:
+        cursor = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+        )
+        tables = {row[0] for row in cursor.fetchall()}
+    finally:
+        conn.close()
+
+    expected = {"airports", "destinations", "price_snapshots",
+                "qualifiers", "routes", "searches", "signups"}
+    assert expected.issubset(tables), f"missing: {expected - tables}"
+
+
+def test_init_schema_creates_v1_indexes(temp_db_path):
+    """v1 indexes are present (perf-critical for /api/go)."""
+    import sqlite3
+    from server.migrations import init_schema
+
+    init_schema(temp_db_path)
+    conn = sqlite3.connect(temp_db_path)
+    try:
+        cursor = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='index' AND name LIKE 'idx_%'"
+        )
+        indexes = {row[0] for row in cursor.fetchall()}
+    finally:
+        conn.close()
+
+    assert "idx_snapshots_lookup" in indexes
+    assert "idx_snapshots_dest" in indexes
+    assert "idx_searches_session" in indexes

@@ -22,8 +22,73 @@ CREATE TABLE IF NOT EXISTS qualifiers (
     UNIQUE(signup_id)
 );
 
+CREATE TABLE IF NOT EXISTS airports (
+    iata        TEXT PRIMARY KEY,
+    city        TEXT NOT NULL,
+    state       TEXT,
+    region_us   TEXT NOT NULL,
+    lat         REAL NOT NULL,
+    lng         REAL NOT NULL,
+    rank_us     INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS destinations (
+    iata                TEXT PRIMARY KEY,
+    city                TEXT NOT NULL,
+    country             TEXT NOT NULL,
+    country_code        TEXT NOT NULL,
+    region              TEXT NOT NULL,
+    vibes               TEXT NOT NULL,
+    passport_required   INTEGER NOT NULL,
+    visa_required_us    INTEGER NOT NULL,
+    best_months         TEXT NOT NULL,
+    avg_daily_cost_usd  INTEGER NOT NULL,
+    safety_tier         INTEGER NOT NULL,
+    currency            TEXT NOT NULL,
+    lat                 REAL NOT NULL,
+    lng                 REAL NOT NULL,
+    base_catch          TEXT,
+    novelty_score       INTEGER NOT NULL,
+    UNIQUE(city, country)
+);
+
+CREATE TABLE IF NOT EXISTS routes (
+    origin_iata      TEXT NOT NULL REFERENCES airports(iata),
+    dest_iata        TEXT NOT NULL REFERENCES destinations(iata),
+    route_catch_text TEXT,
+    PRIMARY KEY (origin_iata, dest_iata)
+);
+
+CREATE TABLE IF NOT EXISTS price_snapshots (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    origin_iata       TEXT NOT NULL REFERENCES airports(iata),
+    dest_iata         TEXT NOT NULL REFERENCES destinations(iata),
+    departure_date    TEXT NOT NULL,
+    return_date       TEXT NOT NULL,
+    trip_nights       INTEGER NOT NULL,
+    total_price_usd   INTEGER NOT NULL,
+    stops             INTEGER,
+    carrier_codes     TEXT,
+    source            TEXT NOT NULL,
+    fetched_at        TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS searches (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id    TEXT NOT NULL,
+    origin_iata   TEXT NOT NULL,
+    budget_usd    INTEGER NOT NULL,
+    trip_nights   INTEGER NOT NULL,
+    vibe_filter   TEXT,
+    result_iatas  TEXT NOT NULL,
+    created_at    TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_signups_email ON signups(email);
 CREATE INDEX IF NOT EXISTS idx_qualifiers_signup_id ON qualifiers(signup_id);
+CREATE INDEX IF NOT EXISTS idx_snapshots_lookup ON price_snapshots(origin_iata, total_price_usd, trip_nights, departure_date);
+CREATE INDEX IF NOT EXISTS idx_snapshots_dest ON price_snapshots(dest_iata, fetched_at);
+CREATE INDEX IF NOT EXISTS idx_searches_session ON searches(session_id, created_at);
 """
 
 
