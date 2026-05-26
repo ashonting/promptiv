@@ -120,9 +120,6 @@ DATABASE_PATH=/var/lib/promptiv/teaser.sqlite
 
 ```python
 """Shared pytest fixtures."""
-import os
-import sqlite3
-import tempfile
 import pytest
 
 
