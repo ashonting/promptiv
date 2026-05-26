@@ -58,7 +58,30 @@ def create_app() -> Flask:
 
     @app.route("/api/healthz")
     def healthz():
-        return jsonify({"status": "ok", "signups": db.count_signups()})
+        import sqlite3
+        snapshot_count = 0
+        last_refresh_at = None
+        db_status = "ok"
+        if db_path:
+            try:
+                conn = sqlite3.connect(db_path)
+                try:
+                    row = conn.execute(
+                        "SELECT COUNT(*), MAX(fetched_at) FROM price_snapshots"
+                    ).fetchone()
+                    snapshot_count = row[0] or 0
+                    last_refresh_at = row[1]
+                finally:
+                    conn.close()
+            except sqlite3.Error as e:
+                db_status = f"error: {e}"
+        return jsonify({
+            "status": "healthy" if db_status == "ok" else "degraded",
+            "db": db_status,
+            "snapshot_count": snapshot_count,
+            "last_refresh_at": last_refresh_at,
+            "signups": db.count_signups(),
+        })
 
     @app.route("/api/signup", methods=["POST"])
     def signup():
