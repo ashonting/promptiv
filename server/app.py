@@ -62,6 +62,36 @@ def create_app() -> Flask:
 
         return jsonify({"signup_id": signup_id})
 
+    @app.route("/api/qualifiers/<int:signup_id>", methods=["POST"])
+    def qualifiers(signup_id):
+        if db.get_signup_by_id(signup_id) is None:
+            return jsonify({"error": "signup not found"}), 404
+
+        data = request.get_json(silent=True) or {}
+        budget_bucket = data.get("budget_bucket")
+        home_airport = data.get("home_airport")
+        frustration = data.get("frustration")
+
+        # Truncate frustration to 500 chars (matches spec)
+        if frustration is not None:
+            frustration = str(frustration)[:500]
+
+        # Trim home airport
+        if home_airport is not None:
+            home_airport = str(home_airport).strip()[:32]
+
+        try:
+            db.upsert_qualifiers(
+                signup_id,
+                budget_bucket=budget_bucket,
+                home_airport=home_airport,
+                frustration=frustration,
+            )
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+
+        return jsonify({"ok": True})
+
     return app
 
 
