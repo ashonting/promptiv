@@ -1,4 +1,5 @@
 """SQLite access layer for Promptiv teaser."""
+import json
 import os
 import sqlite3
 from datetime import datetime, timezone
@@ -114,3 +115,112 @@ def count_signups() -> int:
         return int(conn.execute("SELECT COUNT(*) FROM signups").fetchone()[0])
     finally:
         conn.close()
+
+
+def find_candidates(
+    conn: sqlite3.Connection,
+    origin_iata: str,
+    budget_usd: int,
+    trip_nights: int,
+) -> list[dict]:
+    """Return destinations with cheapest cached price within budget+15%.
+
+    Each dict contains: iata, city, country, vibes (list), best_months (list),
+    avg_daily_cost_usd, safety_tier, novelty_score, base_catch,
+    route_catch_text, price_usd, departure_date, return_date,
+    cheapest_date_in_best_months.
+
+    Caller owns the transaction; this function does not commit.
+    """
+    max_price = int(budget_usd * 1.15)
+    rows = conn.execute(
+        """
+        WITH cheapest AS (
+            SELECT dest_iata,
+                   MIN(total_price_usd) AS min_price
+            FROM price_snapshots
+            WHERE origin_iata = ?
+              AND trip_nights = ?
+              AND total_price_usd <= ?
+            GROUP BY dest_iata
+        )
+        SELECT d.iata, d.city, d.country, d.vibes, d.best_months,
+               d.avg_daily_cost_usd, d.safety_tier, d.novelty_score, d.base_catch,
+               r.route_catch_text,
+               c.min_price,
+               s.departure_date, s.return_date
+        FROM cheapest c
+        JOIN destinations d ON d.iata = c.dest_iata
+        LEFT JOIN routes r ON r.origin_iata = ? AND r.dest_iata = d.iata
+        JOIN price_snapshots s ON s.origin_iata = ?
+                              AND s.dest_iata = c.dest_iata
+                              AND s.trip_nights = ?
+                              AND s.total_price_usd = c.min_price
+        GROUP BY d.iata
+        """,
+        (origin_iata, trip_nights, max_price, origin_iata, origin_iata, trip_nights),
+    ).fetchall()
+
+    out: list[dict] = []
+    for row in rows:
+        best_months = json.loads(row[4])
+        dep_month = int(row[11].split("-")[1])
+        out.append({
+            "iata": row[0],
+            "city": row[1],
+            "country": row[2],
+            "vibes": json.loads(row[3]),
+            "best_months": best_months,
+            "avg_daily_cost_usd": row[5],
+            "safety_tier": row[6],
+            "novelty_score": row[7],
+            "base_catch": row[8],
+            "route_catch_text": row[9],
+            "price_usd": row[10],
+            "departure_date": row[11],
+            "return_date": row[12],
+            "cheapest_date_in_best_months": dep_month in best_months,
+        })
+    return out
+
+
+def record_search(
+    conn: sqlite3.Connection,
+    session_id: str,
+    origin_iata: str,
+    budget_usd: int,
+    trip_nights: int,
+    vibe_filter: list[str],
+    result_iatas: list[str],
+) -> None:
+    """Insert a search row. Caller owns the transaction."""
+    conn.execute(
+        """INSERT INTO searches
+           (session_id, origin_iata, budget_usd, trip_nights, vibe_filter, result_iatas, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)""",
+        (
+            session_id, origin_iata, budget_usd, trip_nights,
+            json.dumps(vibe_filter) if vibe_filter else None,
+            json.dumps(result_iatas),
+            _now(),
+        ),
+    )
+
+
+def count_searches(conn: sqlite3.Connection, session_id: str) -> int:
+    """Return count of searches for a session. Returns 0 if none."""
+    row = conn.execute(
+        "SELECT COUNT(*) FROM searches WHERE session_id = ?", (session_id,)
+    ).fetchone()
+    return int(row[0])
+
+
+def session_seen_counts(conn: sqlite3.Connection, session_id: str) -> dict[str, int]:
+    """Return {dest_iata: times_appeared} across this session's prior result lists."""
+    counts: dict[str, int] = {}
+    for (raw,) in conn.execute(
+        "SELECT result_iatas FROM searches WHERE session_id = ?", (session_id,)
+    ):
+        for iata in json.loads(raw):
+            counts[iata] = counts.get(iata, 0) + 1
+    return counts

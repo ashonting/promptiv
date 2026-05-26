@@ -63,3 +63,80 @@ def test_count_signups(initialized_db):
     db.insert_signup("a@example.com")
     db.insert_signup("b@example.com")
     assert db.count_signups() == 2
+
+
+def test_find_candidates_filters_by_origin_and_budget(temp_db_path, monkeypatch):
+    """find_candidates returns destinations within budget, joined with cheapest price."""
+    import sqlite3
+    from server.migrations import init_schema
+    from server.db import find_candidates
+
+    init_schema(temp_db_path)
+    conn = sqlite3.connect(temp_db_path)
+    try:
+        conn.execute("INSERT INTO airports VALUES ('BNA','Nashville','TN','Southeast',36.1,-86.7,12)")
+        conn.execute("INSERT INTO destinations VALUES ('MEX','Mexico City','Mexico','MX','LA','[\"city\"]',1,0,'[3,4,5]',60,2,'MXN',19.4,-99.1,'catch1',3)")
+        conn.execute("INSERT INTO destinations VALUES ('LIS','Lisbon','Portugal','PT','WE','[\"city\",\"food\"]',1,0,'[5,6]',80,1,'EUR',38.7,-9.1,'catch2',4)")
+        conn.execute("INSERT INTO routes VALUES ('BNA','MEX','via DFW')")
+        conn.execute("INSERT INTO routes VALUES ('BNA','LIS',NULL)")
+        conn.execute("INSERT INTO price_snapshots (origin_iata,dest_iata,departure_date,return_date,trip_nights,total_price_usd,stops,carrier_codes,source,fetched_at) VALUES ('BNA','MEX','2026-06-01','2026-06-08',7,342,0,'[\"AA\"]','fli','2026-05-26T07:00')")
+        conn.execute("INSERT INTO price_snapshots (origin_iata,dest_iata,departure_date,return_date,trip_nights,total_price_usd,stops,carrier_codes,source,fetched_at) VALUES ('BNA','LIS','2026-06-15','2026-06-22',7,612,1,'[\"BA\"]','fli','2026-05-26T07:00')")
+        conn.commit()
+
+        cands = find_candidates(conn, origin_iata="BNA", budget_usd=500, trip_nights=7)
+    finally:
+        conn.close()
+
+    iatas = [c["iata"] for c in cands]
+    assert "MEX" in iatas
+    assert "LIS" not in iatas  # $612 over $500 + 15% = $575
+
+
+def test_find_candidates_returns_cheapest_price_per_destination(temp_db_path):
+    """Multiple snapshots for same route → returns the cheapest."""
+    import sqlite3
+    from server.migrations import init_schema
+    from server.db import find_candidates
+
+    init_schema(temp_db_path)
+    conn = sqlite3.connect(temp_db_path)
+    try:
+        conn.execute("INSERT INTO airports VALUES ('BNA','Nashville','TN','Southeast',36.1,-86.7,12)")
+        conn.execute("INSERT INTO destinations VALUES ('MEX','Mexico City','Mexico','MX','LA','[]',1,0,'[]',60,2,'MXN',19.4,-99.1,NULL,3)")
+        conn.execute("INSERT INTO routes VALUES ('BNA','MEX',NULL)")
+        for price, dep in [(450, '2026-06-01'), (342, '2026-06-08'), (399, '2026-06-15')]:
+            conn.execute("INSERT INTO price_snapshots (origin_iata,dest_iata,departure_date,return_date,trip_nights,total_price_usd,stops,carrier_codes,source,fetched_at) VALUES (?,?,?,?,?,?,0,'[]','fli','2026-05-26T07:00')",
+                         ('BNA','MEX',dep,'2026-06-08',7,price))
+        conn.commit()
+        cands = find_candidates(conn, origin_iata="BNA", budget_usd=500, trip_nights=7)
+    finally:
+        conn.close()
+
+    assert len(cands) == 1
+    assert cands[0]["price_usd"] == 342
+
+
+def test_record_search_persists(temp_db_path):
+    import json, sqlite3
+    from server.migrations import init_schema
+    from server.db import record_search, count_searches
+
+    init_schema(temp_db_path)
+    conn = sqlite3.connect(temp_db_path)
+    try:
+        record_search(
+            conn,
+            session_id="sess123",
+            origin_iata="BNA",
+            budget_usd=500,
+            trip_nights=7,
+            vibe_filter=["city", "food"],
+            result_iatas=["MEX", "LIS"],
+        )
+        conn.commit()
+        assert count_searches(conn, "sess123") == 1
+        row = conn.execute("SELECT vibe_filter, result_iatas FROM searches WHERE session_id=?", ("sess123",)).fetchone()
+    finally:
+        conn.close()
+    assert json.loads(row[0]) == ["city", "food"]
+    assert json.loads(row[1]) == ["MEX", "LIS"]
