@@ -1,0 +1,22 @@
+[Unit]
+Description=Promptiv teaser Flask app (gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/srv/promptiv
+Environment="PYTHONUNBUFFERED=1"
+EnvironmentFile=/srv/promptiv/.env
+ExecStart=/srv/promptiv/.venv/bin/gunicorn \
+    --workers 2 \
+    --bind 127.0.0.1:8000 \
+    --access-logfile /var/log/promptiv/access.log \
+    --error-logfile /var/log/promptiv/error.log \
+    server.app:app
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
