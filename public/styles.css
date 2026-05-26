@@ -82,6 +82,7 @@ body { min-height: 100vh; display: flex; align-items: center; justify-content: c
     grid-template-columns: 1.05fr 1fr;
     grid-template-areas:
       "wordmark wordmark"
+      "kicker    cards"
       "headline  cards"
       "subhead   cards"
       "form      cards"
@@ -90,7 +91,8 @@ body { min-height: 100vh; display: flex; align-items: center; justify-content: c
     row-gap: 0;
     min-height: 0;
   }
-  .wordmark   { grid-area: wordmark; margin-bottom: 80px; font-size: 18px; }
+  .wordmark   { grid-area: wordmark; margin-bottom: 64px; font-size: 18px; }
+  .kicker     { grid-area: kicker;   margin: 0 0 18px; font-size: 12px; }
   .headline   { grid-area: headline; margin: 0 0 22px; font-size: 56px; line-height: 1.05; }
   .subhead    { grid-area: subhead;  margin: 0; font-size: 17px; max-width: 100%; }
   .card-stack { grid-area: cards;    margin: 0; height: 160px; align-self: center; }
@@ -116,7 +118,17 @@ body { min-height: 100vh; display: flex; align-items: center; justify-content: c
   font-weight: 500;
   color: var(--color-accent);
   letter-spacing: -0.005em;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
+}
+
+.kicker {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  opacity: 0.75;
+  margin: 0 0 18px;
 }
 
 .headline {
