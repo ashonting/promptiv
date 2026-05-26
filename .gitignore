@@ -5,3 +5,5 @@ __pycache__/
 *.sqlite
 node_modules/
 teaser.dev.sqlite
+*.egg-info/
+.venv/
