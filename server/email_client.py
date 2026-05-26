@@ -49,7 +49,9 @@ def send_confirmation(email: str) -> Optional[Any]:
         payload["reply_to"] = [reply_to]
 
     try:
-        return resend.Emails.send(payload)
+        # Resend's SendParams is a TypedDict; building it dynamically (with conditional
+        # reply_to) doesn't satisfy strict TypedDict checks.
+        return resend.Emails.send(payload)  # type: ignore[arg-type]
     except Exception as e:
         logger.exception("Resend send failed: %s", e)
         return None

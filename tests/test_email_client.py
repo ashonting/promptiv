@@ -12,7 +12,7 @@ def test_send_confirmation_calls_resend_with_expected_args(monkeypatch):
         result = email_client.send_confirmation("alice@example.com")
 
     assert result == {"id": "msg_123"}
-    args, kwargs = mock_send.call_args
+    args, _ = mock_send.call_args
     payload = args[0]
     assert payload["from"] == "test@example.com"
     assert payload["to"] == ["alice@example.com"]
