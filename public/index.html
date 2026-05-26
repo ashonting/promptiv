@@ -12,95 +12,101 @@
   <meta property="og:url" content="https://promptiv.io" />
   <meta property="og:type" content="website" />
 
-  <!-- Instrument Serif: used only for the "-Coming Soon-" status label to echo the prior placeholder -->
+  <!-- Editorial pairing: Instrument Serif (italic display) + Inter (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <main class="teaser-frame">
-    <div class="status-label">-Coming Soon-</div>
-    <div class="wordmark">Promptiv</div>
-    <h1 class="headline">Somewhere new is <em>closer</em> than you think.</h1>
-    <p class="subhead">Your budget is bigger than your map.</p>
+  <div class="aurora"></div>
 
-    <div class="card-stack" id="card-stack" aria-live="polite" aria-atomic="true">
-      <article class="ex-card" data-card-idx="0">
-        <div class="city">San Juan, Puerto Rico</div>
-        <div class="meta">$342 · 4 nights · 1 stop · no passport</div>
-        <div class="catch">catch: return lands at 11:40pm</div>
-      </article>
-      <article class="ex-card" data-card-idx="1">
-        <div class="city">Lisbon, Portugal</div>
-        <div class="meta">$612 · 7 nights · 1 stop</div>
-        <div class="catch">catch: 13-hour door to door</div>
-      </article>
-      <article class="ex-card" data-card-idx="2">
-        <div class="city">Mexico City</div>
-        <div class="meta">$298 · 5 nights · nonstop</div>
-        <div class="catch">catch: it's a city, not a beach</div>
-      </article>
-      <article class="ex-card" data-card-idx="3">
-        <div class="city">Reykjavik, Iceland</div>
-        <div class="meta">$789 · 6 nights · 1 stop</div>
-        <div class="catch">catch: 5 hours of daylight in November</div>
-      </article>
-      <article class="ex-card" data-card-idx="4">
-        <div class="city">Tokyo, Japan</div>
-        <div class="meta">$1,287 · 10 nights · 1 stop</div>
-        <div class="catch">catch: prices jump 40% during cherry blossom season</div>
-      </article>
-    </div>
+  <div class="frame">
+    <header class="top-bar">
+      <div class="brand">Promptiv<span class="brand-dot"></span></div>
+      <div class="top-status">Coming Soon</div>
+    </header>
 
-    <form id="signup-form" class="form" action="/api/signup" method="POST" novalidate>
-      <label for="email-input" class="sr-only">Your email</label>
-      <input
-        id="email-input"
-        class="email"
-        type="email"
-        name="email"
-        placeholder="your email"
-        required
-        autocomplete="email"
-      />
-      <button class="btn" type="submit">Where can I go?</button>
-    </form>
+    <main class="hero">
+      <div class="eyebrow"><span>Trip Discovery</span></div>
+      <h1 class="display">Somewhere new is <em>closer</em> than you think.</h1>
+      <p class="lede">Your budget is bigger than your map.</p>
 
-    <section class="thanks" id="thanks-state" hidden>
-      <h2 class="ack">We're working on it.</h2>
-      <p class="lead-in">Two quick optionals — they'll shape what we build first.</p>
+      <div class="card-stack" id="card-stack" aria-live="off">
+        <article class="ex-card" data-card-idx="0">
+          <div class="city">San Juan, Puerto Rico</div>
+          <div class="meta">$342 · 4 nights · 1 stop · no passport</div>
+          <div class="catch">catch: return lands at 11:40pm</div>
+        </article>
+        <article class="ex-card" data-card-idx="1">
+          <div class="city">Lisbon, Portugal</div>
+          <div class="meta">$612 · 7 nights · 1 stop</div>
+          <div class="catch">catch: 13-hour door to door</div>
+        </article>
+        <article class="ex-card" data-card-idx="2">
+          <div class="city">Mexico City</div>
+          <div class="meta">$298 · 5 nights · nonstop</div>
+          <div class="catch">catch: it's a city, not a beach</div>
+        </article>
+        <article class="ex-card" data-card-idx="3">
+          <div class="city">Reykjavik, Iceland</div>
+          <div class="meta">$789 · 6 nights · 1 stop</div>
+          <div class="catch">catch: 5 hours of daylight in November</div>
+        </article>
+        <article class="ex-card" data-card-idx="4">
+          <div class="city">Tokyo, Japan</div>
+          <div class="meta">$1,287 · 10 nights · 1 stop</div>
+          <div class="catch">catch: prices jump 40% during cherry blossom season</div>
+        </article>
+      </div>
 
-      <div class="q">
-        <div class="q-label">When you think about a trip, you're usually working with:</div>
-        <div class="pick-group" id="budget-group" role="radiogroup" aria-label="Budget bucket">
-          <button type="button" class="pick" data-pick="low" role="radio" aria-checked="false">Under $500</button>
-          <button type="button" class="pick is-selected" data-pick="mid" role="radio" aria-checked="true">$500 – 1,200</button>
-          <button type="button" class="pick" data-pick="stretch" role="radio" aria-checked="false">More than $1,200</button>
+      <form id="signup-form" class="form" action="/api/signup" method="POST" novalidate>
+        <label for="email-input" class="sr-only">Your email</label>
+        <input
+          id="email-input"
+          class="email"
+          type="email"
+          name="email"
+          placeholder="your email"
+          required
+          autocomplete="email"
+        />
+        <button class="btn" type="submit">Where can I go?</button>
+      </form>
+
+      <section class="thanks" id="thanks-state" hidden>
+        <h2 class="ack">We're working on it.</h2>
+        <p class="lead-in">Two quick optionals — they'll shape what we build first.</p>
+
+        <div class="q">
+          <div class="q-label">When you think about a trip, you're usually working with:</div>
+          <div class="pick-group" id="budget-group" role="radiogroup" aria-label="Budget bucket">
+            <button type="button" class="pick" data-pick="low" role="radio" aria-checked="false">Under $500</button>
+            <button type="button" class="pick is-selected" data-pick="mid" role="radio" aria-checked="true">$500 – 1,200</button>
+            <button type="button" class="pick" data-pick="stretch" role="radio" aria-checked="false">More than $1,200</button>
+          </div>
         </div>
-      </div>
 
-      <div class="q">
-        <label for="airport-input" class="q-label">Home airport <span class="hint">(optional)</span></label>
-        <input id="airport-input" class="text-input" placeholder="BNA, LAX, JFK…" maxlength="32" />
-      </div>
+        <div class="q">
+          <label for="airport-input" class="q-label">Home airport <span class="hint">(optional)</span></label>
+          <input id="airport-input" class="text-input" placeholder="BNA, LAX, JFK…" maxlength="32" />
+        </div>
 
-      <div class="q">
-        <label for="frustration-input" class="q-label">What's the worst part about planning a trip right now? <span class="hint">(optional)</span></label>
-        <textarea id="frustration-input" class="text-input" placeholder="A sentence or two. We read these." maxlength="500"></textarea>
-      </div>
+        <div class="q">
+          <label for="frustration-input" class="q-label">What's the worst part about planning a trip right now? <span class="hint">(optional)</span></label>
+          <textarea id="frustration-input" class="text-input" placeholder="A sentence or two. We read these." maxlength="500"></textarea>
+        </div>
 
-      <div class="actions">
-        <button type="button" id="qualifier-submit" class="done-btn">Share</button>
-        <button type="button" id="qualifier-skip" class="skip-link">No thanks</button>
-      </div>
-    </section>
+        <div class="actions">
+          <button type="button" id="qualifier-submit" class="done-btn">Share</button>
+          <button type="button" id="qualifier-skip" class="skip-link">No thanks</button>
+        </div>
+      </section>
+    </main>
 
-    <footer class="footer">
-      © 2026 Promptiv · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>
-    </footer>
-  </main>
+    <footer class="footer">© 2026 Promptiv · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer>
+  </div>
 
   <!-- GSAP via CDN. Self-host before launch per spec (see DEPLOY.md §11b). -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
