@@ -1,6 +1,6 @@
 # Promptiv v1 Design Spec
 
-**Status:** Approved 2026-05-26
+**Status:** Draft for user review 2026-05-26
 **Author:** Adam Shontingh + Claude
 **Supersedes:** N/A (v0 was the teaser at promptiv.io, which becomes the email-capture layer for this v1)
 
@@ -68,7 +68,7 @@ Existing tools require the user to already know the destination (Google Flights)
 2. Form fields:
    - Home airport (dropdown of 12 hubs, defaults to none)
    - Budget ($ input, defaults to "500")
-   - Trip length (slider 3-14 nights, defaults to 7)
+   - Trip length: 3 buttons (short 5n / medium 7n / long 10n), defaults to medium. Must match cached values (see §6).
    - Vibe chips (multi-select, 0-7 chips, default none = all)
 3. User submits → POST /api/go
 4. Backend:
@@ -376,7 +376,7 @@ def score(candidate, user_query, session):
     elif 1.00 < ratio <= 1.15:
         budget_fit = 0.5  # slightly over, shown if vibe match strong
     else:
-        budget_fit = 0.0  # >15% over budget, filter out
+        return None  # >15% over budget, filtered out of candidate set entirely
 
     # novelty: penalize repeats within session
     if session.seen_count[candidate.iata] == 0:
