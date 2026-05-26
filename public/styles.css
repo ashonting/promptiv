@@ -78,8 +78,16 @@ body { min-height: 100vh; display: flex; align-items: center; justify-content: c
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
+.wordmark {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--color-accent);
+  letter-spacing: -0.005em;
+  margin-bottom: 56px;
+}
+
 .headline {
-  margin: 84px 0 18px;
+  margin: 0 0 18px;
   font-size: 36px;
   font-weight: 500;
   line-height: 1.08;
