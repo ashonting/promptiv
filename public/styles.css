@@ -72,6 +72,39 @@ body { min-height: 100vh; display: flex; align-items: center; justify-content: c
   .teaser-frame { padding: 40px 24px 28px; min-height: 0; }
 }
 
+/* Desktop two-column layout — hero text on the left, rotating card on the right.
+   Single-column stack below 880px (the existing mobile-first defaults apply). */
+@media (min-width: 880px) {
+  .teaser-frame {
+    max-width: 1040px;
+    padding: 88px 64px 56px;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    grid-template-areas:
+      "wordmark wordmark"
+      "headline  cards"
+      "subhead   cards"
+      "form      cards"
+      "footer   footer";
+    column-gap: 96px;
+    row-gap: 0;
+    min-height: 0;
+  }
+  .wordmark   { grid-area: wordmark; margin-bottom: 80px; font-size: 18px; }
+  .headline   { grid-area: headline; margin: 0 0 22px; font-size: 56px; line-height: 1.05; }
+  .subhead    { grid-area: subhead;  margin: 0; font-size: 17px; max-width: 100%; }
+  .card-stack { grid-area: cards;    margin: 0; height: 160px; align-self: center; }
+  .form       { grid-area: form;     margin: 48px 0 0; max-width: 460px; }
+  .thanks     { grid-area: form;     margin: 32px 0 0; }
+  .footer     { grid-area: footer;   margin-top: 72px; }
+
+  /* Card chrome scales up slightly on desktop to match the larger hero type */
+  .ex-card { padding: 24px 26px; border-radius: 10px; }
+  .ex-card .city  { font-size: 17px; margin-bottom: 8px; }
+  .ex-card .meta  { font-size: 13.5px; margin-bottom: 12px; }
+  .ex-card .catch { font-size: 13.5px; }
+}
+
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;
