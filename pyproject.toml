@@ -15,6 +15,7 @@ exclude = ["tests*", "deploy*", "public*", "docs*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+addopts = "--ignore=tests/e2e"
 
 [tool.pyright]
 include = ["server", "tests"]
