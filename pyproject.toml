@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "promptiv-teaser"
+version = "0.0.1"
+description = "Promptiv teaser site — Flask backend + static frontend"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+include = ["server*"]
+exclude = ["tests*", "deploy*", "public*", "docs*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.pyright]
+include = ["server", "tests"]
+exclude = ["**/__pycache__", "**/.venv", "**/.superpowers"]
+extraPaths = ["."]
+reportMissingImports = "warning"
