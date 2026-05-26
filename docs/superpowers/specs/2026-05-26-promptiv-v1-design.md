@@ -211,8 +211,8 @@ CREATE TABLE price_snapshots (
     return_date TEXT NOT NULL,       -- ISO YYYY-MM-DD (round-trip only in v1)
     trip_nights INTEGER NOT NULL,    -- 5, 7, or 10
     total_price_usd INTEGER NOT NULL,  -- rounded to whole dollars
-    stops INTEGER NOT NULL,          -- 0, 1, 2
-    carrier_codes TEXT NOT NULL,     -- JSON array: ["AA","BA"]
+    stops INTEGER,                   -- nullable: fli.SearchDates returns only dates+price; v1.1 enriches via SearchFlights
+    carrier_codes TEXT,              -- nullable: same as stops; populated in v1.1
     source TEXT NOT NULL,            -- 'fli' for v1
     fetched_at TEXT NOT NULL,        -- ISO timestamp
     FOREIGN KEY (origin_iata) REFERENCES airports(iata),
@@ -390,7 +390,7 @@ Top 8 candidates returned. If fewer than 8 candidates pass `budget_fit > 0`, ret
 ```
 ┌─────────────────────────────────────────────┐
 │ Mexico City, Mexico              $342      │
-│ 7 nights · nonstop · Feb 12-19              │
+│ 7 nights · Feb 12-19                        │
 │                                             │
 │ catch: It's a city, not a beach.           │
 │ February nights drop to 45°F. Locals       │
@@ -403,6 +403,8 @@ Top 8 candidates returned. If fewer than 8 candidates pass `budget_fit > 0`, ret
 │ See on Google Flights →                     │
 └─────────────────────────────────────────────┘
 ```
+
+**Note:** v1 cards do not show stop count or carrier (fli.SearchDates returns only date+price+currency). v1.1 will chain `fli.SearchFlights` against the top 8 ranked dates per request to enrich with stop count, carrier codes, and exact flight times. Users get the dates and the price; for booking-time details they click through to Google Flights.
 
 ### Catch composition
 
@@ -692,6 +694,7 @@ Suggested mix to draft during curation (not binding, adjustable):
 ## 13. Out of scope for v1
 
 - **Programmatic SEO pages** (v1.1, see §9 for the deferred design)
+- **Stop count and carrier display on cards** (v1.1: chain fli.SearchFlights on top ranked dates)
 - User accounts, saved trips, trip boards (v1.1)
 - Pro tier ($7/mo) (v1.1)
 - Affiliate booking links (v1.1 if traffic justifies)
