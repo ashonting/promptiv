@@ -24,3 +24,6 @@ reportMissingImports = "warning"
 # Pytest fixtures are passed by parameter name; Pyright doesn't understand the
 # convention and flags them as unused. Silence that noise project-wide.
 reportUnusedParameter = "none"
+# Flask @app.route decorators register functions but they're never called by
+# name. Same noise pattern as pytest fixtures.
+reportUnusedFunction = "none"
