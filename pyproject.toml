@@ -21,3 +21,6 @@ include = ["server", "tests"]
 exclude = ["**/__pycache__", "**/.venv", "**/.superpowers"]
 extraPaths = ["."]
 reportMissingImports = "warning"
+# Pytest fixtures are passed by parameter name; Pyright doesn't understand the
+# convention and flags them as unused. Silence that noise project-wide.
+reportUnusedParameter = "none"
