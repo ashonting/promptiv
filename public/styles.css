@@ -1,0 +1,275 @@
+/* General Sans — self-hosted */
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-bg: #0a0814;
+  --color-accent: #a78bfa;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #d8d4f0;
+  --color-text-tertiary: #8b85b8;
+  --color-text-quaternary: #7a749e;
+  --color-text-quinary: #5a557a;
+  --color-text-faint: #4a4670;
+  --color-border: #2e2a48;
+  --color-border-hover: #5a4d8a;
+  --color-card-bg: rgba(167, 139, 250, 0.05);
+  --color-card-border: rgba(167, 139, 250, 0.16);
+  --color-link-underline: #2e2a48;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  font-family: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+.teaser-frame {
+  width: 100%;
+  max-width: 540px;
+  padding: 56px 36px 40px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  min-height: 620px;
+}
+
+@media (max-width: 540px) {
+  .teaser-frame { padding: 40px 24px 28px; min-height: 0; }
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.headline {
+  margin: 84px 0 18px;
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.08;
+  color: var(--color-text-primary);
+  letter-spacing: -0.025em;
+}
+.headline em {
+  font-style: italic;
+  color: var(--color-accent);
+  font-weight: 400;
+}
+
+.subhead {
+  margin: 0 0 36px;
+  font-size: 15px;
+  color: var(--color-text-tertiary);
+  max-width: 420px;
+  line-height: 1.55;
+}
+
+.card-stack {
+  position: relative;
+  height: 116px;
+  margin-bottom: 36px;
+}
+.ex-card {
+  position: absolute;
+  inset: 0;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: 8px;
+  padding: 18px 20px;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+.ex-card[data-card-idx="0"] { opacity: 1; }  /* JS-free fallback */
+.ex-card .city {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.ex-card .meta {
+  color: var(--color-text-quaternary);
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+.ex-card .catch {
+  color: var(--color-accent);
+  font-size: 12.5px;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+.form.is-hidden { display: none; }
+.email {
+  flex: 1;
+  min-width: 160px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 11px 13px;
+  color: var(--color-text-secondary);
+  font-size: 13.5px;
+  font-family: inherit;
+}
+.email:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+.btn {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border: none;
+  border-radius: 5px;
+  padding: 11px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.thanks { display: block; margin-top: auto; }
+.thanks[hidden] { display: none; }
+.thanks .ack {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+.thanks .lead-in {
+  margin: 0 0 24px;
+  color: var(--color-text-tertiary);
+  font-size: 13.5px;
+}
+.thanks .q { margin-bottom: 20px; }
+.thanks .q-label {
+  display: block;
+  color: var(--color-text-secondary);
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.thanks .q-label .hint {
+  color: var(--color-text-quinary);
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.pick-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.pick {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  font-family: inherit;
+}
+.pick:hover { border-color: var(--color-border-hover); color: var(--color-text-primary); }
+.pick.is-selected {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(167, 139, 250, 0.08);
+}
+.pick:focus { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+.text-input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 10px 13px;
+  color: var(--color-text-secondary);
+  font-size: 13.5px;
+  font-family: inherit;
+}
+.text-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+textarea.text-input { min-height: 64px; resize: vertical; }
+
+.actions { display: flex; gap: 14px; align-items: center; margin-top: 12px; }
+.done-btn {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border: none;
+  border-radius: 5px;
+  padding: 11px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.skip-link {
+  background: transparent;
+  border: none;
+  color: var(--color-text-quaternary);
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.skip-link:hover { color: var(--color-text-secondary); }
+
+.footer {
+  margin-top: 24px;
+  font-size: 10.5px;
+  color: var(--color-text-faint);
+}
+.footer a {
+  color: var(--color-text-quinary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--color-link-underline);
+}
+.footer a:hover { color: var(--color-text-tertiary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ex-card { opacity: 0 !important; transform: none !important; transition: none !important; }
+  .ex-card[data-card-idx="0"] { opacity: 1 !important; }
+}
