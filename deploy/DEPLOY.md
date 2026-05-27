@@ -216,3 +216,107 @@ sqlite3 /var/lib/promptiv/teaser.sqlite ".backup /root/backups/teaser-$(date +%Y
 # Add to cron (daily at 03:30 UTC):
 echo "30 3 * * * sqlite3 /var/lib/promptiv/teaser.sqlite \".backup /root/backups/teaser-\$(date +\\%Y\\%m\\%d).sqlite\" && find /root/backups -name 'teaser-*.sqlite' -mtime +30 -delete" | crontab -
 ```
+
+---
+
+# v1 (Trip Discovery Tool) — Shipped 2026-05-26
+
+## What v1 adds
+
+- `/go` page with airport/budget/length/vibe form, server-side ranking, ranked trip cards
+- `/api/go` endpoint returning ranked candidates with catch text + Google Flights deep links
+- 5 new SQLite tables: airports, destinations, routes, price_snapshots, searches
+- YAML curation in `data/` (airports.yaml = 12 hubs, destinations.yaml = 100 dests, routes.yaml = `[]`)
+- Nightly `fli` price refresh via systemd timer
+- Email gate at 5 searches/session, HTML-styled welcome email via Resend
+- New nginx location for `/go` (the SPA fallback was swallowing it)
+
+## Incremental v1 deploy
+
+```bash
+# 1. From local: ship code + data + deploy configs (NOT tests/, docs/, scripts/)
+cd ~/promptiv && rsync -avz --delete \
+  --exclude '.git/' --exclude '.venv/' --exclude '.env' \
+  --exclude '__pycache__/' --exclude '.pytest_cache/' \
+  --exclude 'tests/' --exclude 'docs/' --exclude '.superpowers/' \
+  --exclude 'PRODUCT-BRIEF.md' \
+  --exclude '*.egg-info/' --exclude '.gitignore' \
+  --exclude 'public/vendor/' --exclude 'teaser.dev.sqlite' \
+  --exclude 'scripts/' \
+  ./ root@promptiv.io:/srv/promptiv/
+
+# 2. If pyproject.toml changed, install new deps
+ssh root@promptiv.io '/srv/promptiv/.venv/bin/pip install -e /srv/promptiv'
+
+# 3. If schema migrations added, run them
+ssh root@promptiv.io 'cd /srv/promptiv && DATABASE_PATH=/var/lib/promptiv/teaser.sqlite \
+  /srv/promptiv/.venv/bin/python -c "from server.migrations import init_schema; init_schema(\"/var/lib/promptiv/teaser.sqlite\")"'
+
+# 4. If destinations.yaml or airports.yaml or routes.yaml changed, reload curation
+ssh root@promptiv.io 'cd /srv/promptiv && DATABASE_PATH=/var/lib/promptiv/teaser.sqlite \
+  /srv/promptiv/.venv/bin/python -m server.destinations'
+
+# 5. ALWAYS re-swap GSAP CDN to vendor (rsync clobbers index.html)
+ssh root@promptiv.io 'python3 -c "
+import re
+p = \"/srv/promptiv/public/index.html\"
+src = open(p).read()
+new = re.sub(r\"<script src=\\\"https://cdn\\.jsdelivr\\.net/.*gsap.*?\\\"[^>]*></script>\",
+             \"<script src=\\\"/vendor/gsap-3.12.5.min.js\\\"></script>\", src)
+if new != src:
+    open(p, \"w\").write(new); print(\"GSAP swapped\")
+else: print(\"GSAP unchanged\")
+"'
+
+# 6. If nginx config changed, copy + reload
+ssh root@promptiv.io 'nginx -t && systemctl reload nginx'
+
+# 7. If Python code changed, restart Flask
+ssh root@promptiv.io 'systemctl restart promptiv.service && sleep 2 && systemctl is-active promptiv.service'
+
+# 8. If you need to trigger an immediate price refresh (otherwise the timer fires at 07:00 UTC)
+ssh root@promptiv.io 'systemctl start promptiv-refresh.service'
+
+# 9. Verify
+curl -s https://promptiv.io/api/healthz | python3 -m json.tool
+curl -s -X POST https://promptiv.io/api/go -H 'Content-Type: application/json' \
+  -d '{"origin_iata":"BNA","budget_usd":1500,"trip_nights":7,"vibes":[]}' | python3 -m json.tool | head -30
+```
+
+## Critical gotchas
+
+- **nginx SPA fallback eats new pages.** The default `try_files $uri $uri/ /index.html` catches any URL Flask should handle. If you add a new page (`/about`, `/help`), add an explicit `location = /<path> { try_files /<path>.html =404; }` block. Bug we hit on v1 launch.
+- **GSAP CDN must be re-swapped after every rsync** of `public/index.html`. The repo keeps the CDN tag so local dev works without `public/vendor/`. Step 5 above handles this — don't skip.
+- **fli is rate-limited** (HTTP 429 from Google). The cron logs failures and continues. Acceptable up to ~5% failure rate. If higher, run `uv tool upgrade flights` locally and redeploy — the reverse-engineering may need updating.
+- **Refresh iterates by destination, not origin.** Don't "fix" this — it spreads load across all 12 origins so /go has coverage within ~3 minutes of refresh start instead of waiting ~30 min for the first origin to finish.
+
+## Monitoring v1
+
+```bash
+# Snapshot count growing?
+ssh root@promptiv.io '/srv/promptiv/.venv/bin/python -c "
+import sqlite3
+c = sqlite3.connect(\"/var/lib/promptiv/teaser.sqlite\")
+print(\"snapshots:\", c.execute(\"SELECT COUNT(*) FROM price_snapshots\").fetchone()[0])
+for r in c.execute(\"SELECT origin_iata, COUNT(*) FROM price_snapshots GROUP BY origin_iata ORDER BY 1\"):
+    print(f\"  {r[0]}: {r[1]}\")
+"'
+
+# Last refresh run
+ssh root@promptiv.io 'tail -50 /var/log/promptiv/price-refresh.log'
+
+# Recent /go searches (analytics)
+ssh root@promptiv.io '/srv/promptiv/.venv/bin/python -c "
+import sqlite3, json
+c = sqlite3.connect(\"/var/lib/promptiv/teaser.sqlite\")
+for r in c.execute(\"SELECT origin_iata, budget_usd, trip_nights, vibe_filter, created_at FROM searches ORDER BY id DESC LIMIT 20\"):
+    print(f\"{r[4][:19]} | {r[0]} | \${r[1]} | {r[2]}n | vibes={r[3]}\")
+"'
+```
+
+## Email gate operator workaround
+
+The /go email gate triggers at 5 searches per session. To keep testing past the gate:
+
+- Open devtools console: `localStorage.clear()` and refresh
+- Or use an Incognito/Private window (fresh localStorage per session)
