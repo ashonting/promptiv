@@ -21,17 +21,42 @@
     var current = 0;
     var DWELL_MS = 6000;
     var FADE_S = 1.2;
+    var pendingTimer = null;
 
-    setInterval(function () {
+    // setTimeout chain instead of setInterval: each tick fires only after the
+    // previous animation finishes, so queued animations can't pile up when
+    // the tab was backgrounded and then refocused.
+    function scheduleNext() {
+      pendingTimer = setTimeout(tick, DWELL_MS);
+    }
+
+    function tick() {
+      if (document.hidden) {
+        // Tab not visible — defer the rotation without queueing animations.
+        scheduleNext();
+        return;
+      }
       var next = (current + 1) % cards.length;
-      var tl = gsap.timeline();
+      var tl = gsap.timeline({ onComplete: scheduleNext });
       tl.to(cards[current], { opacity: 0, y: -6, duration: FADE_S, ease: 'power4.out' })
         .fromTo(cards[next],
           { opacity: 0, y: 6 },
           { opacity: 1, y: 0, duration: FADE_S, ease: 'power4.out' },
           '-=' + (FADE_S * 0.5));
       current = next;
-    }, DWELL_MS);
+    }
+
+    // Stop scheduling when the tab is hidden; resume cleanly on return.
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && pendingTimer) {
+        clearTimeout(pendingTimer);
+        pendingTimer = null;
+      } else if (!document.hidden && !pendingTimer) {
+        scheduleNext();
+      }
+    });
+
+    scheduleNext();
   }
 
   // ---------- Form submission ----------

@@ -184,6 +184,8 @@ body { position: relative; overflow-x: hidden; }
   text-align: left;
   opacity: 0;
   will-change: opacity, transform;
+  /* Cards are decorative; never let them swallow clicks intended for the CTA. */
+  pointer-events: none;
 }
 .ex-card[data-card-idx="0"] { opacity: 1; } /* JS-free fallback */
 .ex-card .city {
@@ -657,6 +659,10 @@ textarea.text-input { min-height: 64px; resize: vertical; }
   display: flex;
   justify-content: center;
   margin-bottom: 24px;
+  /* Explicit stacking so the rotating cards (also positioned) can never
+     paint over the primary CTA. */
+  position: relative;
+  z-index: 2;
 }
 .primary-cta {
   background: var(--color-accent);

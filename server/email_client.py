@@ -14,18 +14,26 @@ logger = logging.getLogger(__name__)
 
 
 CONFIRMATION_HTML = """\
-<p>You're on the list.</p>
-<p>We're building Promptiv now. When we have something to show you, you'll be among the first to see it.</p>
-<p>— The Promptiv team</p>
+<p>You're on the Promptiv list.</p>
+<p>Promptiv finds trips hiding in your budget. Tell us what you have to spend and how many days you have, and we'll surface 5-8 ideas with the catch on each.</p>
+<p><a href="https://promptiv.io/go" style="color:#a78bfa;font-weight:600;">Try it now &rarr;</a></p>
+<p>We'll email you when prices shift on trips you've explored and when new features ship. No spam.</p>
+<p>&mdash; Adam</p>
 <p style="color:#888;font-size:12px;">To unsubscribe, reply with the word UNSUBSCRIBE.</p>
 """
 
 CONFIRMATION_TEXT = """\
-You're on the list.
+You're on the Promptiv list.
 
-We're building Promptiv now. When we have something to show you, you'll be among the first to see it.
+Promptiv finds trips hiding in your budget. Tell us what you have to spend and
+how many days you have, and we'll surface 5-8 ideas with the catch on each.
 
-— The Promptiv team
+Try it now: https://promptiv.io/go
+
+We'll email you when prices shift on trips you've explored and when new features
+ship. No spam.
+
+— Adam
 
 To unsubscribe, reply with the word UNSUBSCRIBE.
 """
