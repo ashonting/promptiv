@@ -20,7 +20,9 @@ log = logging.getLogger("price_refresh")
 
 SLEEP_BETWEEN_CALLS = 6.0
 WINDOW_DAYS = 90
-TRIP_LENGTHS = (5, 7, 10)
+TRIP_LENGTHS = (7,)  # v1: 7-night only to stay under 12h timeout. v1.1: re-add 5 and 10
+                     # once we either parallelize, raise timeout, or get less aggressive
+                     # rate-limiting from Google.
 RATE_LIMIT_BACKOFF_SECONDS = 60.0
 
 
