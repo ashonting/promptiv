@@ -650,3 +650,24 @@ textarea.text-input { min-height: 64px; resize: vertical; }
   background: rgba(255,255,255,0.04);
   color: var(--color-text-primary);
 }
+
+/* ---------------- Landing page primary CTA ---------------- */
+
+.cta-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.primary-cta {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  text-decoration: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.15s;
+}
+.primary-cta:hover { background: var(--color-accent-bright); }
+
+.secondary-form { opacity: 0.85; }

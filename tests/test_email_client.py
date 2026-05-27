@@ -45,3 +45,12 @@ def test_send_confirmation_returns_none_on_failure(monkeypatch):
         # Should swallow exception and return None — signup should not fail because email failed
         result = email_client.send_confirmation("carol@example.com")
     assert result is None
+
+
+def test_compose_welcome_email_body_contains_subject_and_unsubscribe(monkeypatch):
+    monkeypatch.setenv("RESEND_FROM", "team@example.com")
+    msg = email_client.compose_welcome_email(to_email="adam@example.com")
+    assert msg["to"] == ["adam@example.com"]
+    assert "subject" in msg
+    assert "promptiv" in msg["subject"].lower()
+    assert "unsubscribe" in (msg.get("text", "") + msg.get("html", "")).lower()

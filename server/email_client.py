@@ -17,6 +17,7 @@ CONFIRMATION_HTML = """\
 <p>You're on the list.</p>
 <p>We're building Promptiv now. When we have something to show you, you'll be among the first to see it.</p>
 <p>— The Promptiv team</p>
+<p style="color:#888;font-size:12px;">To unsubscribe, reply with the word UNSUBSCRIBE.</p>
 """
 
 CONFIRMATION_TEXT = """\
@@ -25,7 +26,20 @@ You're on the list.
 We're building Promptiv now. When we have something to show you, you'll be among the first to see it.
 
 — The Promptiv team
+
+To unsubscribe, reply with the word UNSUBSCRIBE.
 """
+
+
+def compose_welcome_email(to_email: str) -> dict:
+    """Return a Resend-compatible payload (does not send). Used by /go email gate."""
+    return {
+        "to": [to_email],
+        "from": os.environ.get("RESEND_FROM", "team@mail.distillworks.com"),
+        "subject": "You're on the Promptiv list",
+        "html": CONFIRMATION_HTML,
+        "text": CONFIRMATION_TEXT,
+    }
 
 
 def send_confirmation(email: str) -> Optional[Any]:

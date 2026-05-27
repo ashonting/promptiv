@@ -61,18 +61,22 @@
         </article>
       </div>
 
-      <form id="signup-form" class="form" action="/api/signup" method="POST" novalidate>
+      <div class="cta-row">
+        <a class="btn primary-cta" href="/go">Try it now →</a>
+      </div>
+
+      <form id="signup-form" class="form secondary-form" action="/api/signup" method="POST" novalidate>
         <label for="email-input" class="sr-only">Your email</label>
         <input
           id="email-input"
           class="email"
           type="email"
           name="email"
-          placeholder="your email"
+          placeholder="or drop your email to follow along"
           required
           autocomplete="email"
         />
-        <button class="btn" type="submit">Where can I go?</button>
+        <button class="btn-secondary" type="submit">Notify me</button>
       </form>
 
       <section class="thanks" id="thanks-state" hidden>
