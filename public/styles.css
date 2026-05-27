@@ -450,6 +450,12 @@ textarea.text-input { min-height: 64px; resize: vertical; }
   outline: none;
   border-color: var(--color-accent);
 }
+/* OS-rendered dropdown options inherit the select's color but render on a
+   white system background by default — white-on-white. Force readable colors. */
+.form-label select option {
+  background: #1a1a1f;
+  color: var(--color-text-primary);
+}
 
 .trip-nights {
   border: 1px solid var(--color-border);

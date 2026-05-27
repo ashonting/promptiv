@@ -49,7 +49,7 @@ CONFIRMATION_HTML = """\
                 </tr>
               </table>
               <p style="margin:18px 0 18px;color:#5a5a62;font-size:13.5px;">
-                We'll email you when prices shift on trips you've explored and when new features ship. No spam.
+                We'll email you when new features ship. No spam, no inbox noise.
               </p>
               <p style="margin:0;color:#1a1a1f;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15.5px;">
                 — Adam
@@ -78,8 +78,7 @@ how many days you have, and we'll surface 5-8 ideas with the catch on each.
 
 Try it now: https://promptiv.io/go
 
-We'll email you when prices shift on trips you've explored and when new features
-ship. No spam.
+We'll email you when new features ship. No spam, no inbox noise.
 
 — Adam
 

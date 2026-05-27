@@ -77,8 +77,13 @@ def refresh_all(
     """Iterate every route x trip_length. Returns summary metrics."""
     conn = sqlite3.connect(db_path)
     try:
+        # Round-robin by destination so every origin gets coverage quickly.
+        # Iterating origin-major means /go is empty for 11/12 origins for hours
+        # while we churn through the first origin. Destination-major spreads
+        # load: after ~3 minutes every origin has data for one destination.
+        # Also less likely to trigger Google's per-origin rate limiter.
         pairs = conn.execute(
-            "SELECT origin_iata, dest_iata FROM routes ORDER BY origin_iata, dest_iata"
+            "SELECT origin_iata, dest_iata FROM routes ORDER BY dest_iata, origin_iata"
         ).fetchall()
     finally:
         conn.close()
