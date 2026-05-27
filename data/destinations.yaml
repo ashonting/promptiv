@@ -472,8 +472,8 @@
   lng: -58.3816
   novelty_score: 3
   base_catch: |
-    Seasons flip. December is summer, July is winter. Inflation makes prices change weekly.
-    Bring USD cash for the favorable blue rate exchange.
+    Seasons flip. December is summer, July is winter. Milei lifted currency controls in April 2025
+    so the blue-rate dollar arbitrage is gone. Cards work fine; rates within 2-3% of each other now.
 
 - iata: GIG
   city: Rio de Janeiro
@@ -799,7 +799,7 @@
   lng: -0.1278
   novelty_score: 1
   base_catch: |
-    Heathrow to central London is 50 minutes via the Elizabeth line, £12.80.
+    Heathrow to central London is 30-40 minutes via the Elizabeth line, £15.50 single (raised March 2026).
     Most pubs stop serving food by 9pm. Theater tickets are cheapest day-of from the TKTS booth.
 
 - iata: EDI
@@ -1045,12 +1045,12 @@
   best_months: [5, 6, 7, 8, 9]
   avg_daily_cost_usd: 45
   safety_tier: 1
-  currency: BGN
+  currency: EUR
   lat: 42.6977
   lng: 23.3219
   novelty_score: 5
   base_catch: |
-    Cheapest capital in the EU. Beer is $1.50 and a sit-down meal runs $10.
+    Cheapest capital in the EU. Bulgaria adopted the euro January 2026 so prices are still settling.
     Vitosha Mountain on the south edge of town has hiking and a ski lift.
 
 - iata: BEG
@@ -1359,7 +1359,7 @@
   novelty_score: 1
   base_catch: |
     Ubud is over-touristed and traffic-jammed. The cheap flights land you at DPS late evening.
-    Visa on arrival is $35 cash USD. Bring exact change.
+    Visa on arrival is $35 (cash or card); add a $10 Bali Tourist Levy on arrival as of 2024.
 
 - iata: MNL
   city: Manila
@@ -1533,7 +1533,7 @@
   lng: 51.5310
   novelty_score: 4
   base_catch: |
-    Most travelers see it on a Qatar Airways layover (free transit visa available).
+    Visa-free for US passports up to 90 days (extended from 30 in late 2024).
     Summer temperatures hit 115°F. Souq Waqif is the one walkable evening district.
 
 - iata: AMM
@@ -1552,7 +1552,7 @@
   lng: 35.9284
   novelty_score: 4
   base_catch: |
-    Jordan Pass ($90) covers visa fee + Petra + 40 sites. Worth it if staying 3+ days.
+    Jordan Pass ($99-113 depending on Petra days) covers visa fee + 40 sites. Worth it if staying 3+ nights.
     Petra is 3 hours by car; Wadi Rum desert is 4. Plan both as overnights.
 
 - iata: MCT
@@ -1572,7 +1572,7 @@
   novelty_score: 5
   base_catch: |
     Summer hits 115°F with humidity. October to April is the only viable window.
-    eVisa required, $13, takes a few minutes online. Modest dress mandatory.
+    Visa-free for US passports up to 14 days; eVisa needed only for longer. Modest dress mandatory.
 
 # ============================================================
 # BATCH 6: Africa (8)
@@ -1594,7 +1594,7 @@
   lng: 31.2357
   novelty_score: 3
   base_catch: |
-    eVisa is $25 online. Tourist scams around the pyramids are constant. Hire a guide upfront.
+    eVisa is $30 online (raised from $25 in March 2026). Tourist scams around the pyramids are constant; hire a guide upfront.
     July-September hits 100°F and Cairo's air is thick with dust.
 
 - iata: CMN
@@ -1708,7 +1708,7 @@
   lng: 39.2026
   novelty_score: 4
   base_catch: |
-    Visa on arrival is $100 USD cash. Yellow fever vaccine required if arriving via mainland Africa.
+    Visa on arrival is $100 USD cash plus a $44 mandatory inbound insurance fee (added late 2024).
     Rainy season (March-May) shuts down most beaches and dirt roads.
 
 - iata: DKR
@@ -1788,7 +1788,7 @@
   lng: 174.7633
   novelty_score: 3
   base_catch: |
-    NZeTA required ($23 NZD) + $35 IVL tourist levy. Apply online before flying.
+    NZeTA ($23 NZD) plus the $100 NZD IVL tourist levy (raised from $35 in late 2024). Apply online before flying.
     Most travelers leave Auckland for the South Island after 1-2 days. Internal flights add up fast.
 
 - iata: NAN
