@@ -1,1 +1,1948 @@
-[]
+# Promptiv v1 destinations.
+# 100 destinations across 8 regional batches.
+# All `iata` codes verified against fli.Airport (7,835-entry enum).
+# Vibes restricted to spec §8: beach, city, nature, food, nightlife, history, off-grid.
+# Voice rules: second-person, present tense, specific facts, no marketing.
+# See spec §8 and plan Task 5 for full curation rules.
+
+# ============================================================
+# BATCH 1: Latin America & Caribbean (25)
+# ============================================================
+
+# --- Mexico (6) ---
+
+- iata: CUN
+  city: Cancún
+  country: Mexico
+  country_code: MX
+  region: Latin America
+  vibes: [beach, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 110
+  safety_tier: 2
+  currency: MXN
+  lat: 21.1619
+  lng: -86.8515
+  novelty_score: 1
+  base_catch: |
+    Spring break runs March 1 to April 15. The all-inclusive beaches you see in ads are private.
+    Public access is south of the hotel zone.
+
+- iata: MEX
+  city: Mexico City
+  country: Mexico
+  country_code: MX
+  region: Latin America
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [3, 4, 5, 10, 11]
+  avg_daily_cost_usd: 65
+  safety_tier: 2
+  currency: MXN
+  lat: 19.4326
+  lng: -99.1332
+  novelty_score: 3
+  base_catch: |
+    It's a city, not a beach. February nights drop to 45°F.
+    Locals skip Reforma after 11pm.
+
+- iata: PVR
+  city: Puerto Vallarta
+  country: Mexico
+  country_code: MX
+  region: Latin America
+  vibes: [beach, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 90
+  safety_tier: 2
+  currency: MXN
+  lat: 20.6534
+  lng: -105.2253
+  novelty_score: 2
+  base_catch: |
+    Humidity climbs after May. The old town beach is rocky, not sand.
+    Bus the 20 minutes south to Mismaloya for swimming.
+
+- iata: SJD
+  city: Los Cabos
+  country: Mexico
+  country_code: MX
+  region: Latin America
+  vibes: [beach, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [10, 11, 12, 1, 2, 3, 4, 5]
+  avg_daily_cost_usd: 160
+  safety_tier: 2
+  currency: MXN
+  lat: 22.8909
+  lng: -109.9167
+  novelty_score: 2
+  base_catch: |
+    The airport sits 30 miles from town and the taxi runs $80+. Book a shuttle in advance.
+    Pacific-side beaches have undertow and aren't swimmable.
+
+- iata: OAX
+  city: Oaxaca
+  country: Mexico
+  country_code: MX
+  region: Latin America
+  vibes: [food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [10, 11, 12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 55
+  safety_tier: 2
+  currency: MXN
+  lat: 17.0732
+  lng: -96.7266
+  novelty_score: 4
+  base_catch: |
+    Most flights connect through Mexico City. Day of the Dead bookings sell out by July.
+    Mezcal-tasting tours take a full day.
+
+- iata: MID
+  city: Mérida
+  country: Mexico
+  country_code: MX
+  region: Latin America
+  vibes: [history, food, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 50
+  safety_tier: 1
+  currency: MXN
+  lat: 20.9674
+  lng: -89.5926
+  novelty_score: 4
+  base_catch: |
+    Summer hits 100°F with heat indexes higher. Cenotes are 30-60 minutes outside the city.
+    English is rare outside Centro.
+
+# --- Caribbean, no passport (3) ---
+
+- iata: SJU
+  city: San Juan
+  country: Puerto Rico
+  country_code: PR
+  region: Caribbean
+  vibes: [beach, food, history]
+  passport_required: false
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 100
+  safety_tier: 2
+  currency: USD
+  lat: 18.4655
+  lng: -66.1057
+  novelty_score: 2
+  base_catch: |
+    Old San Juan is a cruise stop, busiest 10am to 4pm. Beaches are east in Isla Verde, not downtown.
+    Hurricane season runs June through November.
+
+- iata: STT
+  city: St. Thomas
+  country: U.S. Virgin Islands
+  country_code: VI
+  region: Caribbean
+  vibes: [beach]
+  passport_required: false
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 180
+  safety_tier: 2
+  currency: USD
+  lat: 18.3358
+  lng: -64.8963
+  novelty_score: 2
+  base_catch: |
+    Cruise ships dock three days most weeks and Charlotte Amalie empties when they leave.
+    Magens Bay charges $5 entry. Rentals require driving on the left.
+
+- iata: STX
+  city: St. Croix
+  country: U.S. Virgin Islands
+  country_code: VI
+  region: Caribbean
+  vibes: [beach, off-grid, nature]
+  passport_required: false
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 140
+  safety_tier: 2
+  currency: USD
+  lat: 17.7256
+  lng: -64.7474
+  novelty_score: 3
+  base_catch: |
+    No direct flights from most US airports. You'll connect through Miami or San Juan.
+    Christiansted and Frederiksted are 17 miles apart and you need a car.
+
+# --- Caribbean, passport (5) ---
+
+- iata: PUJ
+  city: Punta Cana
+  country: Dominican Republic
+  country_code: DO
+  region: Caribbean
+  vibes: [beach, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 130
+  safety_tier: 2
+  currency: DOP
+  lat: 18.5601
+  lng: -68.3725
+  novelty_score: 1
+  base_catch: |
+    Almost everything is all-inclusive resort. Leaving the resort means paid excursions or unreliable taxis.
+    Off-resort food can cause stomach issues.
+
+- iata: MBJ
+  city: Montego Bay
+  country: Jamaica
+  country_code: JM
+  region: Caribbean
+  vibes: [beach, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 120
+  safety_tier: 3
+  currency: JMD
+  lat: 18.4762
+  lng: -77.8939
+  novelty_score: 2
+  base_catch: |
+    The State Department flags Montego Bay for crime outside resort zones.
+    Most travelers don't leave the all-inclusive. The 90-minute drive to Negril is the better beach.
+
+- iata: NAS
+  city: Nassau
+  country: Bahamas
+  country_code: BS
+  region: Caribbean
+  vibes: [beach, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 150
+  safety_tier: 2
+  currency: BSD
+  lat: 25.0389
+  lng: -77.4661
+  novelty_score: 2
+  base_catch: |
+    Nassau is a cruise port and downtown is built around that. Atlantis is on a separate island and costs extra.
+    Real beach time means leaving Paradise Island.
+
+- iata: AUA
+  city: Oranjestad
+  country: Aruba
+  country_code: AW
+  region: Caribbean
+  vibes: [beach]
+  passport_required: true
+  visa_required_us: false
+  best_months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  avg_daily_cost_usd: 170
+  safety_tier: 1
+  currency: AWG
+  lat: 12.5186
+  lng: -70.0359
+  novelty_score: 2
+  base_catch: |
+    It's outside the hurricane belt and prices reflect that year-round.
+    The island is desert, not jungle. Bring sun protection that holds up to wind.
+
+- iata: BGI
+  city: Bridgetown
+  country: Barbados
+  country_code: BB
+  region: Caribbean
+  vibes: [beach, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 150
+  safety_tier: 1
+  currency: BBD
+  lat: 13.0978
+  lng: -59.6184
+  novelty_score: 3
+  base_catch: |
+    Most direct flights run from JFK, MIA, and CLT. Other US hubs connect.
+    West coast is calm and pricey, east coast is wild and untouristed.
+
+# --- Central America (4) ---
+
+- iata: SJO
+  city: San José
+  country: Costa Rica
+  country_code: CR
+  region: Latin America
+  vibes: [nature, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 80
+  safety_tier: 2
+  currency: CRC
+  lat: 9.9281
+  lng: -84.0907
+  novelty_score: 2
+  base_catch: |
+    San José itself isn't the destination. Plan 3-4 hours of driving to reach beaches, volcanoes, or cloud forest.
+    Domestic flights to coastal towns add cost and time.
+
+- iata: PTY
+  city: Panama City
+  country: Panama
+  country_code: PA
+  region: Latin America
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 75
+  safety_tier: 2
+  currency: USD
+  lat: 8.9824
+  lng: -79.5199
+  novelty_score: 3
+  base_catch: |
+    Currency is USD so cash works, but Casco Viejo prices match Miami.
+    The canal takes a half day. Beaches need a 90-minute drive out.
+
+- iata: GUA
+  city: Guatemala City
+  country: Guatemala
+  country_code: GT
+  region: Latin America
+  vibes: [history, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 45
+  safety_tier: 3
+  currency: GTQ
+  lat: 14.6349
+  lng: -90.5069
+  novelty_score: 4
+  base_catch: |
+    Skip the capital and shuttle straight to Antigua, 45 minutes out.
+    State Department flags Zone 18 and parts of Zone 1. Tikal needs an internal flight or 8-hour drive.
+
+- iata: RTB
+  city: Roatán
+  country: Honduras
+  country_code: HN
+  region: Caribbean
+  vibes: [beach, off-grid, nature]
+  passport_required: true
+  visa_required_us: false
+  best_months: [2, 3, 4, 5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 70
+  safety_tier: 2
+  currency: HNL
+  lat: 16.3169
+  lng: -86.5230
+  novelty_score: 3
+  base_catch: |
+    Honduras's mainland is high-risk but Roatán island runs separately.
+    West Bay is the beach, West End is the town. Direct US flights run mostly on weekends.
+
+# --- South America (7) ---
+
+- iata: MDE
+  city: Medellín
+  country: Colombia
+  country_code: CO
+  region: Latin America
+  vibes: [city, nightlife, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 6, 7, 8]
+  avg_daily_cost_usd: 50
+  safety_tier: 3
+  currency: COP
+  lat: 6.2442
+  lng: -75.5812
+  novelty_score: 3
+  base_catch: |
+    El Poblado is the safe tourist neighborhood. Outside it, scopolamine drugging is a real risk on dating apps.
+    Don't take unmarked taxis.
+
+- iata: CTG
+  city: Cartagena
+  country: Colombia
+  country_code: CO
+  region: Latin America
+  vibes: [beach, history, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 75
+  safety_tier: 2
+  currency: COP
+  lat: 10.3997
+  lng: -75.5144
+  novelty_score: 3
+  base_catch: |
+    City beaches are murky and crowded. Real beach means a boat to the Rosario Islands, $40-80 round trip.
+    Walled city humidity stays above 80% year-round.
+
+- iata: BOG
+  city: Bogotá
+  country: Colombia
+  country_code: CO
+  region: Latin America
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 7, 8]
+  avg_daily_cost_usd: 55
+  safety_tier: 3
+  currency: COP
+  lat: 4.7110
+  lng: -74.0721
+  novelty_score: 3
+  base_catch: |
+    At 8,600 feet altitude hits you for the first day. Nights drop to 45°F year-round.
+    Stick to Chapinero, Usaquén, and La Candelaria during daylight only.
+
+- iata: LIM
+  city: Lima
+  country: Peru
+  country_code: PE
+  region: Latin America
+  vibes: [food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 60
+  safety_tier: 2
+  currency: PEN
+  lat: -12.0464
+  lng: -77.0428
+  novelty_score: 3
+  base_catch: |
+    Coastal fog called garúa covers the city May through November. The sun barely appears.
+    Stick to Miraflores and Barranco. The Pacific is too cold and rough for swimming.
+
+- iata: CUZ
+  city: Cusco
+  country: Peru
+  country_code: PE
+  region: Latin America
+  vibes: [history, nature]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 7, 8, 9, 10]
+  avg_daily_cost_usd: 65
+  safety_tier: 2
+  currency: PEN
+  lat: -13.5319
+  lng: -71.9675
+  novelty_score: 3
+  base_catch: |
+    At 11,150 feet altitude sickness is common day one. Plan a slow first day.
+    Machu Picchu tickets and train seats sell out two months ahead in peak season.
+
+- iata: EZE
+  city: Buenos Aires
+  country: Argentina
+  country_code: AR
+  region: Latin America
+  vibes: [city, food, nightlife, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [3, 4, 5, 9, 10, 11]
+  avg_daily_cost_usd: 70
+  safety_tier: 2
+  currency: ARS
+  lat: -34.6037
+  lng: -58.3816
+  novelty_score: 3
+  base_catch: |
+    Seasons flip. December is summer, July is winter. Inflation makes prices change weekly.
+    Bring USD cash for the favorable blue rate exchange.
+
+- iata: GIG
+  city: Rio de Janeiro
+  country: Brazil
+  country_code: BR
+  region: Latin America
+  vibes: [beach, city, nightlife]
+  passport_required: true
+  visa_required_us: true
+  best_months: [4, 5, 6, 7, 8, 9, 10, 11]
+  avg_daily_cost_usd: 90
+  safety_tier: 3
+  currency: BRL
+  lat: -22.9068
+  lng: -43.1729
+  novelty_score: 2
+  base_catch: |
+    US passport holders need an eVisa as of April 2025. Apply 2 weeks ahead.
+    Phone snatching on Copacabana and Ipanema is constant. Carry a decoy.
+
+# ============================================================
+# BATCH 2: Western Europe (20)
+# ============================================================
+
+- iata: LIS
+  city: Lisbon
+  country: Portugal
+  country_code: PT
+  region: Western Europe
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 95
+  safety_tier: 1
+  currency: EUR
+  lat: 38.7223
+  lng: -9.1393
+  novelty_score: 3
+  base_catch: |
+    Hills are steep enough that you'll wear out shoes. Trams are tourist-only.
+    August empties out for vacation. February rains 15+ days.
+
+- iata: OPO
+  city: Porto
+  country: Portugal
+  country_code: PT
+  region: Western Europe
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 80
+  safety_tier: 1
+  currency: EUR
+  lat: 41.1579
+  lng: -8.6291
+  novelty_score: 4
+  base_catch: |
+    Cheaper and quieter than Lisbon. Port wine tastings are across the river in Vila Nova de Gaia.
+    Winter is gray and damp through March.
+
+- iata: MAD
+  city: Madrid
+  country: Spain
+  country_code: ES
+  region: Western Europe
+  vibes: [city, food, history, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 110
+  safety_tier: 1
+  currency: EUR
+  lat: 40.4168
+  lng: -3.7038
+  novelty_score: 2
+  base_catch: |
+    Lunch is 2-4pm, dinner starts 9pm. Restaurants empty before then.
+    August half the city closes for vacation. July hits 100°F.
+
+- iata: BCN
+  city: Barcelona
+  country: Spain
+  country_code: ES
+  region: Western Europe
+  vibes: [beach, city, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 9, 10]
+  avg_daily_cost_usd: 120
+  safety_tier: 2
+  currency: EUR
+  lat: 41.3851
+  lng: 2.1734
+  novelty_score: 1
+  base_catch: |
+    Pickpockets on Las Ramblas and the metro work in teams. Use a front pocket or money belt.
+    Sagrada Família tickets sell out 2-3 weeks ahead in peak season.
+
+- iata: FCO
+  city: Rome
+  country: Italy
+  country_code: IT
+  region: Western Europe
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 130
+  safety_tier: 2
+  currency: EUR
+  lat: 41.9028
+  lng: 12.4964
+  novelty_score: 1
+  base_catch: |
+    August is brutally hot and locals leave. Most non-tourist restaurants close.
+    Vatican lines run 2-3 hours without a reserved ticket.
+
+- iata: VCE
+  city: Venice
+  country: Italy
+  country_code: IT
+  region: Western Europe
+  vibes: [city, history, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 9, 10]
+  avg_daily_cost_usd: 160
+  safety_tier: 1
+  currency: EUR
+  lat: 45.4408
+  lng: 12.3155
+  novelty_score: 2
+  base_catch: |
+    Day-trippers pay a €5 entry fee April through July. Acqua alta floods St. Mark's October to January.
+    Hotels on the islands cost more but you skip the crowds at night.
+
+- iata: NAP
+  city: Naples
+  country: Italy
+  country_code: IT
+  region: Western Europe
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 85
+  safety_tier: 2
+  currency: EUR
+  lat: 40.8518
+  lng: 14.2681
+  novelty_score: 4
+  base_catch: |
+    Traffic is anarchic and pickpocketing is constant near the train station.
+    Pizza margherita costs €5 from a place locals queue at. Pompeii is a 30-minute train.
+
+- iata: NCE
+  city: Nice
+  country: France
+  country_code: FR
+  region: Western Europe
+  vibes: [beach, city, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 9, 10]
+  avg_daily_cost_usd: 150
+  safety_tier: 1
+  currency: EUR
+  lat: 43.7102
+  lng: 7.2620
+  novelty_score: 3
+  base_catch: |
+    The beach is pebbles, not sand. July and August are wall-to-wall.
+    Monaco and Cannes are 20-40 minutes by train.
+
+- iata: CDG
+  city: Paris
+  country: France
+  country_code: FR
+  region: Western Europe
+  vibes: [city, food, history, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 9, 10]
+  avg_daily_cost_usd: 150
+  safety_tier: 2
+  currency: EUR
+  lat: 48.8566
+  lng: 2.3522
+  novelty_score: 1
+  base_catch: |
+    Metro pickpockets work tourists at Châtelet, Anvers, and the Eiffel Tower.
+    August closes half the small restaurants. Skip-the-line tickets pay for themselves.
+
+- iata: AMS
+  city: Amsterdam
+  country: Netherlands
+  country_code: NL
+  region: Western Europe
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 140
+  safety_tier: 1
+  currency: EUR
+  lat: 52.3676
+  lng: 4.9041
+  novelty_score: 2
+  base_catch: |
+    Bike lanes are real lanes. Walk in one and you'll get hit.
+    Coffeeshops sell weed; cafés sell coffee. Anne Frank House sells out two months out.
+
+- iata: BER
+  city: Berlin
+  country: Germany
+  country_code: DE
+  region: Western Europe
+  vibes: [city, nightlife, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 100
+  safety_tier: 1
+  currency: EUR
+  lat: 52.5200
+  lng: 13.4050
+  novelty_score: 2
+  base_catch: |
+    Clubs like Berghain run all weekend with strict door policies. Wear black, go solo, look bored.
+    Winter is gray and -5°C is normal.
+
+- iata: MUC
+  city: Munich
+  country: Germany
+  country_code: DE
+  region: Western Europe
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 130
+  safety_tier: 1
+  currency: EUR
+  lat: 48.1351
+  lng: 11.5820
+  novelty_score: 3
+  base_catch: |
+    Oktoberfest runs mid-September to early October. Hotel prices triple and beer tents are reserved months out.
+    The Alps are an hour south by train.
+
+- iata: CPH
+  city: Copenhagen
+  country: Denmark
+  country_code: DK
+  region: Western Europe
+  vibes: [city, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8]
+  avg_daily_cost_usd: 170
+  safety_tier: 1
+  currency: DKK
+  lat: 55.6761
+  lng: 12.5683
+  novelty_score: 3
+  base_catch: |
+    Winter daylight runs about 7 hours and it's gray most of them.
+    Restaurants close around 10pm on weeknights. Bikes outnumber cars.
+
+- iata: HEL
+  city: Helsinki
+  country: Finland
+  country_code: FI
+  region: Western Europe
+  vibes: [city, nature, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [6, 7, 8]
+  avg_daily_cost_usd: 140
+  safety_tier: 1
+  currency: EUR
+  lat: 60.1699
+  lng: 24.9384
+  novelty_score: 4
+  base_catch: |
+    December has 6 hours of daylight. June has 19.
+    A sauna culture means most hotels and Airbnbs include one. Use it.
+
+- iata: DUB
+  city: Dublin
+  country: Ireland
+  country_code: IE
+  region: Western Europe
+  vibes: [city, food, nightlife, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 130
+  safety_tier: 1
+  currency: EUR
+  lat: 53.3498
+  lng: -6.2603
+  novelty_score: 2
+  base_catch: |
+    Pubs close around 1am and brunch culture is weak. Plan around dinner.
+    Cliffs of Moher are a 3.5-hour drive each way.
+
+- iata: LHR
+  city: London
+  country: United Kingdom
+  country_code: GB
+  region: Western Europe
+  vibes: [city, food, history, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 180
+  safety_tier: 2
+  currency: GBP
+  lat: 51.5074
+  lng: -0.1278
+  novelty_score: 1
+  base_catch: |
+    Heathrow to central London is 50 minutes via the Elizabeth line, £12.80.
+    Most pubs stop serving food by 9pm. Theater tickets are cheapest day-of from the TKTS booth.
+
+- iata: EDI
+  city: Edinburgh
+  country: United Kingdom
+  country_code: GB
+  region: Western Europe
+  vibes: [city, history, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 130
+  safety_tier: 1
+  currency: GBP
+  lat: 55.9533
+  lng: -3.1883
+  novelty_score: 3
+  base_catch: |
+    August is the Fringe Festival. Prices double and hotels book a year ahead.
+    Wind off the Firth makes a 50°F day feel like 40°F. Layers, always.
+
+- iata: KEF
+  city: Reykjavík
+  country: Iceland
+  country_code: IS
+  region: Western Europe
+  vibes: [nature, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [6, 7, 8, 9]
+  avg_daily_cost_usd: 200
+  safety_tier: 1
+  currency: ISK
+  lat: 64.1466
+  lng: -21.9426
+  novelty_score: 3
+  base_catch: |
+    November to February has 4-5 hours of daylight. The Northern Lights need a clear night.
+    A grocery-store sandwich costs $15. Bus to Blue Lagoon, don't taxi.
+
+- iata: ATH
+  city: Athens
+  country: Greece
+  country_code: GR
+  region: Western Europe
+  vibes: [city, history, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 9, 10]
+  avg_daily_cost_usd: 90
+  safety_tier: 2
+  currency: EUR
+  lat: 37.9838
+  lng: 23.7275
+  novelty_score: 2
+  base_catch: |
+    July and August hit 100°F and the Acropolis closes mid-day for safety.
+    Most travelers leave for the islands after 2 days. Ferries to Santorini are 5-8 hours.
+
+- iata: VIE
+  city: Vienna
+  country: Austria
+  country_code: AT
+  region: Western Europe
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 120
+  safety_tier: 1
+  currency: EUR
+  lat: 48.2082
+  lng: 16.3738
+  novelty_score: 3
+  base_catch: |
+    Sundays most shops close. Plan groceries Saturday or use the train station market.
+    Coffeehouses are an institution. You're allowed to sit for hours on one cup.
+
+# ============================================================
+# BATCH 3: Eastern Europe & Caucasus (12)
+# ============================================================
+
+- iata: PRG
+  city: Prague
+  country: Czechia
+  country_code: CZ
+  region: Eastern Europe
+  vibes: [city, food, history, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 70
+  safety_tier: 1
+  currency: CZK
+  lat: 50.0755
+  lng: 14.4378
+  novelty_score: 2
+  base_catch: |
+    The center is a bachelor-party stop on weekends. Locals avoid Wenceslas Square at night.
+    Charles Bridge is empty before 7am and packed by 10.
+
+- iata: BUD
+  city: Budapest
+  country: Hungary
+  country_code: HU
+  region: Eastern Europe
+  vibes: [city, history, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 65
+  safety_tier: 1
+  currency: HUF
+  lat: 47.4979
+  lng: 19.0402
+  novelty_score: 3
+  base_catch: |
+    Ruin bars in District VII are the nightlife. Szimpla Kert opens at 3pm and gets touristy after 10.
+    Thermal baths are real institutions; bring flip-flops.
+
+- iata: KRK
+  city: Kraków
+  country: Poland
+  country_code: PL
+  region: Eastern Europe
+  vibes: [city, history, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 55
+  safety_tier: 1
+  currency: PLN
+  lat: 50.0647
+  lng: 19.9450
+  novelty_score: 3
+  base_catch: |
+    Auschwitz tours leave from town and take a full day. Book 2-3 weeks ahead.
+    Winter goes to -10°C and stays gray until March.
+
+- iata: WAW
+  city: Warsaw
+  country: Poland
+  country_code: PL
+  region: Eastern Europe
+  vibes: [city, history, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 60
+  safety_tier: 1
+  currency: PLN
+  lat: 52.2297
+  lng: 21.0122
+  novelty_score: 4
+  base_catch: |
+    The "Old Town" is a postwar reconstruction. Praga district is the actual old neighborhood.
+    Most cheap flights from the US connect via Frankfurt or Munich.
+
+- iata: BTS
+  city: Bratislava
+  country: Slovakia
+  country_code: SK
+  region: Eastern Europe
+  vibes: [city, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 60
+  safety_tier: 1
+  currency: EUR
+  lat: 48.1486
+  lng: 17.1077
+  novelty_score: 5
+  base_catch: |
+    Most travelers do it as a Vienna day trip. The old town is small enough for a half day.
+    No direct flights from the US; you'll connect through Vienna or Prague.
+
+- iata: LJU
+  city: Ljubljana
+  country: Slovenia
+  country_code: SI
+  region: Eastern Europe
+  vibes: [city, nature, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 75
+  safety_tier: 1
+  currency: EUR
+  lat: 46.0569
+  lng: 14.5058
+  novelty_score: 5
+  base_catch: |
+    Lake Bled is an hour by bus. The cake-shaped island in the middle is the iconic shot.
+    Capital city center bans cars and is fully walkable.
+
+- iata: ZAG
+  city: Zagreb
+  country: Croatia
+  country_code: HR
+  region: Eastern Europe
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 9, 10]
+  avg_daily_cost_usd: 70
+  safety_tier: 1
+  currency: EUR
+  lat: 45.8150
+  lng: 15.9819
+  novelty_score: 4
+  base_catch: |
+    Most travelers skip Zagreb for the coast. That makes it quieter and cheaper.
+    Plitvice Lakes are 2 hours away by bus and worth a day.
+
+- iata: SPU
+  city: Split
+  country: Croatia
+  country_code: HR
+  region: Eastern Europe
+  vibes: [beach, history, city]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 9, 10]
+  avg_daily_cost_usd: 100
+  safety_tier: 1
+  currency: EUR
+  lat: 43.5081
+  lng: 16.4402
+  novelty_score: 3
+  base_catch: |
+    July and August are punishing crowds and prices. Cruise ships dump 5,000 day-trippers a day.
+    Ferries to Hvar and Vis leave from the main port and sell out by mid-morning.
+
+- iata: SOF
+  city: Sofia
+  country: Bulgaria
+  country_code: BG
+  region: Eastern Europe
+  vibes: [city, food, history, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 45
+  safety_tier: 1
+  currency: BGN
+  lat: 42.6977
+  lng: 23.3219
+  novelty_score: 5
+  base_catch: |
+    Cheapest capital in the EU. Beer is $1.50 and a sit-down meal runs $10.
+    Vitosha Mountain on the south edge of town has hiking and a ski lift.
+
+- iata: BEG
+  city: Belgrade
+  country: Serbia
+  country_code: RS
+  region: Eastern Europe
+  vibes: [city, nightlife, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 50
+  safety_tier: 2
+  currency: RSD
+  lat: 44.7866
+  lng: 20.4489
+  novelty_score: 4
+  base_catch: |
+    Floating clubs on the river (splavovi) are the nightlife. Most don't open until 11pm.
+    Skadarlija is the touristy bohemian street; locals eat one block over.
+
+- iata: TBS
+  city: Tbilisi
+  country: Georgia
+  country_code: GE
+  region: Caucasus
+  vibes: [city, food, history, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 9, 10]
+  avg_daily_cost_usd: 35
+  safety_tier: 1
+  currency: GEL
+  lat: 41.7151
+  lng: 44.8271
+  novelty_score: 5
+  base_catch: |
+    Visa-free for 365 days. Wine and sulfur baths cost less than coffee in your city.
+    Russian is more common than English. Cash is king outside Tbilisi.
+
+- iata: EVN
+  city: Yerevan
+  country: Armenia
+  country_code: AM
+  region: Caucasus
+  vibes: [city, food, history, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 9, 10]
+  avg_daily_cost_usd: 40
+  safety_tier: 2
+  currency: AMD
+  lat: 40.1792
+  lng: 44.4991
+  novelty_score: 5
+  base_catch: |
+    Five-hour layover in Istanbul or Doha is standard. Currency is dram, mostly cash outside Yerevan.
+    Mount Ararat dominates the skyline but it's technically across the closed Turkish border.
+
+# ============================================================
+# BATCH 4: Asia (18)
+# ============================================================
+
+- iata: NRT
+  city: Tokyo
+  country: Japan
+  country_code: JP
+  region: Asia
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [3, 4, 10, 11]
+  avg_daily_cost_usd: 130
+  safety_tier: 1
+  currency: JPY
+  lat: 35.6762
+  lng: 139.6503
+  novelty_score: 2
+  base_catch: |
+    Cherry blossom prices jump 40% mid-March to mid-April. Flights land at Narita, 60-90 minutes from central Tokyo.
+    Most restaurants are cash-only and small (8-12 seats). IC cards (Suica) work for everything else.
+
+- iata: KIX
+  city: Osaka
+  country: Japan
+  country_code: JP
+  region: Asia
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [3, 4, 10, 11]
+  avg_daily_cost_usd: 110
+  safety_tier: 1
+  currency: JPY
+  lat: 34.6937
+  lng: 135.5023
+  novelty_score: 3
+  base_catch: |
+    Kyoto is 30 minutes by Shinkansen. Most do it as a day trip and miss the temples that close by 5pm.
+    Dotonbori is the photo street; eat one street over.
+
+- iata: ICN
+  city: Seoul
+  country: South Korea
+  country_code: KR
+  region: Asia
+  vibes: [city, food, nightlife, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 9, 10]
+  avg_daily_cost_usd: 100
+  safety_tier: 1
+  currency: KRW
+  lat: 37.5665
+  lng: 126.9780
+  novelty_score: 3
+  base_catch: |
+    Incheon airport sits 90 minutes from central Seoul. Take the AREX express train, not a taxi.
+    K-ETA visa waiver requires an online form 72 hours before flying.
+
+- iata: TPE
+  city: Taipei
+  country: Taiwan
+  country_code: TW
+  region: Asia
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [3, 4, 10, 11]
+  avg_daily_cost_usd: 75
+  safety_tier: 1
+  currency: TWD
+  lat: 25.0330
+  lng: 121.5654
+  novelty_score: 4
+  base_catch: |
+    Summer is monsoon humid and typhoons hit July to September.
+    Night markets are the food scene. Bring cash; many stalls don't take cards.
+
+- iata: HKG
+  city: Hong Kong
+  country: Hong Kong
+  country_code: HK
+  region: Asia
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [10, 11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 140
+  safety_tier: 1
+  currency: HKD
+  lat: 22.3193
+  lng: 114.1694
+  novelty_score: 2
+  base_catch: |
+    Humidity drops November to February. Other months stay 85% and don't break.
+    The MTR closes around 1am. Late taxis to Kowloon double after midnight.
+
+- iata: BKK
+  city: Bangkok
+  country: Thailand
+  country_code: TH
+  region: Asia
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2]
+  avg_daily_cost_usd: 50
+  safety_tier: 2
+  currency: THB
+  lat: 13.7563
+  lng: 100.5018
+  novelty_score: 2
+  base_catch: |
+    Rainy season is June through October and floods can shut down districts for days.
+    Taxis must use the meter; if they refuse, walk away. Use Grab or the BTS skytrain.
+
+- iata: HKT
+  city: Phuket
+  country: Thailand
+  country_code: TH
+  region: Asia
+  vibes: [beach, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 70
+  safety_tier: 2
+  currency: THB
+  lat: 7.8804
+  lng: 98.3923
+  novelty_score: 2
+  base_catch: |
+    Patong is the party strip and chaotic. Quieter beaches are 30+ minutes by taxi to the north.
+    Monsoon (May to October) makes some beaches unswimmable.
+
+- iata: CNX
+  city: Chiang Mai
+  country: Thailand
+  country_code: TH
+  region: Asia
+  vibes: [food, nature, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2]
+  avg_daily_cost_usd: 40
+  safety_tier: 1
+  currency: THB
+  lat: 18.7883
+  lng: 98.9853
+  novelty_score: 4
+  base_catch: |
+    Burning season (Feb-Apr) blankets the city in toxic smoke. AQI hits 200+.
+    Ethical elephant sanctuaries exist; most riding camps don't.
+
+- iata: SGN
+  city: Ho Chi Minh City
+  country: Vietnam
+  country_code: VN
+  region: Asia
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: true
+  best_months: [12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 45
+  safety_tier: 2
+  currency: VND
+  lat: 10.8231
+  lng: 106.6297
+  novelty_score: 3
+  base_catch: |
+    US passport holders need an eVisa, $25, takes 3 business days.
+    Scooter snatching of phones and bags happens. Keep them away from the street side.
+
+- iata: HAN
+  city: Hanoi
+  country: Vietnam
+  country_code: VN
+  region: Asia
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: true
+  best_months: [10, 11, 12, 3, 4]
+  avg_daily_cost_usd: 40
+  safety_tier: 2
+  currency: VND
+  lat: 21.0285
+  lng: 105.8542
+  novelty_score: 3
+  base_catch: |
+    US passport holders need an eVisa, $25, 3 business days.
+    Crossing streets means walking slowly into traffic at constant speed. Stopping is what gets you hit.
+
+- iata: KUL
+  city: Kuala Lumpur
+  country: Malaysia
+  country_code: MY
+  region: Asia
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8]
+  avg_daily_cost_usd: 55
+  safety_tier: 2
+  currency: MYR
+  lat: 3.1390
+  lng: 101.6869
+  novelty_score: 4
+  base_catch: |
+    Equatorial heat means 90°F and humid year-round. Afternoon thunderstorms are the rule.
+    Food courts in malls are the cheapest local eats. Cash for street stalls, card for malls.
+
+- iata: SIN
+  city: Singapore
+  country: Singapore
+  country_code: SG
+  region: Asia
+  vibes: [city, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [2, 3, 4]
+  avg_daily_cost_usd: 140
+  safety_tier: 1
+  currency: SGD
+  lat: 1.3521
+  lng: 103.8198
+  novelty_score: 2
+  base_catch: |
+    Most expensive city in Asia, on par with NYC. Hawker centers are the cheap food (under $5/meal).
+    Gum is illegal; vapes too. Chewing them is a $1,000 fine.
+
+- iata: DPS
+  city: Denpasar
+  country: Indonesia
+  country_code: ID
+  region: Asia
+  vibes: [beach, nature, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9]
+  avg_daily_cost_usd: 55
+  safety_tier: 2
+  currency: IDR
+  lat: -8.7467
+  lng: 115.1672
+  novelty_score: 1
+  base_catch: |
+    Ubud is over-touristed and traffic-jammed. The cheap flights land you at DPS late evening.
+    Visa on arrival is $35 cash USD. Bring exact change.
+
+- iata: MNL
+  city: Manila
+  country: Philippines
+  country_code: PH
+  region: Asia
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [12, 1, 2, 3]
+  avg_daily_cost_usd: 50
+  safety_tier: 3
+  currency: PHP
+  lat: 14.5995
+  lng: 120.9842
+  novelty_score: 3
+  base_catch: |
+    Traffic is among the worst on Earth. Plan 2-3 hours for anything across the metro.
+    Most travelers use Manila only as a gateway to Palawan or Cebu.
+
+- iata: DEL
+  city: Delhi
+  country: India
+  country_code: IN
+  region: Asia
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: true
+  best_months: [10, 11, 12, 1, 2]
+  avg_daily_cost_usd: 35
+  safety_tier: 3
+  currency: INR
+  lat: 28.7041
+  lng: 77.1025
+  novelty_score: 2
+  base_catch: |
+    US passport holders need an eVisa, ~$25, applied online. November-January AQI often exceeds 300.
+    Tourist scams at the airport taxi rank are constant. Prepaid taxi booths inside the terminal only.
+
+- iata: GOI
+  city: Goa
+  country: India
+  country_code: IN
+  region: Asia
+  vibes: [beach, nightlife, off-grid]
+  passport_required: true
+  visa_required_us: true
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 40
+  safety_tier: 2
+  currency: INR
+  lat: 15.2993
+  lng: 74.1240
+  novelty_score: 3
+  base_catch: |
+    North Goa (Baga, Calangute) is party-tourism; South Goa (Palolem, Agonda) is quiet.
+    Monsoon (June-September) closes most beach shacks and the sea turns brown.
+
+- iata: KTM
+  city: Kathmandu
+  country: Nepal
+  country_code: NP
+  region: Asia
+  vibes: [nature, off-grid, history]
+  passport_required: true
+  visa_required_us: true
+  best_months: [10, 11, 3, 4]
+  avg_daily_cost_usd: 35
+  safety_tier: 2
+  currency: NPR
+  lat: 27.7172
+  lng: 85.3240
+  novelty_score: 4
+  base_catch: |
+    Visa on arrival is $30 cash USD for 15 days. Bring two passport photos.
+    Air pollution rivals Delhi. Plan trekking around it, not city sightseeing.
+
+- iata: MLE
+  city: Malé
+  country: Maldives
+  country_code: MV
+  region: Asia
+  vibes: [beach, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 280
+  safety_tier: 1
+  currency: MVR
+  lat: 4.1755
+  lng: 73.5093
+  novelty_score: 4
+  base_catch: |
+    Resort transfers (seaplane or speedboat) add $200-500 to the trip and aren't included.
+    Public-island guesthouses cost a tenth of resorts but no alcohol and modest dress.
+
+# ============================================================
+# BATCH 5: Middle East (6)
+# ============================================================
+
+- iata: IST
+  city: Istanbul
+  country: Turkey
+  country_code: TR
+  region: Middle East
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 9, 10]
+  avg_daily_cost_usd: 70
+  safety_tier: 2
+  currency: TRY
+  lat: 41.0082
+  lng: 28.9784
+  novelty_score: 2
+  base_catch: |
+    The new airport sits 90 minutes from Sultanahmet. Use the M11 metro, not a taxi.
+    Tourist carpet shops use long charm offensives. Saying "no" three times is normal.
+
+- iata: AYT
+  city: Antalya
+  country: Turkey
+  country_code: TR
+  region: Middle East
+  vibes: [beach, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 60
+  safety_tier: 2
+  currency: TRY
+  lat: 36.8969
+  lng: 30.7133
+  novelty_score: 4
+  base_catch: |
+    July-August hits 100°F and the beaches fill with Russian and German package tourists.
+    Most direct US flights connect via Istanbul. Roman ruins (Aspendos, Perge) need a car.
+
+- iata: DXB
+  city: Dubai
+  country: United Arab Emirates
+  country_code: AE
+  region: Middle East
+  vibes: [city, beach, nightlife]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 160
+  safety_tier: 1
+  currency: AED
+  lat: 25.2048
+  lng: 55.2708
+  novelty_score: 2
+  base_catch: |
+    June to September hits 110°F. Most outdoor activity stops between 11am and 5pm.
+    Alcohol is sold only in licensed bars and hotels. Public drunkenness is a fine or jail.
+
+- iata: DOH
+  city: Doha
+  country: Qatar
+  country_code: QA
+  region: Middle East
+  vibes: [city, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 130
+  safety_tier: 1
+  currency: QAR
+  lat: 25.2854
+  lng: 51.5310
+  novelty_score: 4
+  base_catch: |
+    Most travelers see it on a Qatar Airways layover (free transit visa available).
+    Summer temperatures hit 115°F. Souq Waqif is the one walkable evening district.
+
+- iata: AMM
+  city: Amman
+  country: Jordan
+  country_code: JO
+  region: Middle East
+  vibes: [city, history, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [3, 4, 5, 9, 10]
+  avg_daily_cost_usd: 70
+  safety_tier: 2
+  currency: JOD
+  lat: 31.9454
+  lng: 35.9284
+  novelty_score: 4
+  base_catch: |
+    Jordan Pass ($90) covers visa fee + Petra + 40 sites. Worth it if staying 3+ days.
+    Petra is 3 hours by car; Wadi Rum desert is 4. Plan both as overnights.
+
+- iata: MCT
+  city: Muscat
+  country: Oman
+  country_code: OM
+  region: Middle East
+  vibes: [city, beach, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 110
+  safety_tier: 1
+  currency: OMR
+  lat: 23.5859
+  lng: 58.4059
+  novelty_score: 5
+  base_catch: |
+    Summer hits 115°F with humidity. October to April is the only viable window.
+    eVisa required, $13, takes a few minutes online. Modest dress mandatory.
+
+# ============================================================
+# BATCH 6: Africa (8)
+# ============================================================
+
+- iata: CAI
+  city: Cairo
+  country: Egypt
+  country_code: EG
+  region: Africa
+  vibes: [city, history, food]
+  passport_required: true
+  visa_required_us: true
+  best_months: [10, 11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 50
+  safety_tier: 3
+  currency: EGP
+  lat: 30.0444
+  lng: 31.2357
+  novelty_score: 3
+  base_catch: |
+    eVisa is $25 online. Tourist scams around the pyramids are constant. Hire a guide upfront.
+    July-September hits 100°F and Cairo's air is thick with dust.
+
+- iata: CMN
+  city: Casablanca
+  country: Morocco
+  country_code: MA
+  region: Africa
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 60
+  safety_tier: 2
+  currency: MAD
+  lat: 33.5731
+  lng: -7.5898
+  novelty_score: 3
+  base_catch: |
+    Casablanca itself isn't the destination. Most travelers train 3 hours to Marrakech or Fez.
+    The Hassan II Mosque is the one major sight; tour required and English slots fill early.
+
+- iata: RAK
+  city: Marrakech
+  country: Morocco
+  country_code: MA
+  region: Africa
+  vibes: [city, food, history]
+  passport_required: true
+  visa_required_us: false
+  best_months: [3, 4, 5, 10, 11]
+  avg_daily_cost_usd: 65
+  safety_tier: 2
+  currency: MAD
+  lat: 31.6295
+  lng: -7.9811
+  novelty_score: 3
+  base_catch: |
+    July-August hits 110°F in the medina. Souks are deliberately maze-like; expect to get lost.
+    Hire a guide for the first afternoon to learn the layout. Tap water is not drinkable.
+
+- iata: TUN
+  city: Tunis
+  country: Tunisia
+  country_code: TN
+  region: Africa
+  vibes: [city, history, beach]
+  passport_required: true
+  visa_required_us: false
+  best_months: [4, 5, 6, 9, 10]
+  avg_daily_cost_usd: 50
+  safety_tier: 2
+  currency: TND
+  lat: 36.8065
+  lng: 10.1815
+  novelty_score: 5
+  base_catch: |
+    No direct US flights; you'll connect via Paris, Frankfurt, or Istanbul.
+    Carthage ruins and Sidi Bou Said are 30 minutes by light rail from Tunis.
+
+- iata: CPT
+  city: Cape Town
+  country: South Africa
+  country_code: ZA
+  region: Africa
+  vibes: [city, beach, nature, food]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 80
+  safety_tier: 3
+  currency: ZAR
+  lat: -33.9249
+  lng: 18.4241
+  novelty_score: 3
+  base_catch: |
+    Seasons flip. December is summer. Petty crime is high; don't walk after dark.
+    Table Mountain closes when wind exceeds the cable car limit. Plan it day one.
+
+- iata: NBO
+  city: Nairobi
+  country: Kenya
+  country_code: KE
+  region: Africa
+  vibes: [city, nature, off-grid]
+  passport_required: true
+  visa_required_us: true
+  best_months: [6, 7, 8, 9, 1, 2]
+  avg_daily_cost_usd: 90
+  safety_tier: 3
+  currency: KES
+  lat: -1.2921
+  lng: 36.8219
+  novelty_score: 3
+  base_catch: |
+    eTA required, $33 online, 3 business days. Most travelers use Nairobi as a safari gateway.
+    Don't walk between neighborhoods after dark. Uber is widely used and reliable.
+
+- iata: ZNZ
+  city: Zanzibar
+  country: Tanzania
+  country_code: TZ
+  region: Africa
+  vibes: [beach, off-grid, history]
+  passport_required: true
+  visa_required_us: true
+  best_months: [6, 7, 8, 9, 12, 1, 2]
+  avg_daily_cost_usd: 80
+  safety_tier: 2
+  currency: TZS
+  lat: -6.1659
+  lng: 39.2026
+  novelty_score: 4
+  base_catch: |
+    Visa on arrival is $100 USD cash. Yellow fever vaccine required if arriving via mainland Africa.
+    Rainy season (March-May) shuts down most beaches and dirt roads.
+
+- iata: DKR
+  city: Dakar
+  country: Senegal
+  country_code: SN
+  region: Africa
+  vibes: [city, food, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [11, 12, 1, 2, 3, 4]
+  avg_daily_cost_usd: 70
+  safety_tier: 2
+  currency: XOF
+  lat: 14.7167
+  lng: -17.4677
+  novelty_score: 5
+  base_catch: |
+    French is essential; English barely exists outside hotels.
+    Most direct US flights are weekly from JFK and IAD. Île de Gorée ferry is 20 minutes.
+
+# ============================================================
+# BATCH 7: Oceania (4)
+# ============================================================
+
+- iata: SYD
+  city: Sydney
+  country: Australia
+  country_code: AU
+  region: Oceania
+  vibes: [beach, city, food]
+  passport_required: true
+  visa_required_us: true
+  best_months: [10, 11, 12, 2, 3, 4]
+  avg_daily_cost_usd: 140
+  safety_tier: 1
+  currency: AUD
+  lat: -33.8688
+  lng: 151.2093
+  novelty_score: 2
+  base_catch: |
+    eTA required ($20 AUD via Visitor App). Flight from US west coast is 14 hours minimum.
+    Seasons flip. December is summer. Bondi is iconic and packed; Bronte is the local pick.
+
+- iata: MEL
+  city: Melbourne
+  country: Australia
+  country_code: AU
+  region: Oceania
+  vibes: [city, food, nightlife]
+  passport_required: true
+  visa_required_us: true
+  best_months: [10, 11, 12, 2, 3, 4]
+  avg_daily_cost_usd: 130
+  safety_tier: 1
+  currency: AUD
+  lat: -37.8136
+  lng: 144.9631
+  novelty_score: 3
+  base_catch: |
+    eTA required. Weather changes 4 times a day; locals call it "4 seasons in one day."
+    Laneway coffee culture is real. Most cafés close by 4pm.
+
+- iata: AKL
+  city: Auckland
+  country: New Zealand
+  country_code: NZ
+  region: Oceania
+  vibes: [nature, off-grid, city]
+  passport_required: true
+  visa_required_us: true
+  best_months: [11, 12, 1, 2, 3]
+  avg_daily_cost_usd: 130
+  safety_tier: 1
+  currency: NZD
+  lat: -36.8485
+  lng: 174.7633
+  novelty_score: 3
+  base_catch: |
+    NZeTA required ($23 NZD) + $35 IVL tourist levy. Apply online before flying.
+    Most travelers leave Auckland for the South Island after 1-2 days. Internal flights add up fast.
+
+- iata: NAN
+  city: Nadi
+  country: Fiji
+  country_code: FJ
+  region: Oceania
+  vibes: [beach, nature, off-grid]
+  passport_required: true
+  visa_required_us: false
+  best_months: [5, 6, 7, 8, 9, 10]
+  avg_daily_cost_usd: 120
+  safety_tier: 1
+  currency: FJD
+  lat: -17.7765
+  lng: 177.4356
+  novelty_score: 4
+  base_catch: |
+    Nadi is the airport town, not the beach. Real beach means a 2-hour boat or domestic flight to the outer islands.
+    Cyclone season runs November to April; some resorts close.
+
+# ============================================================
+# BATCH 8: US Domestic (7)
+# ============================================================
+
+- iata: LAS
+  city: Las Vegas
+  country: United States
+  country_code: US
+  region: North America
+  vibes: [city, nightlife, food]
+  passport_required: false
+  visa_required_us: false
+  best_months: [3, 4, 5, 10, 11]
+  avg_daily_cost_usd: 130
+  safety_tier: 2
+  currency: USD
+  lat: 36.1699
+  lng: -115.1398
+  novelty_score: 1
+  base_catch: |
+    June-August hits 110°F+ and the pool decks are the only outdoor option.
+    Resort fees (not in headline rates) add $35-50/night per room. Read the booking fine print.
+
+- iata: MCO
+  city: Orlando
+  country: United States
+  country_code: US
+  region: North America
+  vibes: [city]
+  passport_required: false
+  visa_required_us: false
+  best_months: [3, 4, 11, 12]
+  avg_daily_cost_usd: 150
+  safety_tier: 1
+  currency: USD
+  lat: 28.5383
+  lng: -81.3792
+  novelty_score: 1
+  base_catch: |
+    July-August adds afternoon thunderstorms daily and 90°F+ heat. Parks book out spring break and Christmas.
+    Disney park-hopper costs $200+/day per adult. Universal is cheaper and shorter lines.
+
+- iata: HNL
+  city: Honolulu
+  country: United States
+  country_code: US
+  region: North America
+  vibes: [beach, nature, history]
+  passport_required: false
+  visa_required_us: false
+  best_months: [4, 5, 9, 10]
+  avg_daily_cost_usd: 200
+  safety_tier: 1
+  currency: USD
+  lat: 21.3099
+  lng: -157.8581
+  novelty_score: 2
+  base_catch: |
+    Flight from the East Coast is 10+ hours one way. Most travelers don't realize.
+    Waikiki is the cliché; the North Shore is the better beach. 1.5-hour drive.
+
+- iata: SAN
+  city: San Diego
+  country: United States
+  country_code: US
+  region: North America
+  vibes: [beach, city, food]
+  passport_required: false
+  visa_required_us: false
+  best_months: [3, 4, 5, 9, 10, 11]
+  avg_daily_cost_usd: 140
+  safety_tier: 1
+  currency: USD
+  lat: 32.7157
+  lng: -117.1611
+  novelty_score: 2
+  base_catch: |
+    "May Gray" and "June Gloom" mean morning fog through noon most days late spring.
+    Tijuana is 30 minutes south; bring a passport and it's a different trip in an afternoon.
+
+- iata: AUS
+  city: Austin
+  country: United States
+  country_code: US
+  region: North America
+  vibes: [city, food, nightlife]
+  passport_required: false
+  visa_required_us: false
+  best_months: [3, 4, 10, 11]
+  avg_daily_cost_usd: 130
+  safety_tier: 2
+  currency: USD
+  lat: 30.2672
+  lng: -97.7431
+  novelty_score: 3
+  base_catch: |
+    SXSW (March) and ACL (October) double hotel prices and book out months ahead.
+    Summer hits 100°F+ for weeks. Most Austinites leave town in August.
+
+- iata: JAC
+  city: Jackson Hole
+  country: United States
+  country_code: US
+  region: North America
+  vibes: [nature, off-grid]
+  passport_required: false
+  visa_required_us: false
+  best_months: [6, 7, 8, 9, 1, 2]
+  avg_daily_cost_usd: 220
+  safety_tier: 1
+  currency: USD
+  lat: 43.4799
+  lng: -110.7624
+  novelty_score: 4
+  base_catch: |
+    Lodging in town is expensive; Teton Village (the ski base) is more so.
+    Yellowstone is 1 hour north; Grand Teton starts at the town edge. Wildlife crosses roads.
+
+- iata: ANC
+  city: Anchorage
+  country: United States
+  country_code: US
+  region: North America
+  vibes: [nature, off-grid]
+  passport_required: false
+  visa_required_us: false
+  best_months: [6, 7, 8]
+  avg_daily_cost_usd: 160
+  safety_tier: 2
+  currency: USD
+  lat: 61.2181
+  lng: -149.9003
+  novelty_score: 4
+  base_catch: |
+    Summer days have 19+ hours of daylight. Winter has 5-6 and -10°F is normal.
+    Most "Alaska" experiences need a 2-4 hour drive (Seward, Denali) or a small-plane flight.
