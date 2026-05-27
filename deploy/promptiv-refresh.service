@@ -13,7 +13,7 @@ EnvironmentFile=/srv/promptiv/.env
 ExecStart=/srv/promptiv/.venv/bin/python -m server.price_refresh
 StandardOutput=append:/var/log/promptiv/price-refresh.log
 StandardError=append:/var/log/promptiv/price-refresh.log
-TimeoutSec=28800
+TimeoutSec=43200
 
 [Install]
 WantedBy=multi-user.target

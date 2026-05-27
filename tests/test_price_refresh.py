@@ -64,3 +64,59 @@ def test_refresh_all_iterates_all_routes(seeded_db):
     summary = refresh_all(seeded_db, fli, trip_lengths=[7], sleep_seconds=0)
     assert summary["routes_attempted"] == 2
     assert summary["snapshots_written"] > 0
+
+
+class _RateLimitOnceClient:
+    """Test double: raises rate-limit FliError on first call, then succeeds."""
+
+    def __init__(self, real_client):
+        self._real = real_client
+        self.calls = 0
+
+    def search_dates(self, *args, **kwargs):
+        self.calls += 1
+        if self.calls == 1:
+            from server.fli_client import FliError
+            raise FliError("fli call failed for X->Y: Google Flights returned an error response (HTTP 429). The request may be malformed, rate-limited, or blocked.")
+        return self._real.search_dates(*args, **kwargs)
+
+
+class _NonRetryableErrorClient:
+    """Test double: raises a non-rate-limit FliError always."""
+
+    def search_dates(self, *args, **kwargs):
+        from server.fli_client import FliError
+        raise FliError("fli call failed for X->Y: bad gateway 502")
+
+
+def test_refresh_route_retries_on_rate_limit(seeded_db):
+    """A 429 on the first call triggers a single retry that succeeds."""
+    fli = _RateLimitOnceClient(FliClient(mock=True))
+    refresh_route(
+        seeded_db, fli, origin="BNA", dest="MEX", trip_nights=7,
+        start_date=date(2026, 6, 1), end_date=date(2026, 8, 30),
+        rate_limit_backoff=0,  # don't actually sleep during the test
+    )
+
+    assert fli.calls == 2, "expected first call (rate-limited) + retry"
+    conn = sqlite3.connect(seeded_db)
+    try:
+        count = conn.execute(
+            "SELECT COUNT(*) FROM price_snapshots WHERE origin_iata='BNA' AND dest_iata='MEX' AND trip_nights=7"
+        ).fetchone()[0]
+    finally:
+        conn.close()
+    assert count > 0
+
+
+def test_refresh_route_does_not_retry_on_non_rate_limit_error(seeded_db):
+    """A non-rate-limit error propagates immediately without retry."""
+    from server.fli_client import FliError
+
+    fli = _NonRetryableErrorClient()
+    with pytest.raises(FliError):
+        refresh_route(
+            seeded_db, fli, origin="BNA", dest="MEX", trip_nights=7,
+            start_date=date(2026, 6, 1), end_date=date(2026, 8, 30),
+            rate_limit_backoff=0,
+        )

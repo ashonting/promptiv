@@ -21,6 +21,13 @@ log = logging.getLogger("price_refresh")
 SLEEP_BETWEEN_CALLS = 6.0
 WINDOW_DAYS = 90
 TRIP_LENGTHS = (5, 7, 10)
+RATE_LIMIT_BACKOFF_SECONDS = 60.0
+
+
+def _is_rate_limit_error(err: Exception) -> bool:
+    """Detect HTTP 429 / rate-limit signals in an FliError message."""
+    msg = str(err).lower()
+    return "429" in msg or "rate-limit" in msg or "rate limit" in msg
 
 
 def refresh_route(
@@ -31,9 +38,26 @@ def refresh_route(
     trip_nights: int,
     start_date: date,
     end_date: date,
+    rate_limit_backoff: float = RATE_LIMIT_BACKOFF_SECONDS,
 ) -> int:
-    """Refresh one (origin, dest, nights) tuple. Returns rows inserted."""
-    results = fli.search_dates(origin, dest, start_date, end_date, trip_nights)
+    """Refresh one (origin, dest, nights) tuple. Returns rows inserted.
+
+    Retries once with a `rate_limit_backoff`-second sleep if fli signals
+    HTTP 429 or rate-limit on the first attempt. Other FliErrors propagate
+    to the caller without retry.
+    """
+    try:
+        results = fli.search_dates(origin, dest, start_date, end_date, trip_nights)
+    except FliError as e:
+        if not _is_rate_limit_error(e):
+            raise
+        log.info(
+            "%s->%s %dn rate-limited; backing off %.0fs and retrying once",
+            origin, dest, trip_nights, rate_limit_backoff,
+        )
+        time.sleep(rate_limit_backoff)
+        results = fli.search_dates(origin, dest, start_date, end_date, trip_nights)
+
     if not results:
         return 0
 
