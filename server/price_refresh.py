@@ -88,6 +88,20 @@ def refresh_route(
                 ),
             )
             inserted += 1
+
+        # Append one summary row to durable price_history (append-only, never
+        # deleted). price_snapshots above is ephemeral ("what's cheap to book
+        # now"); price_history accumulates the route's cheapest observed price
+        # per scan day, which is what baseline computation reads. INSERT OR
+        # REPLACE keyed on the UNIQUE constraint means re-running the same day
+        # overwrites rather than duplicates.
+        cheapest = min(r.total_price_usd for r in results)
+        conn.execute(
+            """INSERT OR REPLACE INTO price_history
+               (origin_iata, dest_iata, trip_nights, cheapest_price_usd, observed_date, source)
+               VALUES (?, ?, ?, ?, date('now'), 'fli')""",
+            (origin, dest, trip_nights, cheapest),
+        )
         conn.commit()
         return inserted
     finally:

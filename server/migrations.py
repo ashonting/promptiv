@@ -84,11 +84,23 @@ CREATE TABLE IF NOT EXISTS searches (
     created_at    TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS price_history (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    origin_iata         TEXT NOT NULL,
+    dest_iata           TEXT NOT NULL,
+    trip_nights         INTEGER NOT NULL,
+    cheapest_price_usd  INTEGER NOT NULL,
+    observed_date       TEXT NOT NULL,
+    source              TEXT NOT NULL DEFAULT 'fli',
+    UNIQUE(origin_iata, dest_iata, trip_nights, observed_date, source)
+);
+
 CREATE INDEX IF NOT EXISTS idx_signups_email ON signups(email);
 CREATE INDEX IF NOT EXISTS idx_qualifiers_signup_id ON qualifiers(signup_id);
 CREATE INDEX IF NOT EXISTS idx_snapshots_lookup ON price_snapshots(origin_iata, total_price_usd, trip_nights, departure_date);
 CREATE INDEX IF NOT EXISTS idx_snapshots_dest ON price_snapshots(dest_iata, fetched_at);
 CREATE INDEX IF NOT EXISTS idx_searches_session ON searches(session_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_price_history_route ON price_history(origin_iata, dest_iata, trip_nights, observed_date);
 """
 
 

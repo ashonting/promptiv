@@ -38,6 +38,47 @@ def test_refresh_route_inserts_snapshots(seeded_db):
     assert count > 0
 
 
+def test_refresh_route_appends_price_history(seeded_db):
+    """Each scan appends one summary row to the append-only price_history table."""
+    fli = FliClient(mock=True)
+    refresh_route(seeded_db, fli, origin="BNA", dest="MEX", trip_nights=7,
+                  start_date=date(2026, 6, 1), end_date=date(2026, 8, 30))
+
+    conn = sqlite3.connect(seeded_db)
+    try:
+        rows = conn.execute(
+            "SELECT cheapest_price_usd, observed_date, source FROM price_history "
+            "WHERE origin_iata='BNA' AND dest_iata='MEX' AND trip_nights=7"
+        ).fetchall()
+        snapshot_min = conn.execute(
+            "SELECT MIN(total_price_usd) FROM price_snapshots "
+            "WHERE origin_iata='BNA' AND dest_iata='MEX' AND trip_nights=7"
+        ).fetchone()[0]
+    finally:
+        conn.close()
+    assert len(rows) == 1, "exactly one history row per scan"
+    assert rows[0][0] == snapshot_min, "history cheapest matches the scan's min snapshot"
+    assert rows[0][2] == "fli"
+
+
+def test_refresh_route_history_no_duplicate_same_day(seeded_db):
+    """Re-running the same route the same day overwrites, doesn't duplicate."""
+    fli = FliClient(mock=True)
+    for _ in range(3):
+        refresh_route(seeded_db, fli, origin="BNA", dest="MEX", trip_nights=7,
+                      start_date=date(2026, 6, 1), end_date=date(2026, 8, 30))
+
+    conn = sqlite3.connect(seeded_db)
+    try:
+        n = conn.execute(
+            "SELECT COUNT(*) FROM price_history "
+            "WHERE origin_iata='BNA' AND dest_iata='MEX' AND trip_nights=7"
+        ).fetchone()[0]
+    finally:
+        conn.close()
+    assert n == 1, "same-day re-runs collapse to one row via UNIQUE + INSERT OR REPLACE"
+
+
 def test_refresh_route_clears_old_snapshots_for_same_route(seeded_db):
     """Re-running for the same (origin, dest, nights) replaces older rows."""
     fli = FliClient(mock=True)
