@@ -12,17 +12,17 @@
 }
 
 :root {
-  --color-bg: #0a0a0e;
-  --color-accent: #a78bfa;
-  --color-accent-bright: #c4b5fd;
-  --color-text-primary: #f7f5ef;
-  --color-text-secondary: #d8d4f0;
-  --color-text-muted: #8a8a92;
-  --color-text-faint: rgba(255, 255, 255, 0.32);
-  --color-border: rgba(255, 255, 255, 0.10);
-  --color-border-hover: rgba(255, 255, 255, 0.22);
-  --color-card-bg: rgba(167, 139, 250, 0.06);
-  --color-card-border: rgba(167, 139, 250, 0.18);
+  --color-bg: #ffffff;
+  --color-accent: #8b5cf6;
+  --color-accent-bright: #7c3aed;
+  --color-text-primary: #1a1924;
+  --color-text-secondary: #3a3850;
+  --color-text-muted: #6e6c7a;
+  --color-text-faint: rgba(26, 25, 36, 0.42);
+  --color-border: rgba(26, 25, 36, 0.12);
+  --color-border-hover: rgba(26, 25, 36, 0.22);
+  --color-card-bg: rgba(167, 139, 250, 0.08);
+  --color-card-border: rgba(167, 139, 250, 0.30);
 
   --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -50,8 +50,8 @@ body { position: relative; overflow-x: hidden; }
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(circle at 18% 28%, rgba(167, 139, 250, 0.18) 0%, transparent 38%),
-    radial-gradient(circle at 82% 72%, rgba(94, 103, 234, 0.14) 0%, transparent 42%);
+    radial-gradient(circle at 18% 28%, rgba(167, 139, 250, 0.12) 0%, transparent 38%),
+    radial-gradient(circle at 82% 72%, rgba(94, 103, 234, 0.10) 0%, transparent 42%);
 }
 
 .frame {
