@@ -72,6 +72,8 @@ Each is a self-contained build with its own detailed task plan when we start it.
 
 ### W2 — City hub generator + pages (Phase 1)
 - A generator that, per origin, builds the hub content from the engine: hero = verified pairing; sections = cheapest-total weeks, surprising long-haul reach, vibe cuts, best-months. Render as static pages under `public/<city>` (nginx-served, SEO) or Flask-templated. Email capture component (writes to `signups`, tagged by city).
+- **Per-hub SEO (each hub is a real indexed page):** unique `<title>`, meta description, OG tags, and `rel=canonical` pointing at its own `/<city>` URL. This is the actual ranking surface, the homepage geo-swap (W3) does not rank; these do.
+- **Sitemap regeneration is part of this generator.** The indexing foundation already exists (`public/robots.txt`, `public/sitemap.xml`, canonicals, shipped 2026-06-04, currently 4 pages). When the generator runs, it **rewrites `public/sitemap.xml` to include every `/<city>` hub** (plus `/`, `/go`, `/privacy`, `/terms`) with a fresh `<lastmod>`. So the sitemap stays complete and current automatically as hubs ship or refresh, no manual edits. (One-time human action remains: submit the sitemap in Google Search Console.)
 - Prove on **BNA first**, then scale to 12 via the generator (it's a cron, your ACE pattern).
 - Honest constraint to design in: content must read editorial, not algorithmic (anti-slop), the insight + `base_catch` voice carry it.
 
@@ -87,7 +89,7 @@ Each is a self-contained build with its own detailed task plan when we start it.
 
 - **Durable creative + monitored facts** (W1): the pairing is curated and stable; the numbers are re-verified nightly; a surface shows a pairing only while true; a broken fact alerts a human, never silently rewrites. This protects the brand creative while keeping every claim honest.
 - **Anti-slop:** automation generates the data; the *insight and voice* make it not-slop. A hub that reads like an algorithm made it won't rank or get shared. Lean on the real angle (total-cost flip, surprising reach) + the `base_catch` editorial voice.
-- **SEO reality:** "cheap trips from [city]" is competitive. The hubs win on the unique angle + *freshness* (most cheap-trip content is static listicles; ours updates with live-ish prices). Ranking takes time; don't expect instant traffic.
+- **SEO reality:** "cheap trips from [city]" is competitive. The hubs win on the unique angle + *freshness* (most cheap-trip content is static listicles; ours updates with live-ish prices). Ranking takes time; don't expect instant traffic. **Indexing foundation is in place** (robots.txt, sitemap.xml, per-page canonicals, shipped 2026-06-04); W2's generator keeps the sitemap current as hubs ship, and submitting it to Search Console is the one human step.
 - **Data caveats:** dollar figures rest on ~1 week of baseline + *estimated* ground costs. Present the *pairing* as the durable creative and the numbers as directional ("about $820") until the archive deepens. `fare_observations` (just added) is what makes the figures and deal-detection trustworthy over time.
 - **Not doing:** live hotel/activity aggregation; serving cities outside the 12 (add later); auto-rewriting curated pairings.
 - **Cost:** $0 net new. MaxMind GeoLite2 is free/local; Resend already in use; the engine is a cron on the existing droplet (mind its 1 GB RAM, the work is I/O, not memory).
