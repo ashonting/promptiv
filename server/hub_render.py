@@ -75,6 +75,7 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
   <link rel="canonical" href="{_esc(canonical)}" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/styles.css" />
   <style>
     .hub-hero {{ margin-bottom: 8px; }}
