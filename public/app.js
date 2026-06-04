@@ -116,7 +116,11 @@
 
   function showThanks() {
     document.getElementById('signup-form').classList.add('is-hidden');
-    document.getElementById('thanks-state').hidden = false;
+    var thanks = document.getElementById('thanks-state');
+    if (thanks) { thanks.hidden = false; return; }
+    // Hub pages have no qualifier flow — just show the inline confirmation.
+    var confirm = document.getElementById('signup-confirm');
+    if (confirm) confirm.hidden = false;
   }
 
   function initSignupForm() {
@@ -133,10 +137,17 @@
       btn.disabled = true;
       btn.textContent = '…';
 
+      // Hub pages carry a hidden hub_city so signups can be attributed to the city.
+      var payload = { email: email };
+      var hubCity = form.querySelector('input[name="hub_city"]');
+      if (hubCity && hubCity.value) payload.hub_city = hubCity.value;
+
       fetch('/api/signup', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
+        // Accept JSON so the server returns the signup_id instead of a 303 redirect
+        // to /thanks.html (the no-JS fallback). Without this the success path never runs.
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
       })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
       .then(function (res) {

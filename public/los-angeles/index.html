@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cheap trips from Los Angeles | Promptiv</title>
+  <meta name="description" content="A week in Oaxaca costs less than a week in Los Cabos. See where your budget actually reaches from Los Angeles, total trip cost, not just airfare." />
+
+  <meta property="og:title" content="Cheap trips from Los Angeles | Promptiv" />
+  <meta property="og:description" content="A week in Oaxaca costs less than a week in Los Cabos. See where your budget actually reaches from Los Angeles, total trip cost, not just airfare." />
+  <meta property="og:url" content="https://promptiv.io/los-angeles" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="canonical" href="https://promptiv.io/los-angeles" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .hub-hero { margin-bottom: 8px; }
+    .hub-section { margin: 56px 0 0; }
+    .hub-section h2 {
+      font-family: var(--font-serif); font-weight: 400; font-style: italic;
+      font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 1.1;
+      color: var(--color-text-primary); margin: 0 0 6px;
+    }
+    .hub-section .section-note {
+      font-family: var(--font-sans); font-size: 14px; color: var(--color-text-muted);
+      margin: 0 0 22px; max-width: 56ch; line-height: 1.6;
+    }
+    .trip-list { list-style: none; margin: 0; padding: 0; }
+    .trip {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--color-border);
+    }
+    .trip:last-child { border-bottom: none; }
+    .trip-place { font-family: var(--font-sans); font-size: 16px; color: var(--color-text-primary); }
+    .trip-place .country { color: var(--color-text-muted); font-size: 14px; }
+    .trip-break { display: block; font-size: 12.5px; color: var(--color-text-faint); margin-top: 2px; }
+    .trip-total {
+      font-family: var(--font-serif); font-style: italic; font-size: 1.45rem;
+      color: var(--color-accent-bright); white-space: nowrap;
+    }
+    .vibe-list { list-style: none; margin: 0; padding: 0; }
+    .vibe-row {
+      display: flex; align-items: baseline; gap: 14px; padding: 11px 0;
+      border-bottom: 1px solid var(--color-border); font-family: var(--font-sans);
+    }
+    .vibe-row:last-child { border-bottom: none; }
+    .vibe-tag {
+      font-size: 12px; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--color-text-muted); width: 92px; flex: none;
+    }
+    .vibe-pick { color: var(--color-text-primary); font-size: 15px; }
+    .vibe-pick b { color: var(--color-accent-bright); font-weight: 500; }
+    .hub-back {
+      font-family: var(--font-sans); font-size: 13px; color: var(--color-text-muted);
+      text-decoration: none;
+    }
+    .hub-back:hover { color: var(--color-text-secondary); }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="frame">
+    <header class="top-bar">
+      <div class="brand">Promptiv<span class="brand-dot"></span></div>
+      <a class="hub-back" href="/">&larr; All cities</a>
+    </header>
+
+    <main>
+      <section class="hero hub-hero">
+        <div class="eyebrow"><span>Cheap trips from Los Angeles</span></div>
+        <h1 class="display">A week in <em>Oaxaca</em> costs less than a week in <em>Los Cabos</em>.</h1>
+        <p class="lede">Total trip cost, airfare plus a week on the ground, not just the
+          fare. That's the number that actually decides where you can afford to go.</p>
+        <form id="signup-form" class="form secondary-form" action="/api/signup" method="POST" novalidate>
+          <input type="hidden" name="hub_city" value="Los Angeles" />
+          <label for="email-input" class="sr-only">Your email</label>
+          <input id="email-input" class="email" type="email" name="email"
+                 placeholder="get Los Angeles&rsquo;s cheapest trips, weekly" required autocomplete="email" />
+          <button class="btn-secondary" type="submit">Notify me</button>
+        </form>
+        <p id="signup-confirm" class="lede" hidden>You&rsquo;re on the list. We&rsquo;ll send Los Angeles&rsquo;s cheapest trips weekly.</p>
+      </section>
+
+      <section class="hub-section"><h2>The cheapest weeks from Los Angeles</h2><p class="section-note">Ranked by what the whole week actually costs. A cheap flight to an expensive city loses to a pricier flight somewhere your money goes further.</p><ul class="trip-list"><li class="trip"><span class="trip-place">Mérida<span class="country">, Mexico</span><span class="trip-break">flight $235 + $50/day for a week</span></span><span class="trip-total">$585</span></li><li class="trip"><span class="trip-place">Guatemala City<span class="country">, Guatemala</span><span class="trip-break">flight $287 + $45/day for a week</span></span><span class="trip-total">$602</span></li><li class="trip"><span class="trip-place">Oaxaca<span class="country">, Mexico</span><span class="trip-break">flight $250 + $55/day for a week</span></span><span class="trip-total">$635</span></li><li class="trip"><span class="trip-place">Bogotá<span class="country">, Colombia</span><span class="trip-break">flight $294 + $55/day for a week</span></span><span class="trip-total">$679</span></li><li class="trip"><span class="trip-place">Mexico City<span class="country">, Mexico</span><span class="trip-break">flight $256 + $65/day for a week</span></span><span class="trip-total">$711</span></li><li class="trip"><span class="trip-place">Medellín<span class="country">, Colombia</span><span class="trip-break">flight $507 + $50/day for a week</span></span><span class="trip-total">$857</span></li><li class="trip"><span class="trip-place">Puerto Vallarta<span class="country">, Mexico</span><span class="trip-break">flight $245 + $90/day for a week</span></span><span class="trip-total">$875</span></li><li class="trip"><span class="trip-place">San José<span class="country">, Costa Rica</span><span class="trip-break">flight $368 + $80/day for a week</span></span><span class="trip-total">$928</span></li><li class="trip"><span class="trip-place">Panama City<span class="country">, Panama</span><span class="trip-break">flight $417 + $75/day for a week</span></span><span class="trip-total">$942</span></li><li class="trip"><span class="trip-place">Las Vegas<span class="country">, United States</span><span class="trip-break">flight $50 + $130/day for a week</span></span><span class="trip-total">$960</span></li></ul></section>
+      <section class="hub-section"><h2>Farther than you think, cheaper than you&rsquo;d guess</h2><p class="section-note">Every one of these overseas weeks comes in under a week in Los Cabos ($1,441, all in). Distance is not the same as price.</p><ul class="trip-list"><li class="trip"><span class="trip-place">Kraków<span class="country">, Poland</span><span class="trip-break">flight $624 + $55/day for a week</span></span><span class="trip-total">$1,009</span></li><li class="trip"><span class="trip-place">Warsaw<span class="country">, Poland</span><span class="trip-break">flight $604 + $60/day for a week</span></span><span class="trip-total">$1,024</span></li><li class="trip"><span class="trip-place">Sofia<span class="country">, Bulgaria</span><span class="trip-break">flight $768 + $45/day for a week</span></span><span class="trip-total">$1,083</span></li><li class="trip"><span class="trip-place">Prague<span class="country">, Czechia</span><span class="trip-break">flight $612 + $70/day for a week</span></span><span class="trip-total">$1,102</span></li><li class="trip"><span class="trip-place">Belgrade<span class="country">, Serbia</span><span class="trip-break">flight $754 + $50/day for a week</span></span><span class="trip-total">$1,104</span></li><li class="trip"><span class="trip-place">Budapest<span class="country">, Hungary</span><span class="trip-break">flight $669 + $65/day for a week</span></span><span class="trip-total">$1,124</span></li></ul></section>
+      <section class="hub-section"><h2>Whatever you&rsquo;re after</h2><p class="section-note">The cheapest week, all in, for each kind of trip.</p><ul class="vibe-list"><li class="vibe-row"><span class="vibe-tag">Beach</span><span class="vibe-pick">A week in <b>Puerto Vallarta</b>, $875</span></li><li class="vibe-row"><span class="vibe-tag">Food</span><span class="vibe-pick">A week in <b>Mérida</b>, $585</span></li><li class="vibe-row"><span class="vibe-tag">Nightlife</span><span class="vibe-pick">A week in <b>Medellín</b>, $857</span></li><li class="vibe-row"><span class="vibe-tag">Nature</span><span class="vibe-pick">A week in <b>San José</b>, $928</span></li><li class="vibe-row"><span class="vibe-tag">History</span><span class="vibe-pick">A week in <b>Mérida</b>, $585</span></li></ul></section>
+    </main>
+
+    <footer class="footer">&copy; 2026 Promptiv &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

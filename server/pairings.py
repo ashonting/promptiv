@@ -113,12 +113,15 @@ def verify_all(conn, now: Optional[str] = None) -> dict:
     return counts
 
 
-def get_headline(conn, origin: str) -> Optional[dict]:
+def get_headline(conn, origin: str, display_names: Optional[dict] = None) -> Optional[dict]:
     """The served headline for an origin, or None if the pairing is not verified.
 
     The verified gate is the whole point: an unbacked claim is never published.
-    City names come from the destinations catalog, so the human-facing text stays
-    in sync with the data.
+    City names default to the destinations catalog so the text stays in sync with
+    the data; pass `display_names` (IATA -> common name) to override the few cases
+    where the catalog's airport-city differs from how people say the place
+    (e.g. AUA "Oranjestad" -> "Aruba"). The override is a presentation concern, so
+    the map lives in the consuming layer (see server/hubs.py), not here.
     """
     row = conn.execute(
         "SELECT cheap_iata, anchor_iata, cheap_total_usd, anchor_total_usd, margin_usd "
@@ -127,9 +130,10 @@ def get_headline(conn, origin: str) -> Optional[dict]:
     ).fetchone()
     if row is None:
         return None
+    names = display_names or {}
     cheap_iata, anchor_iata, cheap_total, anchor_total, margin = row
-    cheap_city = _city(conn, cheap_iata)
-    anchor_city = _city(conn, anchor_iata)
+    cheap_city = names.get(cheap_iata) or _city(conn, cheap_iata)
+    anchor_city = names.get(anchor_iata) or _city(conn, anchor_iata)
     if cheap_city is None or anchor_city is None:
         return None
     return {

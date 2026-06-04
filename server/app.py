@@ -127,7 +127,10 @@ def create_app() -> Flask:
 
         ip = request.headers.get("X-Forwarded-For", request.remote_addr or "")
         ip_hash = _hash_ip(ip.split(",")[0].strip()) if ip else None
-        referrer = request.headers.get("Referer")
+        # Hub pages post a hub_city so the signup is attributed to that city;
+        # otherwise fall back to the page URL the browser reports.
+        hub_city = (data.get("hub_city") or "").strip()
+        referrer = f"hub:{hub_city}" if hub_city else request.headers.get("Referer")
 
         signup_id = db.insert_signup(email, ip_hash=ip_hash, referrer=referrer)
         # Email send is best-effort; failures are logged inside the client.

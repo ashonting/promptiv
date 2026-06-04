@@ -15,6 +15,23 @@ def test_signup_creates_row(client):
     assert row is not None
 
 
+def test_signup_tags_hub_city(client, temp_db_path):
+    import sqlite3
+    with patch("server.email_client.send_confirmation", return_value={"id": "msg"}):
+        resp = client.post(
+            "/api/signup",
+            json={"email": "hubfan@example.com", "hub_city": "Nashville"},
+            headers={"Accept": "application/json"},
+        )
+    assert resp.status_code == 200
+    conn = sqlite3.connect(temp_db_path)
+    ref = conn.execute(
+        "SELECT referrer FROM signups WHERE email=?", ("hubfan@example.com",)
+    ).fetchone()[0]
+    conn.close()
+    assert ref == "hub:Nashville"
+
+
 def test_signup_dedup_returns_existing_id(client):
     with patch("server.email_client.send_confirmation", return_value={"id": "msg"}):
         r1 = client.post("/api/signup", json={"email": "bob@example.com"}, headers={"Accept": "application/json"})
