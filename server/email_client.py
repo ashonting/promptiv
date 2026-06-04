@@ -124,3 +124,49 @@ def send_confirmation(email: str) -> Optional[Any]:
     except Exception as e:
         logger.exception("Resend send failed: %s", e)
         return None
+
+
+def send_pairing_alert(at_risk_list: list, to_email: Optional[str] = None) -> Optional[Any]:
+    """Notify the operator that one or more pairing claims need a human look.
+
+    The fact monitor calls this after each refresh with the output of
+    pairings.at_risk(). No-op (returns None) when nothing is at risk or no
+    recipient is configured — the alert is internal, so a missing address just
+    means "don't bother me," not an error worth raising.
+    """
+    if not at_risk_list:
+        return None
+    api_key = os.environ.get("RESEND_API_KEY")
+    sender = os.environ.get("RESEND_FROM")
+    recipient = (
+        to_email
+        or os.environ.get("PAIRING_ALERT_TO")
+        or os.environ.get("RESEND_REPLY_TO")
+    )
+    if not api_key or not sender or not recipient:
+        logger.warning(
+            "pairing alert skipped: need RESEND_API_KEY, RESEND_FROM, and a recipient"
+        )
+        return None
+
+    lines = [
+        f"  {p['origin']}: {p['cheap_iata']} vs {p['anchor_iata']} "
+        f"— {p['reason']} (margin ${p.get('margin_usd')})"
+        for p in at_risk_list
+    ]
+    body = (
+        "These pairing claims broke or got thin against the latest fares. "
+        "Re-pair or re-verify:\n\n" + "\n".join(lines) + "\n"
+    )
+    resend.api_key = api_key
+    payload = {
+        "from": sender,
+        "to": [recipient],
+        "subject": f"Promptiv: {len(at_risk_list)} pairing claim(s) need review",
+        "text": body,
+    }
+    try:
+        return resend.Emails.send(payload)  # type: ignore[arg-type]
+    except Exception as e:
+        logger.exception("pairing alert send failed: %s", e)
+        return None

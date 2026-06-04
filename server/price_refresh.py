@@ -13,6 +13,8 @@ from datetime import date, datetime, timedelta, timezone
 from typing import Iterable
 
 from server.fli_client import FliClient, FliError
+from server import pairings
+from server.email_client import send_pairing_alert
 
 
 log = logging.getLogger("price_refresh")
@@ -189,6 +191,24 @@ def main() -> int:
     mock = os.environ.get("FLI_MOCK") == "1"
     fli = FliClient(mock=mock)
     summary = refresh_all(db_path, fli)
+
+    # Fact monitor: re-seed the curated pairings (idempotent) and re-verify every
+    # claim against the fares we just collected, then alert if any broke or got
+    # thin. Non-fatal — a monitor hiccup must not fail the price refresh itself.
+    try:
+        conn = sqlite3.connect(db_path)
+        try:
+            pairings.seed_pairings(conn)
+            verify_summary = pairings.verify_all(conn, now=_iso_now())
+            flagged = pairings.at_risk(conn)
+        finally:
+            conn.close()
+        log.info("pairings verified: %s; %d at risk", verify_summary, len(flagged))
+        if flagged:
+            send_pairing_alert(flagged)
+    except Exception:
+        log.exception("pairing verification failed (non-fatal)")
+
     failure_rate = (
         summary["routes_failed"] / summary["routes_attempted"]
         if summary["routes_attempted"] else 0

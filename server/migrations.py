@@ -117,6 +117,24 @@ CREATE TABLE IF NOT EXISTS fare_observations (
     UNIQUE(origin_iata, dest_iata, departure_date, return_date, trip_nights, observed_date, source)
 );
 
+-- The pairing engine's durable creative. One curated row per origin: a "cheap"
+-- destination and an "anchor" destination, with the headline claim "a week in
+-- <cheap> costs less than a week in <anchor>". The pairing (the three IATAs) is
+-- hand-curated and stable; the dollar columns + verified flag are FACTS the
+-- monitor recomputes on every fare refresh. verified=1 only when the cheap leg's
+-- total trip cost is genuinely lower. Nothing unverified is ever served.
+CREATE TABLE IF NOT EXISTS city_pairings (
+    origin_iata       TEXT PRIMARY KEY,
+    cheap_iata        TEXT NOT NULL,
+    anchor_iata       TEXT NOT NULL,
+    trip_nights       INTEGER NOT NULL DEFAULT 7,
+    cheap_total_usd   INTEGER,
+    anchor_total_usd  INTEGER,
+    margin_usd        INTEGER,
+    verified          INTEGER NOT NULL DEFAULT 0,
+    last_checked      TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_signups_email ON signups(email);
 CREATE INDEX IF NOT EXISTS idx_qualifiers_signup_id ON qualifiers(signup_id);
 CREATE INDEX IF NOT EXISTS idx_snapshots_lookup ON price_snapshots(origin_iata, total_price_usd, trip_nights, departure_date);
