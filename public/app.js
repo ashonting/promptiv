@@ -2,51 +2,102 @@
 (function () {
   'use strict';
 
-  // ---------- Card rotation ----------
+  // ---------- Headline rotation (the 12 city pairings) ----------
+  // The PAIRING is the durable creative; rotated client-side so the static
+  // homepage shows all 12 cities with no geo. No dollar figures here on purpose
+  // (those are volatile + fact-monitored; they live on the city hubs).
+  // (city, cheapest marquee destination, recognizable splurge anchor). All three
+  // flip in the headline. Each pairing is verified true (cheap week < anchor week
+  // all-in) at authoring time; the engine will re-verify against live data later.
+  var PAIRINGS = [
+    { city: 'Nashville',     cheap: 'Medellín',     anchor: 'Vegas' },
+    { city: 'New York',      cheap: 'Mexico City',       anchor: 'Honolulu' },
+    { city: 'Los Angeles',   cheap: 'Oaxaca',            anchor: 'Cabo' },
+    { city: 'Atlanta',       cheap: 'Cartagena',         anchor: 'Jackson Hole' },
+    { city: 'Dallas',        cheap: 'Mérida',       anchor: 'Cabo' },
+    { city: 'Chicago',       cheap: 'Guatemala City',    anchor: 'Honolulu' },
+    { city: 'Miami',         cheap: 'Lima',              anchor: 'Aruba' },
+    { city: 'Seattle',       cheap: 'Panama City',       anchor: 'Honolulu' },
+    { city: 'Denver',        cheap: 'Bogotá',       anchor: 'Jackson Hole' },
+    { city: 'Houston',       cheap: 'San José',     anchor: 'Jackson Hole' },
+    { city: 'San Francisco', cheap: 'Sofia',             anchor: 'Jackson Hole' },
+    { city: 'Boston',        cheap: 'Cairo',             anchor: 'Honolulu' }
+  ];
 
-  function initCardRotation() {
+  function initHeadlineRotation() {
+    var cheapEl = document.getElementById('rh-cheap');
+    var anchorEl = document.getElementById('rh-anchor');
+    var cityEl = document.getElementById('rh-city');
+    if (!cheapEl || !anchorEl || !cityEl) return;
+
+    function apply(p) {
+      cheapEl.textContent = p.cheap;
+      anchorEl.textContent = p.anchor;
+      cityEl.textContent = p.city;
+    }
+    apply(PAIRINGS[0]);
+
     var reduceMotion =
       window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var cards = document.querySelectorAll('#card-stack .ex-card');
-    if (!cards.length) return;
+    if (reduceMotion || typeof gsap === 'undefined') return; // first pairing, no rotation
 
-    if (reduceMotion || typeof gsap === 'undefined') {
-      cards[0].style.opacity = '1';
-      return;
-    }
-
-    gsap.set(cards, { opacity: 0, y: 6 });
-    gsap.set(cards[0], { opacity: 1, y: 0 });
-
+    // Only the three changing words flip — the sentence frame stays put. Punchier.
+    var targets = [cheapEl, anchorEl, cityEl];
     var current = 0;
-    var DWELL_MS = 6000;
-    var FADE_S = 1.2;
+    var DWELL_MS = 3500;
+    var FADE_S = 0.35;
     var pendingTimer = null;
+    var headlineEl = document.getElementById('headline');
+    var ledeEl = cityEl.parentNode; // the .lede paragraph
 
-    // setTimeout chain instead of setInterval: each tick fires only after the
-    // previous animation finishes, so queued animations can't pile up when
-    // the tab was backgrounded and then refocused.
+    // Reserve the tallest rendered height across all pairings so a longer word
+    // (e.g. "Guatemala City") can't rewrap the headline and bob the CTA below.
+    // Re-measured after web fonts load and on resize, so it's right at any width.
+    function lockHeights() {
+      headlineEl.style.minHeight = '';
+      ledeEl.style.minHeight = '';
+      var maxH = 0, maxL = 0, i;
+      for (i = 0; i < PAIRINGS.length; i++) {
+        apply(PAIRINGS[i]);
+        if (headlineEl.offsetHeight > maxH) maxH = headlineEl.offsetHeight;
+        if (ledeEl.offsetHeight > maxL) maxL = ledeEl.offsetHeight;
+      }
+      apply(PAIRINGS[current]);
+      headlineEl.style.minHeight = maxH + 'px';
+      ledeEl.style.minHeight = maxL + 'px';
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(lockHeights);
+    } else {
+      lockHeights();
+    }
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(lockHeights, 150);
+    });
+
+    // setTimeout chain (not setInterval) so animations can't pile up after the
+    // tab is backgrounded and refocused.
     function scheduleNext() {
       pendingTimer = setTimeout(tick, DWELL_MS);
     }
 
     function tick() {
       if (document.hidden) {
-        // Tab not visible — defer the rotation without queueing animations.
         scheduleNext();
         return;
       }
-      var next = (current + 1) % cards.length;
+      var next = (current + 1) % PAIRINGS.length;
       var tl = gsap.timeline({ onComplete: scheduleNext });
-      tl.to(cards[current], { opacity: 0, y: -6, duration: FADE_S, ease: 'power4.out' })
-        .fromTo(cards[next],
-          { opacity: 0, y: 6 },
-          { opacity: 1, y: 0, duration: FADE_S, ease: 'power4.out' },
-          '-=' + (FADE_S * 0.5));
+      tl.to(targets, { opacity: 0, y: -4, duration: FADE_S, ease: 'power3.out' })
+        .add(function () { apply(PAIRINGS[next]); })
+        .fromTo(targets,
+          { opacity: 0, y: 4 },
+          { opacity: 1, y: 0, duration: FADE_S, ease: 'power3.out' });
       current = next;
     }
 
-    // Stop scheduling when the tab is hidden; resume cleanly on return.
     document.addEventListener('visibilitychange', function () {
       if (document.hidden && pendingTimer) {
         clearTimeout(pendingTimer);
@@ -91,7 +142,7 @@
       .then(function (res) {
         if (!res.ok) {
           btn.disabled = false;
-          btn.textContent = 'Where can I go?';
+          btn.textContent = 'Notify me';
           emailInput.focus();
           return;
         }
@@ -100,7 +151,7 @@
       })
       .catch(function () {
         btn.disabled = false;
-        btn.textContent = 'Where can I go?';
+        btn.textContent = 'Notify me';
       });
     });
   }
@@ -161,7 +212,7 @@
   // ---------- Bootstrap ----------
 
   document.addEventListener('DOMContentLoaded', function () {
-    initCardRotation();
+    initHeadlineRotation();
     initSignupForm();
     initPickButtons();
     initQualifierActions();
