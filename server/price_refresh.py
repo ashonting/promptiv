@@ -102,6 +102,27 @@ def refresh_route(
                VALUES (?, ?, ?, ?, date('now'), 'fli')""",
             (origin, dest, trip_nights, cheapest),
         )
+
+        # Append the FULL price surface to the durable fare_observations
+        # archive (never deleted), so we keep every departure-date fare per
+        # scan day, not just the single cheapest. INSERT OR REPLACE on the
+        # UNIQUE key makes a same-day re-run idempotent.
+        for r in results:
+            conn.execute(
+                """INSERT OR REPLACE INTO fare_observations
+                   (origin_iata, dest_iata, departure_date, return_date,
+                    trip_nights, total_price_usd, stops, carrier_codes,
+                    source, observed_date, fetched_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), ?)""",
+                (
+                    r.origin_iata, r.dest_iata,
+                    r.departure_date, r.return_date,
+                    r.trip_nights, r.total_price_usd,
+                    r.stops, json.dumps(r.carrier_codes) if r.carrier_codes else None,
+                    "fli", fetched_at,
+                ),
+            )
+
         conn.commit()
         return inserted
     finally:

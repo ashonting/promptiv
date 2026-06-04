@@ -95,12 +95,36 @@ CREATE TABLE IF NOT EXISTS price_history (
     UNIQUE(origin_iata, dest_iata, trip_nights, observed_date, source)
 );
 
+-- Append-only fare archive. Unlike price_snapshots (ephemeral, rewritten each
+-- scan for /go) and price_history (one cheapest number per route/day), this
+-- keeps the FULL price surface every scan: every departure date's fare, tagged
+-- by observed_date. This is the durable time series for booking-curve analysis
+-- and date-level deal detection. Never deleted. UNIQUE -> same-day re-runs
+-- overwrite rather than duplicate.
+CREATE TABLE IF NOT EXISTS fare_observations (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    origin_iata       TEXT NOT NULL,
+    dest_iata         TEXT NOT NULL,
+    departure_date    TEXT NOT NULL,
+    return_date       TEXT,
+    trip_nights       INTEGER NOT NULL,
+    total_price_usd   INTEGER,
+    stops             INTEGER,
+    carrier_codes     TEXT,
+    source            TEXT NOT NULL DEFAULT 'fli',
+    observed_date     TEXT NOT NULL,
+    fetched_at        TEXT NOT NULL,
+    UNIQUE(origin_iata, dest_iata, departure_date, return_date, trip_nights, observed_date, source)
+);
+
 CREATE INDEX IF NOT EXISTS idx_signups_email ON signups(email);
 CREATE INDEX IF NOT EXISTS idx_qualifiers_signup_id ON qualifiers(signup_id);
 CREATE INDEX IF NOT EXISTS idx_snapshots_lookup ON price_snapshots(origin_iata, total_price_usd, trip_nights, departure_date);
 CREATE INDEX IF NOT EXISTS idx_snapshots_dest ON price_snapshots(dest_iata, fetched_at);
 CREATE INDEX IF NOT EXISTS idx_searches_session ON searches(session_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_price_history_route ON price_history(origin_iata, dest_iata, trip_nights, observed_date);
+CREATE INDEX IF NOT EXISTS idx_fare_obs_route_day ON fare_observations(origin_iata, dest_iata, trip_nights, observed_date);
+CREATE INDEX IF NOT EXISTS idx_fare_obs_day ON fare_observations(observed_date);
 """
 
 
