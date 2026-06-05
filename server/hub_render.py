@@ -114,11 +114,6 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
     }}
     .vibe-pick {{ color: var(--color-text-primary); font-size: 15px; }}
     .vibe-pick b {{ color: var(--color-accent-bright); font-weight: 500; }}
-    .hub-back {{
-      font-family: var(--font-sans); font-size: 13px; color: var(--color-text-muted);
-      text-decoration: none;
-    }}
-    .hub-back:hover {{ color: var(--color-text-secondary); }}
   </style>
 </head>
 <body>
@@ -126,7 +121,6 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
   <div class="frame">
     <header class="top-bar">
       <div class="brand">Promptiv<span class="brand-dot"></span></div>
-      <a class="hub-back" href="/">&larr; All cities</a>
     </header>
 
     <main>
