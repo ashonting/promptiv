@@ -1,13 +1,21 @@
 # Promptiv
 
-Idea-stage trip discovery product. This repo currently contains:
-- `PRODUCT-BRIEF.md` — product concept
-- `docs/superpowers/specs/` — design specs
-- `docs/superpowers/plans/` — implementation plans
-- `server/` — Flask backend
-- `public/` — static teaser site
-- `tests/` — pytest + Playwright
-- `deploy/` — production deployment artifacts
+**Live at https://promptiv.io** — a curated "cheap trips, not cheap flights" product for
+12 U.S. cities. Total trip cost (airfare + a week on the ground) reveals where your budget
+actually reaches; a week in Medellín costs less than a week in Las Vegas.
+
+**Start here:** [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — complete current-state
+overview (data model, engine, cron pipeline, page types, SEO system, deploy).
+
+Repo layout:
+- `docs/ARCHITECTURE.md` — **the system, as built** (read this first)
+- `PRODUCT-BRIEF.md` — product concept / north star
+- `docs/plans/2026-06-04-cheap-trips-pivot.md` — the strategic pivot (executed)
+- `server/` — Flask API + the generation engine (pairings, hubs, budget, comparisons, digest)
+- `public/` — the static site (regenerated daily from the DB)
+- `scripts/generate_hubs.py` — the generator (runs nightly on the droplet)
+- `tests/` — pytest (120 tests)
+- `deploy/` — nginx config, systemd units, `DEPLOY.md`
 
 ## Local development
 

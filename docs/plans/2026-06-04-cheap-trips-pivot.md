@@ -1,6 +1,8 @@
 # Promptiv → Curated Cheap-Trips: Implementation Plan
 
-**Date:** 2026-06-04 · **Status:** Plan (pre-build)
+**Date:** 2026-06-04 · **Status:** EXECUTED (2026-06-05). W1–W4 shipped + live, plus a
+programmatic-SEO layer (budget + comparison pages) beyond the original plan. Kept as the
+strategic narrative; for the current built system see `docs/ARCHITECTURE.md`.
 
 ---
 
