@@ -9,7 +9,7 @@ real indexed page and the actual ranking surface.
 import html
 from typing import Optional
 
-from server import hubs
+from server import hubs, schema_ld
 
 CANONICAL_BASE = "https://promptiv.io"
 
@@ -56,6 +56,14 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
             f"See where your budget actually reaches from {origin_city}. "
             f"Total trip cost, not just airfare."
         )
+
+    cheapest = hubs.cheapest_trips(hub, N_CHEAPEST)
+    json_ld = schema_ld.page_ld(
+        crumbs=[("Home", f"{canonical_base}/"),
+                (f"Cheap trips from {origin_city}", canonical)],
+        list_name=f"Cheapest weeks from {origin_city}",
+        item_names=[f"{t['city']}, {t['country']}" for t in cheapest],
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -115,6 +123,7 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
     .vibe-pick {{ color: var(--color-text-primary); font-size: 15px; }}
     .vibe-pick b {{ color: var(--color-accent-bright); font-weight: 500; }}
   </style>
+  {json_ld}
 </head>
 <body>
   <div class="aurora"></div>

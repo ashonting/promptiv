@@ -9,6 +9,8 @@ so the page also feeds the weekly digest.
 import html
 from typing import Optional
 
+from server import schema_ld
+
 CANONICAL_BASE = "https://promptiv.io"
 
 
@@ -53,6 +55,14 @@ def render_budget_page(page: dict, sibling_bands: Optional[list] = None,
 
     fresh_line = f'<p class="fresh">Prices updated {_esc(freshness)}.</p>' if freshness else ""
 
+    json_ld = schema_ld.page_ld(
+        crumbs=[("Home", f"{canonical_base}/"),
+                (city, f"{canonical_base}/{slug}"),
+                (f"Trips under {_money(budget)}", canonical)],
+        list_name=f"Trips under {_money(budget)} from {city}",
+        item_names=[f"{t['city']}, {t['country']}" for t in page["trips"]],
+    )
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,6 +100,7 @@ def render_budget_page(page: dict, sibling_bands: Optional[list] = None,
     .more .label {{ color: var(--color-text-muted); margin-right: 10px; }}
     .xlink {{ color: var(--color-text-secondary); font-weight: 500; margin-right: 14px; white-space: nowrap; }}
   </style>
+  {json_ld}
 </head>
 <body>
   <div class="aurora"></div>

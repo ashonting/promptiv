@@ -1,11 +1,12 @@
 """Tests for the budget-page pilot (programmatic SEO) — especially the
 selectivity gate that keeps the lattice from going thin."""
+import json
 import sqlite3
 
 import pytest
 
 from server.migrations import init_schema
-from server import budget_pages, budget_render
+from server import budget_pages, budget_render, schema_ld
 
 
 def _airport(c, iata, city):
@@ -90,3 +91,24 @@ def test_render_has_seo_freshness_and_internal_links(conn):
     assert '/nashville/under-1500' in html          # sibling-band internal link
     assert 'href="/nashville"' in html              # link back to the hub
     assert 'href="/go"' in html                     # link to the tool
+    assert 'application/ld+json' in html            # structured data present
+    assert '"BreadcrumbList"' in html and '"ItemList"' in html
+
+
+def test_schema_ld_is_valid_json_and_carries_no_offers():
+    s = schema_ld.page_ld(
+        crumbs=[("Home", "https://promptiv.io/"),
+                ("Nashville", "https://promptiv.io/nashville"),
+                ("Trips under $1,000", "https://promptiv.io/nashville/under-1000")],
+        list_name="Trips under $1,000 from Nashville",
+        item_names=["Guatemala City, Guatemala", "Medellín, Colombia"],
+    )
+    raw = s[len('<script type="application/ld+json">'):-len("</script>")]
+    data = json.loads(raw)  # must be valid JSON
+    types = {g["@type"] for g in data["@graph"]}
+    assert {"BreadcrumbList", "ItemList"} <= types
+    # The safety rule: no purchasable-offer / price markup on directional fares.
+    assert "Offer" not in raw and '"price"' not in raw and "Product" not in raw
+    # Breadcrumb reflects the 3-level hierarchy.
+    bc = next(g for g in data["@graph"] if g["@type"] == "BreadcrumbList")
+    assert [el["name"] for el in bc["itemListElement"]] == ["Home", "Nashville", "Trips under $1,000"]
