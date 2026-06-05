@@ -20,6 +20,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 from server import pairings, hubs, hub_render, budget_pages, budget_render
+from server import comparisons, comparison_render
 from server.migrations import init_schema
 
 CANONICAL_BASE = "https://promptiv.io"
@@ -74,11 +75,25 @@ def generate(db_path: str, public_dir: Path) -> list:
                 budget_paths.append(f"{slug}/under-{p['budget']}")
             if bands:
                 print(f"       budget pages: {', '.join('under-' + str(b) for b in bands)}")
+        # Comparison pages (/vs/<cheap>-vs-<anchor>), curated + robust-flip gated.
+        comps = comparisons.published_comparisons(conn)
+        labels = [{"slug": c["slug"], "label": f"{c['cheap']['city']} vs {c['anchor']['city']}"} for c in comps]
+        vs_paths = []
+        for i, c in enumerate(comps):
+            others = [labels[j] for j in range(len(labels)) if j != i][:3]
+            vdir = public_dir / "vs" / c["slug"]
+            vdir.mkdir(parents=True, exist_ok=True)
+            vdir.joinpath("index.html").write_text(
+                comparison_render.render_comparison(c, others=others, freshness=today),
+                encoding="utf-8")
+            vs_paths.append(f"vs/{c['slug']}")
+        print(f"  comparison pages: {len(vs_paths)} (gated from {len(comparisons.CURATED_COMPARISONS)})")
+
         _write_pairings_js(conn, public_dir)
     finally:
         conn.close()
 
-    _write_sitemap(public_dir, written, budget_paths)
+    _write_sitemap(public_dir, written, budget_paths, vs_paths)
     print(f"  budget pages total: {len(budget_paths)}")
     return written
 
@@ -115,8 +130,10 @@ def _write_pairings_js(conn, public_dir: Path) -> None:
     print(f"  pairings.js: {len(entries)} verified pairings")
 
 
-def _write_sitemap(public_dir: Path, hub_slugs: list, budget_paths: list = None) -> None:
+def _write_sitemap(public_dir: Path, hub_slugs: list, budget_paths: list = None,
+                   vs_paths: list = None) -> None:
     budget_paths = budget_paths or []
+    vs_paths = vs_paths or []
     today = date.today().isoformat()
     parts = [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -130,9 +147,12 @@ def _write_sitemap(public_dir: Path, hub_slugs: list, budget_paths: list = None)
         parts += _url(f"{CANONICAL_BASE}/{slug}", today, "weekly", "0.7")
     for path in budget_paths:
         parts += _url(f"{CANONICAL_BASE}/{path}", today, "weekly", "0.6")
+    for path in vs_paths:
+        parts += _url(f"{CANONICAL_BASE}/{path}", today, "weekly", "0.6")
     parts.append("</urlset>")
     (public_dir / "sitemap.xml").write_text("\n".join(parts) + "\n", encoding="utf-8")
-    print(f"  sitemap.xml: {len(CORE_PAGES)} core + {len(hub_slugs)} hubs + {len(budget_paths)} budget")
+    print(f"  sitemap.xml: {len(CORE_PAGES)} core + {len(hub_slugs)} hubs + "
+          f"{len(budget_paths)} budget + {len(vs_paths)} vs")
 
 
 def _url(loc: str, lastmod: str, changefreq: str, priority: str) -> list:

@@ -7,6 +7,8 @@ title, meta description, Open Graph, and a self-canonical, because each hub is a
 real indexed page and the actual ranking surface.
 """
 import html
+import re
+import unicodedata
 from typing import Optional
 
 from server import hubs, schema_ld
@@ -26,8 +28,11 @@ VIBE_CUTS = [
 
 
 def slugify(city: str) -> str:
-    """Hub URL slug from a city name: 'Nashville' -> 'nashville'."""
-    return "".join(c if c.isalnum() else "-" for c in city.lower()).strip("-")
+    """URL slug from a city name, ASCII-folded so accented names produce clean,
+    matchable slugs: 'Nashville' -> 'nashville', 'Medellín' -> 'medellin',
+    'Los Cabos' -> 'los-cabos'. (US origin slugs are unchanged.)"""
+    s = unicodedata.normalize("NFKD", str(city)).encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
 
 
 def _money(n) -> str:

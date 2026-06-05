@@ -47,3 +47,8 @@ def item_list(name: str, item_names: list) -> dict:
 def page_ld(crumbs: list, list_name: str, item_names: list) -> str:
     """The full <script> block for a list page (breadcrumb + item list)."""
     return _ld_script([breadcrumb(crumbs), item_list(list_name, item_names)])
+
+
+def breadcrumb_ld(crumbs: list) -> str:
+    """A <script> block with just the breadcrumb (for non-list pages)."""
+    return _ld_script([breadcrumb(crumbs)])
