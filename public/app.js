@@ -9,26 +9,31 @@
   // (city, cheapest marquee destination, recognizable splurge anchor). All three
   // flip in the headline. Each pairing is verified true (cheap week < anchor week
   // all-in) at authoring time; the engine will re-verify against live data later.
+  // lat/lng (airport coords) + slug power geo personalization: nearest served
+  // city within ~150mi gets pinned as the hero. cheap/anchor are the punchy
+  // homepage display names (the hubs use the fuller catalog names).
   var PAIRINGS = [
-    { city: 'Nashville',     cheap: 'Medellín',     anchor: 'Vegas' },
-    { city: 'New York',      cheap: 'Mexico City',       anchor: 'Honolulu' },
-    { city: 'Los Angeles',   cheap: 'Oaxaca',            anchor: 'Cabo' },
-    { city: 'Atlanta',       cheap: 'Cartagena',         anchor: 'Jackson Hole' },
-    { city: 'Dallas',        cheap: 'Mérida',       anchor: 'Cabo' },
-    { city: 'Chicago',       cheap: 'Guatemala City',    anchor: 'Honolulu' },
-    { city: 'Miami',         cheap: 'Lima',              anchor: 'Aruba' },
-    { city: 'Seattle',       cheap: 'Panama City',       anchor: 'Honolulu' },
-    { city: 'Denver',        cheap: 'Bogotá',       anchor: 'Jackson Hole' },
-    { city: 'Houston',       cheap: 'San José',     anchor: 'Jackson Hole' },
-    { city: 'San Francisco', cheap: 'Sofia',             anchor: 'Jackson Hole' },
-    { city: 'Boston',        cheap: 'Cairo',             anchor: 'Honolulu' }
+    { city: 'Nashville',     slug: 'nashville',     lat: 36.124, lng:  -86.678, cheap: 'Medellín',       anchor: 'Vegas' },
+    { city: 'New York',      slug: 'new-york',      lat: 40.641, lng:  -73.778, cheap: 'Mexico City',    anchor: 'Honolulu' },
+    { city: 'Los Angeles',   slug: 'los-angeles',   lat: 33.942, lng: -118.409, cheap: 'Oaxaca',         anchor: 'Cabo' },
+    { city: 'Atlanta',       slug: 'atlanta',       lat: 33.641, lng:  -84.428, cheap: 'Cartagena',      anchor: 'Jackson Hole' },
+    { city: 'Dallas',        slug: 'dallas',        lat: 32.900, lng:  -97.040, cheap: 'Mérida',         anchor: 'Cabo' },
+    { city: 'Chicago',       slug: 'chicago',       lat: 41.974, lng:  -87.907, cheap: 'Guatemala City', anchor: 'Honolulu' },
+    { city: 'Miami',         slug: 'miami',         lat: 25.796, lng:  -80.287, cheap: 'Lima',           anchor: 'Aruba' },
+    { city: 'Seattle',       slug: 'seattle',       lat: 47.450, lng: -122.309, cheap: 'Panama City',    anchor: 'Honolulu' },
+    { city: 'Denver',        slug: 'denver',        lat: 39.856, lng: -104.674, cheap: 'Bogotá',         anchor: 'Jackson Hole' },
+    { city: 'Houston',       slug: 'houston',       lat: 29.990, lng:  -95.337, cheap: 'San José',       anchor: 'Jackson Hole' },
+    { city: 'San Francisco', slug: 'san-francisco', lat: 37.621, lng: -122.379, cheap: 'Sofia',          anchor: 'Jackson Hole' },
+    { city: 'Boston',        slug: 'boston',        lat: 42.366, lng:  -71.010, cheap: 'Cairo',          anchor: 'Honolulu' }
   ];
 
+  // Returns a controller { pinTo(index) } so geo personalization can stop the
+  // rotation and settle the hero on the visitor's city. Returns null off-homepage.
   function initHeadlineRotation() {
     var cheapEl = document.getElementById('rh-cheap');
     var anchorEl = document.getElementById('rh-anchor');
     var cityEl = document.getElementById('rh-city');
-    if (!cheapEl || !anchorEl || !cityEl) return;
+    if (!cheapEl || !anchorEl || !cityEl) return null;
 
     function apply(p) {
       cheapEl.textContent = p.cheap;
@@ -37,16 +42,36 @@
     }
     apply(PAIRINGS[0]);
 
-    var reduceMotion =
-      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || typeof gsap === 'undefined') return; // first pairing, no rotation
-
-    // Only the three changing words flip — the sentence frame stays put. Punchier.
     var targets = [cheapEl, anchorEl, cityEl];
     var current = 0;
+    var pinned = false;
     var DWELL_MS = 3500;
     var FADE_S = 0.35;
     var pendingTimer = null;
+
+    var reduceMotion =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var canAnimate = !(reduceMotion || typeof gsap === 'undefined');
+
+    function fadeTo(p) {
+      var tl = gsap.timeline();
+      tl.to(targets, { opacity: 0, y: -4, duration: FADE_S, ease: 'power3.out' })
+        .add(function () { apply(p); })
+        .fromTo(targets, { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: FADE_S, ease: 'power3.out' });
+    }
+
+    // Stop rotating and settle on one city (geo personalization).
+    function pinTo(idx) {
+      pinned = true;
+      if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
+      current = idx;
+      if (canAnimate && idx !== 0) { fadeTo(PAIRINGS[idx]); } else { apply(PAIRINGS[idx]); }
+    }
+
+    // No animation (reduced motion or no GSAP): first pairing is shown; geo can
+    // still pin instantly. Nothing rotates.
+    if (!canAnimate) { return { pinTo: pinTo }; }
+
     var headlineEl = document.getElementById('headline');
     var ledeEl = cityEl.parentNode; // the .lede paragraph
 
@@ -84,6 +109,7 @@
     }
 
     function tick() {
+      if (pinned) { return; }
       if (document.hidden) {
         scheduleNext();
         return;
@@ -102,12 +128,106 @@
       if (document.hidden && pendingTimer) {
         clearTimeout(pendingTimer);
         pendingTimer = null;
-      } else if (!document.hidden && !pendingTimer) {
+      } else if (!document.hidden && !pendingTimer && !pinned) {
         scheduleNext();
       }
     });
 
     scheduleNext();
+    return { pinTo: pinTo };
+  }
+
+  // ---------- Geo personalization ----------
+  // Detect the visitor's nearest served city (within ~150mi) and swap the hero
+  // to their city + a "see your city's trips" CTA. Fully client-side: the free
+  // IP API rate-limits by caller IP, so each browser calling from its own IP
+  // stays well under the limit (a server-side call would share one limit across
+  // every visitor). Crawlers get the generic rotating hero (this runs in JS only).
+  // Degrades silently: any failure or no city in range -> rotation keeps running.
+  var GEO_MAX_MI = 150;
+
+  function haversineMi(lat1, lng1, lat2, lng2) {
+    var R = 3959, toRad = Math.PI / 180;
+    var dLat = (lat2 - lat1) * toRad, dLng = (lng2 - lng1) * toRad;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.sqrt(a));
+  }
+
+  function nearestCityIndex(lat, lng, maxMi) {
+    var best = -1, bestD = Infinity, i, d;
+    for (i = 0; i < PAIRINGS.length; i++) {
+      d = haversineMi(lat, lng, PAIRINGS[i].lat, PAIRINGS[i].lng);
+      if (d < bestD) { bestD = d; best = i; }
+    }
+    return bestD <= maxMi ? best : -1;
+  }
+
+  function slugIndex(slug) {
+    var i;
+    for (i = 0; i < PAIRINGS.length; i++) {
+      if (PAIRINGS[i].slug === slug) { return i; }
+    }
+    return -1;
+  }
+
+  // ?geo=<slug> or ?geo=<lat>,<lng> forces a location — used for testing and so
+  // a visitor (or you) can preview any city. Bypasses the IP lookup when present.
+  function geoOverrideIndex() {
+    var m = /[?&]geo=([^&]+)/.exec(window.location.search);
+    if (!m) { return null; }
+    var val = decodeURIComponent(m[1]).trim();
+    var bySlug = slugIndex(val.toLowerCase());
+    if (bySlug >= 0) { return bySlug; }
+    var parts = val.split(',');
+    if (parts.length === 2) {
+      var lat = parseFloat(parts[0]), lng = parseFloat(parts[1]);
+      if (isFinite(lat) && isFinite(lng)) { return nearestCityIndex(lat, lng, GEO_MAX_MI); }
+    }
+    return -1;
+  }
+
+  function fetchGeoCoords() {
+    return fetch('https://ipapi.co/json/', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (!j) { return null; }
+        var lat = parseFloat(j.latitude), lng = parseFloat(j.longitude);
+        return (isFinite(lat) && isFinite(lng)) ? { lat: lat, lng: lng } : null;
+      })
+      .catch(function () { return null; });
+  }
+
+  function personalizeTo(idx, rotation) {
+    var p = PAIRINGS[idx];
+    rotation.pinTo(idx); // stop rotation, settle the hero on this city
+    var eyebrow = document.getElementById('eyebrow-text');
+    if (eyebrow) { eyebrow.textContent = 'Cheap trips from ' + p.city; }
+    var ctaGo = document.getElementById('cta-go');
+    var ctaHub = document.getElementById('cta-hub');
+    if (ctaHub) {
+      ctaHub.setAttribute('href', '/' + p.slug);
+      ctaHub.textContent = 'See ' + p.city + '’s trips →';
+      ctaHub.hidden = false;
+    }
+    if (ctaGo) { ctaGo.hidden = true; }
+  }
+
+  function initGeoPersonalization(rotation) {
+    if (!rotation) { return; } // homepage only
+
+    var forced = geoOverrideIndex();
+    if (forced !== null) {
+      if (forced >= 0) { personalizeTo(forced, rotation); }
+      return; // an explicit ?geo= means "don't also hit the network"
+    }
+
+    fetchGeoCoords().then(function (loc) {
+      if (!loc) { return; } // fallback: rotation keeps running
+      var idx = nearestCityIndex(loc.lat, loc.lng, GEO_MAX_MI);
+      if (idx >= 0) { personalizeTo(idx, rotation); }
+    });
   }
 
   // ---------- Form submission ----------
@@ -223,7 +343,8 @@
   // ---------- Bootstrap ----------
 
   document.addEventListener('DOMContentLoaded', function () {
-    initHeadlineRotation();
+    var rotation = initHeadlineRotation();
+    initGeoPersonalization(rotation);
     initSignupForm();
     initPickButtons();
     initQualifierActions();

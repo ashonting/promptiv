@@ -35,12 +35,13 @@
     </header>
 
     <main class="hero">
-      <div class="eyebrow"><span>Cheap trips, not cheap flights</span></div>
+      <div class="eyebrow"><span id="eyebrow-text">Cheap trips, not cheap flights</span></div>
       <h1 class="display" id="headline">A week in <em id="rh-cheap">Medell&iacute;n</em> costs less than a week in <em id="rh-anchor">Vegas</em>.</h1>
       <p class="lede">From <em id="rh-city">Nashville</em>, see where your budget actually reaches. New picks every week.</p>
 
       <div class="cta-row">
-        <a class="btn primary-cta" href="/go">See where you can go &rarr;</a>
+        <a class="btn primary-cta" id="cta-go" href="/go">See where you can go &rarr;</a>
+        <a class="btn primary-cta" id="cta-hub" href="/go" hidden>See your city&rsquo;s trips &rarr;</a>
       </div>
 
       <form id="signup-form" class="form secondary-form" action="/api/signup" method="POST" novalidate>
