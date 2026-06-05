@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trips under $1,000 from Atlanta | Promptiv</title>
+  <meta name="description" content="9 trips from Atlanta that fit a full week under $1,000, airfare plus a week on the ground. Total cost, not just the fare. Updated weekly." />
+
+  <meta property="og:title" content="Trips under $1,000 from Atlanta | Promptiv" />
+  <meta property="og:description" content="9 trips from Atlanta that fit a full week under $1,000, airfare plus a week on the ground. Total cost, not just the fare. Updated weekly." />
+  <meta property="og:url" content="https://promptiv.io/atlanta/under-1000" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="canonical" href="https://promptiv.io/atlanta/under-1000" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .budget-hero { margin-bottom: 8px; }
+    .intro { font-family: var(--font-sans); font-size: 15.5px; line-height: 1.65; color: var(--color-text-secondary); max-width: 60ch; margin: 0 0 14px; }
+    .fresh { font-family: var(--font-sans); font-size: 12.5px; color: var(--color-text-faint); margin: 0 0 26px; }
+    .hub-section { margin: 40px 0 0; }
+    .hub-section h2 { font-family: var(--font-serif); font-weight: 400; font-style: italic; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--color-text-primary); margin: 0 0 16px; }
+    .trip-list { list-style: none; margin: 0; padding: 0; }
+    .trip { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--color-border); }
+    .trip:last-child { border-bottom: none; }
+    .trip-place { font-family: var(--font-sans); font-size: 16px; color: var(--color-text-primary); }
+    .trip-place .country { color: var(--color-text-muted); font-size: 14px; }
+    .trip-break { display: block; font-size: 12.5px; color: var(--color-text-faint); margin-top: 2px; }
+    .trip-total { font-family: var(--font-serif); font-style: italic; font-size: 1.45rem; color: var(--color-accent-bright); white-space: nowrap; }
+    .more { margin: 40px 0 0; font-family: var(--font-sans); font-size: 14px; }
+    .more .label { color: var(--color-text-muted); margin-right: 10px; }
+    .xlink { color: var(--color-text-secondary); font-weight: 500; margin-right: 14px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="frame">
+    <header class="top-bar">
+      <div class="brand">Promptiv<span class="brand-dot"></span></div>
+    </header>
+
+    <main>
+      <section class="hero budget-hero">
+        <div class="eyebrow"><span>Cheap trips from Atlanta</span></div>
+        <h1 class="display">A week under <em>$1,000</em> from Atlanta.</h1>
+        <p class="intro">From Atlanta, 9 destinations fit a full week under $1,000, airfare plus seven days on the ground. It starts at Guatemala City, about $638 all in. $1,000 also reaches Mérida, Austin and Cartagena. Just over the line: San Juan at $1,017.</p>
+        <p class="fresh">Prices updated 2026-06-05.</p>
+        <form id="signup-form" class="form secondary-form" action="/api/signup" method="POST" novalidate>
+          <input type="hidden" name="hub_city" value="Atlanta" />
+          <label for="email-input" class="sr-only">Your email</label>
+          <input id="email-input" class="email" type="email" name="email"
+                 placeholder="get Atlanta&rsquo;s cheapest trips, weekly" required autocomplete="email" />
+          <button class="btn-secondary" type="submit">Notify me</button>
+        </form>
+        <p id="signup-confirm" class="intro" hidden>You&rsquo;re on the list. We&rsquo;ll send Atlanta&rsquo;s cheapest trips weekly.</p>
+      </section>
+
+      <section class="hub-section">
+        <h2>Every week under $1,000 from Atlanta</h2>
+        <ul class="trip-list"><li class="trip"><span class="trip-place">Guatemala City<span class="country">, Guatemala</span><span class="trip-break">flight $323 + $45/day for a week</span></span><span class="trip-total">$638</span></li><li class="trip"><span class="trip-place">Medellín<span class="country">, Colombia</span><span class="trip-break">flight $289 + $50/day for a week</span></span><span class="trip-total">$639</span></li><li class="trip"><span class="trip-place">Bogotá<span class="country">, Colombia</span><span class="trip-break">flight $294 + $55/day for a week</span></span><span class="trip-total">$679</span></li><li class="trip"><span class="trip-place">Mexico City<span class="country">, Mexico</span><span class="trip-break">flight $311 + $65/day for a week</span></span><span class="trip-total">$766</span></li><li class="trip"><span class="trip-place">Oaxaca<span class="country">, Mexico</span><span class="trip-break">flight $471 + $55/day for a week</span></span><span class="trip-total">$856</span></li><li class="trip"><span class="trip-place">San José<span class="country">, Costa Rica</span><span class="trip-break">flight $395 + $80/day for a week</span></span><span class="trip-total">$955</span></li><li class="trip"><span class="trip-place">Mérida<span class="country">, Mexico</span><span class="trip-break">flight $619 + $50/day for a week</span></span><span class="trip-total">$969</span></li><li class="trip"><span class="trip-place">Austin<span class="country">, United States</span><span class="trip-break">flight $70 + $130/day for a week</span></span><span class="trip-total">$980</span></li><li class="trip"><span class="trip-place">Cartagena<span class="country">, Colombia</span><span class="trip-break">flight $457 + $75/day for a week</span></span><span class="trip-total">$982</span></li></ul>
+      </section>
+
+      <div class="more">
+        <span class="label">More from Atlanta:</span>
+        <a href="/atlanta" class="xlink">All cheap trips</a>
+        <a href="/atlanta/under-1500" class="xlink">Under $1,500</a>
+        <a href="/go" class="xlink">Build your own search &rarr;</a>
+      </div>
+    </main>
+
+    <footer class="footer">&copy; 2026 Promptiv &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

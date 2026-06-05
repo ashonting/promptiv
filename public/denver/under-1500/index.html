@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trips under $1,500 from Denver | Promptiv</title>
+  <meta name="description" content="51 trips from Denver that fit a full week under $1,500, airfare plus a week on the ground. Total cost, not just the fare. Updated weekly." />
+
+  <meta property="og:title" content="Trips under $1,500 from Denver | Promptiv" />
+  <meta property="og:description" content="51 trips from Denver that fit a full week under $1,500, airfare plus a week on the ground. Total cost, not just the fare. Updated weekly." />
+  <meta property="og:url" content="https://promptiv.io/denver/under-1500" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="canonical" href="https://promptiv.io/denver/under-1500" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .budget-hero { margin-bottom: 8px; }
+    .intro { font-family: var(--font-sans); font-size: 15.5px; line-height: 1.65; color: var(--color-text-secondary); max-width: 60ch; margin: 0 0 14px; }
+    .fresh { font-family: var(--font-sans); font-size: 12.5px; color: var(--color-text-faint); margin: 0 0 26px; }
+    .hub-section { margin: 40px 0 0; }
+    .hub-section h2 { font-family: var(--font-serif); font-weight: 400; font-style: italic; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--color-text-primary); margin: 0 0 16px; }
+    .trip-list { list-style: none; margin: 0; padding: 0; }
+    .trip { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--color-border); }
+    .trip:last-child { border-bottom: none; }
+    .trip-place { font-family: var(--font-sans); font-size: 16px; color: var(--color-text-primary); }
+    .trip-place .country { color: var(--color-text-muted); font-size: 14px; }
+    .trip-break { display: block; font-size: 12.5px; color: var(--color-text-faint); margin-top: 2px; }
+    .trip-total { font-family: var(--font-serif); font-style: italic; font-size: 1.45rem; color: var(--color-accent-bright); white-space: nowrap; }
+    .more { margin: 40px 0 0; font-family: var(--font-sans); font-size: 14px; }
+    .more .label { color: var(--color-text-muted); margin-right: 10px; }
+    .xlink { color: var(--color-text-secondary); font-weight: 500; margin-right: 14px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="frame">
+    <header class="top-bar">
+      <div class="brand">Promptiv<span class="brand-dot"></span></div>
+    </header>
+
+    <main>
+      <section class="hero budget-hero">
+        <div class="eyebrow"><span>Cheap trips from Denver</span></div>
+        <h1 class="display">A week under <em>$1,500</em> from Denver.</h1>
+        <p class="intro">From Denver, 51 destinations fit a full week under $1,500, airfare plus seven days on the ground. It starts at Mérida, about $584 all in. $1,500 also reaches Athens, Berlin and Bridgetown. Just over the line: Antalya at $1,513.</p>
+        <p class="fresh">Prices updated 2026-06-05.</p>
+        <form id="signup-form" class="form secondary-form" action="/api/signup" method="POST" novalidate>
+          <input type="hidden" name="hub_city" value="Denver" />
+          <label for="email-input" class="sr-only">Your email</label>
+          <input id="email-input" class="email" type="email" name="email"
+                 placeholder="get Denver&rsquo;s cheapest trips, weekly" required autocomplete="email" />
+          <button class="btn-secondary" type="submit">Notify me</button>
+        </form>
+        <p id="signup-confirm" class="intro" hidden>You&rsquo;re on the list. We&rsquo;ll send Denver&rsquo;s cheapest trips weekly.</p>
+      </section>
+
+      <section class="hub-section">
+        <h2>Every week under $1,500 from Denver</h2>
+        <ul class="trip-list"><li class="trip"><span class="trip-place">Mérida<span class="country">, Mexico</span><span class="trip-break">flight $234 + $50/day for a week</span></span><span class="trip-total">$584</span></li><li class="trip"><span class="trip-place">Guatemala City<span class="country">, Guatemala</span><span class="trip-break">flight $363 + $45/day for a week</span></span><span class="trip-total">$678</span></li><li class="trip"><span class="trip-place">Mexico City<span class="country">, Mexico</span><span class="trip-break">flight $249 + $65/day for a week</span></span><span class="trip-total">$704</span></li><li class="trip"><span class="trip-place">Oaxaca<span class="country">, Mexico</span><span class="trip-break">flight $364 + $55/day for a week</span></span><span class="trip-total">$749</span></li><li class="trip"><span class="trip-place">Bogotá<span class="country">, Colombia</span><span class="trip-break">flight $405 + $55/day for a week</span></span><span class="trip-total">$790</span></li><li class="trip"><span class="trip-place">Medellín<span class="country">, Colombia</span><span class="trip-break">flight $535 + $50/day for a week</span></span><span class="trip-total">$885</span></li><li class="trip"><span class="trip-place">Lima<span class="country">, Peru</span><span class="trip-break">flight $539 + $60/day for a week</span></span><span class="trip-total">$959</span></li><li class="trip"><span class="trip-place">Las Vegas<span class="country">, United States</span><span class="trip-break">flight $58 + $130/day for a week</span></span><span class="trip-total">$968</span></li><li class="trip"><span class="trip-place">Austin<span class="country">, United States</span><span class="trip-break">flight $60 + $130/day for a week</span></span><span class="trip-total">$970</span></li><li class="trip"><span class="trip-place">Cartagena<span class="country">, Colombia</span><span class="trip-break">flight $447 + $75/day for a week</span></span><span class="trip-total">$972</span></li><li class="trip"><span class="trip-place">Cancún<span class="country">, Mexico</span><span class="trip-break">flight $208 + $110/day for a week</span></span><span class="trip-total">$978</span></li><li class="trip"><span class="trip-place">San José<span class="country">, Costa Rica</span><span class="trip-break">flight $469 + $80/day for a week</span></span><span class="trip-total">$1,029</span></li><li class="trip"><span class="trip-place">Panama City<span class="country">, Panama</span><span class="trip-break">flight $510 + $75/day for a week</span></span><span class="trip-total">$1,035</span></li><li class="trip"><span class="trip-place">San Juan<span class="country">, Puerto Rico</span><span class="trip-break">flight $357 + $100/day for a week</span></span><span class="trip-total">$1,057</span></li><li class="trip"><span class="trip-place">San Diego<span class="country">, United States</span><span class="trip-break">flight $80 + $140/day for a week</span></span><span class="trip-total">$1,060</span></li><li class="trip"><span class="trip-place">Sofia<span class="country">, Bulgaria</span><span class="trip-break">flight $768 + $45/day for a week</span></span><span class="trip-total">$1,083</span></li><li class="trip"><span class="trip-place">Belgrade<span class="country">, Serbia</span><span class="trip-break">flight $755 + $50/day for a week</span></span><span class="trip-total">$1,105</span></li><li class="trip"><span class="trip-place">Kraków<span class="country">, Poland</span><span class="trip-break">flight $723 + $55/day for a week</span></span><span class="trip-total">$1,108</span></li><li class="trip"><span class="trip-place">Warsaw<span class="country">, Poland</span><span class="trip-break">flight $730 + $60/day for a week</span></span><span class="trip-total">$1,150</span></li><li class="trip"><span class="trip-place">Puerto Vallarta<span class="country">, Mexico</span><span class="trip-break">flight $532 + $90/day for a week</span></span><span class="trip-total">$1,162</span></li><li class="trip"><span class="trip-place">Budapest<span class="country">, Hungary</span><span class="trip-break">flight $747 + $65/day for a week</span></span><span class="trip-total">$1,202</span></li><li class="trip"><span class="trip-place">Hanoi<span class="country">, Vietnam</span><span class="trip-break">flight $930 + $40/day for a week</span></span><span class="trip-total">$1,210</span></li><li class="trip"><span class="trip-place">Tbilisi<span class="country">, Georgia</span><span class="trip-break">flight $976 + $35/day for a week</span></span><span class="trip-total">$1,221</span></li><li class="trip"><span class="trip-place">Marrakech<span class="country">, Morocco</span><span class="trip-break">flight $787 + $65/day for a week</span></span><span class="trip-total">$1,242</span></li><li class="trip"><span class="trip-place">Prague<span class="country">, Czechia</span><span class="trip-break">flight $757 + $70/day for a week</span></span><span class="trip-total">$1,247</span></li><li class="trip"><span class="trip-place">Montego Bay<span class="country">, Jamaica</span><span class="trip-break">flight $423 + $120/day for a week</span></span><span class="trip-total">$1,263</span></li><li class="trip"><span class="trip-place">Delhi<span class="country">, India</span><span class="trip-break">flight $1,026 + $35/day for a week</span></span><span class="trip-total">$1,271</span></li><li class="trip"><span class="trip-place">Cusco<span class="country">, Peru</span><span class="trip-break">flight $832 + $65/day for a week</span></span><span class="trip-total">$1,287</span></li><li class="trip"><span class="trip-place">Zagreb<span class="country">, Croatia</span><span class="trip-break">flight $810 + $70/day for a week</span></span><span class="trip-total">$1,300</span></li><li class="trip"><span class="trip-place">Yerevan<span class="country">, Armenia</span><span class="trip-break">flight $1,027 + $40/day for a week</span></span><span class="trip-total">$1,307</span></li><li class="trip"><span class="trip-place">Orlando<span class="country">, United States</span><span class="trip-break">flight $268 + $150/day for a week</span></span><span class="trip-total">$1,318</span></li><li class="trip"><span class="trip-place">Manila<span class="country">, Philippines</span><span class="trip-break">flight $973 + $50/day for a week</span></span><span class="trip-total">$1,323</span></li><li class="trip"><span class="trip-place">Punta Cana<span class="country">, Dominican Republic</span><span class="trip-break">flight $417 + $130/day for a week</span></span><span class="trip-total">$1,327</span></li><li class="trip"><span class="trip-place">Istanbul<span class="country">, Turkey</span><span class="trip-break">flight $849 + $70/day for a week</span></span><span class="trip-total">$1,339</span></li><li class="trip"><span class="trip-place">Naples<span class="country">, Italy</span><span class="trip-break">flight $749 + $85/day for a week</span></span><span class="trip-total">$1,344</span></li><li class="trip"><span class="trip-place">Tunis<span class="country">, Tunisia</span><span class="trip-break">flight $996 + $50/day for a week</span></span><span class="trip-total">$1,346</span></li><li class="trip"><span class="trip-place">Bangkok<span class="country">, Thailand</span><span class="trip-break">flight $1,038 + $50/day for a week</span></span><span class="trip-total">$1,388</span></li><li class="trip"><span class="trip-place">Casablanca<span class="country">, Morocco</span><span class="trip-break">flight $979 + $60/day for a week</span></span><span class="trip-total">$1,399</span></li><li class="trip"><span class="trip-place">Buenos Aires<span class="country">, Argentina</span><span class="trip-break">flight $913 + $70/day for a week</span></span><span class="trip-total">$1,403</span></li><li class="trip"><span class="trip-place">Porto<span class="country">, Portugal</span><span class="trip-break">flight $843 + $80/day for a week</span></span><span class="trip-total">$1,403</span></li><li class="trip"><span class="trip-place">Ho Chi Minh City<span class="country">, Vietnam</span><span class="trip-break">flight $1,100 + $45/day for a week</span></span><span class="trip-total">$1,415</span></li><li class="trip"><span class="trip-place">Taipei<span class="country">, Taiwan</span><span class="trip-break">flight $903 + $75/day for a week</span></span><span class="trip-total">$1,428</span></li><li class="trip"><span class="trip-place">Split<span class="country">, Croatia</span><span class="trip-break">flight $730 + $100/day for a week</span></span><span class="trip-total">$1,430</span></li><li class="trip"><span class="trip-place">Cairo<span class="country">, Egypt</span><span class="trip-break">flight $1,088 + $50/day for a week</span></span><span class="trip-total">$1,438</span></li><li class="trip"><span class="trip-place">Nassau<span class="country">, Bahamas</span><span class="trip-break">flight $393 + $150/day for a week</span></span><span class="trip-total">$1,443</span></li><li class="trip"><span class="trip-place">Ljubljana<span class="country">, Slovenia</span><span class="trip-break">flight $939 + $75/day for a week</span></span><span class="trip-total">$1,464</span></li><li class="trip"><span class="trip-place">Chiang Mai<span class="country">, Thailand</span><span class="trip-break">flight $1,201 + $40/day for a week</span></span><span class="trip-total">$1,481</span></li><li class="trip"><span class="trip-place">Kuala Lumpur<span class="country">, Malaysia</span><span class="trip-break">flight $1,102 + $55/day for a week</span></span><span class="trip-total">$1,487</span></li><li class="trip"><span class="trip-place">Athens<span class="country">, Greece</span><span class="trip-break">flight $867 + $90/day for a week</span></span><span class="trip-total">$1,497</span></li><li class="trip"><span class="trip-place">Berlin<span class="country">, Germany</span><span class="trip-break">flight $798 + $100/day for a week</span></span><span class="trip-total">$1,498</span></li><li class="trip"><span class="trip-place">Bridgetown<span class="country">, Barbados</span><span class="trip-break">flight $449 + $150/day for a week</span></span><span class="trip-total">$1,499</span></li></ul>
+      </section>
+
+      <div class="more">
+        <span class="label">More from Denver:</span>
+        <a href="/denver" class="xlink">All cheap trips</a>
+        <a href="/denver/under-1000" class="xlink">Under $1,000</a>
+        <a href="/go" class="xlink">Build your own search &rarr;</a>
+      </div>
+    </main>
+
+    <footer class="footer">&copy; 2026 Promptiv &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

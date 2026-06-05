@@ -19,7 +19,7 @@ import sqlite3
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from server import pairings, hubs, hub_render
+from server import pairings, hubs, hub_render, budget_pages, budget_render
 from server.migrations import init_schema
 
 CANONICAL_BASE = "https://promptiv.io"
@@ -44,26 +44,42 @@ def generate(db_path: str, public_dir: Path) -> list:
         pairings.seed_pairings(conn)
         pairings.verify_all(conn, now=datetime.now(timezone.utc).isoformat())
 
+        today = date.today().isoformat()
         origins = [o for o, _, _ in pairings.CURATED_PAIRINGS]
         written = []
+        budget_paths = []
         for origin in origins:
             hub = hubs.build_hub(conn, origin)
             if not hub["trips"]:
                 print(f"  SKIP {origin}: no trip data")
                 continue
             slug = hub_render.slugify(hub["origin_city"])
-            html = hub_render.render_hub(hub)
-            out_dir = public_dir / slug
-            out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / "index.html").write_text(html, encoding="utf-8")
+            (public_dir / slug).mkdir(parents=True, exist_ok=True)
+            (public_dir / slug / "index.html").write_text(hub_render.render_hub(hub), encoding="utf-8")
             hero = "hero" if hub["hero"] else "NO HERO"
             print(f"  {origin} -> /{slug}  ({len(hub['trips'])} trips, {hero})")
             written.append(slug)
+
+            # Budget pages (origin x band), gated. build once per band, keep the ones
+            # that pass; sibling links use the published set so they cross-link.
+            pages = [p for p in (budget_pages.build_budget_page(conn, origin, b)
+                                 for b in budget_pages.BUDGET_BANDS) if p]
+            bands = [p["budget"] for p in pages]
+            for p in pages:
+                bdir = public_dir / slug / f"under-{p['budget']}"
+                bdir.mkdir(parents=True, exist_ok=True)
+                bdir.joinpath("index.html").write_text(
+                    budget_render.render_budget_page(p, sibling_bands=bands, freshness=today),
+                    encoding="utf-8")
+                budget_paths.append(f"{slug}/under-{p['budget']}")
+            if bands:
+                print(f"       budget pages: {', '.join('under-' + str(b) for b in bands)}")
         _write_pairings_js(conn, public_dir)
     finally:
         conn.close()
 
-    _write_sitemap(public_dir, written)
+    _write_sitemap(public_dir, written, budget_paths)
+    print(f"  budget pages total: {len(budget_paths)}")
     return written
 
 
@@ -99,7 +115,8 @@ def _write_pairings_js(conn, public_dir: Path) -> None:
     print(f"  pairings.js: {len(entries)} verified pairings")
 
 
-def _write_sitemap(public_dir: Path, hub_slugs: list) -> None:
+def _write_sitemap(public_dir: Path, hub_slugs: list, budget_paths: list = None) -> None:
+    budget_paths = budget_paths or []
     today = date.today().isoformat()
     parts = [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -111,9 +128,11 @@ def _write_sitemap(public_dir: Path, hub_slugs: list) -> None:
         parts += _url(f"{CANONICAL_BASE}{loc}", today, changefreq, priority)
     for slug in hub_slugs:
         parts += _url(f"{CANONICAL_BASE}/{slug}", today, "weekly", "0.7")
+    for path in budget_paths:
+        parts += _url(f"{CANONICAL_BASE}/{path}", today, "weekly", "0.6")
     parts.append("</urlset>")
     (public_dir / "sitemap.xml").write_text("\n".join(parts) + "\n", encoding="utf-8")
-    print(f"  sitemap.xml: {len(CORE_PAGES)} core + {len(hub_slugs)} hubs")
+    print(f"  sitemap.xml: {len(CORE_PAGES)} core + {len(hub_slugs)} hubs + {len(budget_paths)} budget")
 
 
 def _url(loc: str, lastmod: str, changefreq: str, priority: str) -> list:
