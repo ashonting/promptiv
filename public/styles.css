@@ -43,6 +43,13 @@ html, body {
 
 body { position: relative; overflow-x: hidden; }
 
+/* Site-wide link hover — every text link transitions to the brand purple.
+   Buttons (.btn, .primary-cta) are excluded so they keep their background hover.
+   The :not() chain also outranks per-component hovers (footer, cards, hub-back)
+   so the whole site hovers to one consistent purple. */
+a:not(.btn):not(.primary-cta) { transition: color 0.15s ease; }
+a:not(.btn):not(.primary-cta):hover { color: var(--color-accent); }
+
 /* Aurora — soft radial gradients in the background. Fixed so it doesn't scroll. */
 .aurora {
   position: fixed;
