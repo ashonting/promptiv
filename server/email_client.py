@@ -170,3 +170,36 @@ def send_pairing_alert(at_risk_list: list, to_email: Optional[str] = None) -> Op
     except Exception as e:
         logger.exception("pairing alert send failed: %s", e)
         return None
+
+
+def send_digest_email(to_email: str, subject: str, html: str, text: str,
+                      unsubscribe_url: Optional[str] = None) -> Optional[Any]:
+    """Send one weekly digest. Sets the List-Unsubscribe header (RFC 8058
+    one-click) for deliverability. Returns the Resend response or None on failure."""
+    api_key = os.environ.get("RESEND_API_KEY")
+    sender = os.environ.get("RESEND_FROM")
+    if not api_key or not sender:
+        logger.error("RESEND_API_KEY or RESEND_FROM not set; skipping digest send")
+        return None
+
+    resend.api_key = api_key
+    payload = {
+        "from": sender,
+        "to": [to_email],
+        "subject": subject,
+        "html": html,
+        "text": text,
+    }
+    if unsubscribe_url:
+        payload["headers"] = {
+            "List-Unsubscribe": f"<{unsubscribe_url}>",
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        }
+    reply_to = os.environ.get("RESEND_REPLY_TO")
+    if reply_to:
+        payload["reply_to"] = [reply_to]
+    try:
+        return resend.Emails.send(payload)  # type: ignore[arg-type]
+    except Exception as e:
+        logger.exception("digest send failed: %s", e)
+        return None

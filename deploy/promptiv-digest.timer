@@ -1,0 +1,11 @@
+[Unit]
+Description=Trigger Promptiv weekly digest Sundays 10:00 America/Chicago
+
+[Timer]
+# Timezone-aware so it stays 10am Central across DST (systemd v240+).
+OnCalendar=Sun *-*-* 10:00:00 America/Chicago
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

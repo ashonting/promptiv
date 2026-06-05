@@ -204,6 +204,10 @@
     rotation.pinTo(idx); // stop rotation, settle the hero on this city
     var eyebrow = document.getElementById('eyebrow-text');
     if (eyebrow) { eyebrow.textContent = 'Cheap trips from ' + p.city; }
+    // Tag the signup with the detected city so a homepage signup subscribes to
+    // that city's weekly digest (hub signups already carry hub_city).
+    var cityField = document.getElementById('signup-city');
+    if (cityField) { cityField.value = p.city; }
     var ctaGo = document.getElementById('cta-go');
     var ctaHub = document.getElementById('cta-hub');
     if (ctaHub) {

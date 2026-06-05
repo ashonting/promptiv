@@ -58,6 +58,30 @@ def _hash_ip(ip: Optional[str]) -> Optional[str]:
     ).hexdigest()
 
 
+def _unsub_page(ok: bool) -> str:
+    """Minimal styled confirmation page for the unsubscribe link."""
+    if ok:
+        head = "You&rsquo;re unsubscribed."
+        body = "You won&rsquo;t get any more weekly emails from Promptiv. Changed your mind? You can sign up again any time."
+    else:
+        head = "Link not recognized."
+        body = "That unsubscribe link didn&rsquo;t match anything. If you keep getting emails, just reply to one and we&rsquo;ll sort it out."
+    return (
+        '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" />'
+        '<meta name="viewport" content="width=device-width,initial-scale=1.0" />'
+        '<meta name="robots" content="noindex" />'
+        '<title>Unsubscribe &middot; Promptiv</title>'
+        '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />'
+        '<link rel="stylesheet" href="/styles.css" /></head>'
+        '<body><div class="frame"><header class="top-bar">'
+        '<div class="brand">Promptiv<span class="brand-dot"></span></div></header>'
+        f'<main class="hero"><h1 class="display">{head}</h1>'
+        f'<p class="lede">{body}</p>'
+        '<div class="cta-row"><a class="btn primary-cta" href="/">Back to Promptiv &rarr;</a></div>'
+        '</main></div></body></html>'
+    )
+
+
 def create_app() -> Flask:
     public_dir = Path(__file__).resolve().parent.parent / "public"
     app = Flask(__name__, static_folder=str(public_dir), static_url_path="")
@@ -86,6 +110,15 @@ def create_app() -> Flask:
     @app.route("/go")
     def go_page():
         return send_from_directory(str(public_dir), "go.html")
+
+    @app.route("/unsubscribe", methods=["GET", "POST"])
+    def unsubscribe():
+        token = (request.args.get("token") or request.form.get("token") or "").strip()
+        ok = db.unsubscribe_by_token(token)
+        # RFC 8058 one-click POST from the List-Unsubscribe header: a bare 200/404.
+        if request.method == "POST":
+            return ("", 200) if ok else ("", 404)
+        return (_unsub_page(ok), 200 if ok else 404)
 
     @app.route("/api/healthz")
     def healthz():
@@ -127,12 +160,15 @@ def create_app() -> Flask:
 
         ip = request.headers.get("X-Forwarded-For", request.remote_addr or "")
         ip_hash = _hash_ip(ip.split(",")[0].strip()) if ip else None
-        # Hub pages post a hub_city so the signup is attributed to that city;
-        # otherwise fall back to the page URL the browser reports.
-        hub_city = (data.get("hub_city") or "").strip()
+        # Hub pages (and the geo-personalized homepage) post a hub_city so the
+        # signup is attributed to that city and becomes that city's digest
+        # subscriber; otherwise fall back to the page URL the browser reports.
+        hub_city = (data.get("hub_city") or "").strip()[:64]
         referrer = f"hub:{hub_city}" if hub_city else request.headers.get("Referer")
 
-        signup_id = db.insert_signup(email, ip_hash=ip_hash, referrer=referrer)
+        signup_id = db.insert_signup(
+            email, ip_hash=ip_hash, referrer=referrer, digest_city=hub_city or None
+        )
         # Email send is best-effort; failures are logged inside the client.
         email_client.send_confirmation(email)
 

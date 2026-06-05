@@ -1,6 +1,7 @@
 """SQLite access layer for Promptiv teaser."""
 import json
 import os
+import secrets
 import sqlite3
 from datetime import datetime, timezone
 from typing import Optional
@@ -23,24 +24,72 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def insert_signup(email: str, ip_hash: Optional[str] = None, referrer: Optional[str] = None) -> int:
-    """Insert a signup. If email exists, return the existing row's id (dedup)."""
+def insert_signup(email: str, ip_hash: Optional[str] = None, referrer: Optional[str] = None,
+                  digest_city: Optional[str] = None) -> int:
+    """Insert a signup (= a weekly-digest subscription). If the email exists,
+    return the existing id; backfill its digest_city / unsub_token if missing so a
+    later hub signup can supply the city a homepage signup didn't have."""
     conn = _connect()
     try:
-        cur = conn.execute("SELECT id FROM signups WHERE email = ?", (email,))
-        existing = cur.fetchone()
+        existing = conn.execute(
+            "SELECT id, digest_city, unsub_token FROM signups WHERE email = ?", (email,)
+        ).fetchone()
         if existing:
-            return int(existing["id"])
+            eid = int(existing["id"])
+            updates = {}
+            if digest_city and not existing["digest_city"]:
+                updates["digest_city"] = digest_city
+            if not existing["unsub_token"]:
+                updates["unsub_token"] = secrets.token_urlsafe(24)
+            if updates:
+                sets = ", ".join(f"{k} = ?" for k in updates)
+                conn.execute(f"UPDATE signups SET {sets} WHERE id = ?", (*updates.values(), eid))
+                conn.commit()
+            return eid
 
         cur = conn.execute(
-            "INSERT INTO signups (email, created_at, ip_hash, referrer) VALUES (?, ?, ?, ?)",
-            (email, _now(), ip_hash, referrer),
+            "INSERT INTO signups (email, created_at, ip_hash, referrer, digest_city, unsub_token) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (email, _now(), ip_hash, referrer, digest_city, secrets.token_urlsafe(24)),
         )
         conn.commit()
         new_id = cur.lastrowid
         if new_id is None:
             raise RuntimeError("INSERT succeeded but lastrowid is None")
         return new_id
+    finally:
+        conn.close()
+
+
+def get_digest_subscribers() -> list:
+    """Active subscribers with a known served city, for the weekly digest."""
+    conn = _connect()
+    try:
+        return conn.execute(
+            "SELECT email, digest_city, unsub_token FROM signups "
+            "WHERE unsubscribed_at IS NULL AND digest_city IS NOT NULL AND digest_city != '' "
+            "ORDER BY digest_city, email"
+        ).fetchall()
+    finally:
+        conn.close()
+
+
+def unsubscribe_by_token(token: Optional[str]) -> bool:
+    """Mark the subscriber with this token unsubscribed. Returns True if the
+    token is valid (already-unsubscribed counts as success), False if unknown."""
+    if not token:
+        return False
+    conn = _connect()
+    try:
+        row = conn.execute(
+            "SELECT id, unsubscribed_at FROM signups WHERE unsub_token = ?", (token,)
+        ).fetchone()
+        if not row:
+            return False
+        if row["unsubscribed_at"] is None:
+            conn.execute("UPDATE signups SET unsubscribed_at = ? WHERE id = ?", (_now(), row["id"]))
+            conn.commit()
+        return True
     finally:
         conn.close()
 

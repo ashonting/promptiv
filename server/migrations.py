@@ -146,12 +146,36 @@ CREATE INDEX IF NOT EXISTS idx_fare_obs_day ON fare_observations(observed_date);
 """
 
 
+# Additive column migrations for existing tables (CREATE TABLE IF NOT EXISTS
+# can't add columns to a table that already exists). Each entry is applied only
+# when the column is missing, so this is idempotent.
+#   signups.digest_city     — the served city whose weekly digest they get (W4)
+#   signups.unsubscribed_at  — ISO timestamp once they unsubscribe (NULL = active)
+#   signups.unsub_token      — opaque token for their one-click unsubscribe link
+_COLUMN_MIGRATIONS = [
+    ("signups", "digest_city", "TEXT"),
+    ("signups", "unsubscribed_at", "TEXT"),
+    ("signups", "unsub_token", "TEXT"),
+]
+
+
+def _add_column_if_missing(conn, table: str, column: str, decl: str) -> None:
+    cols = [r[1] for r in conn.execute(f"PRAGMA table_info({table})")]
+    if column not in cols:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
+
+
 def init_schema(db_path: str) -> None:
     """Ensure schema exists at db_path. Idempotent — safe to run repeatedly."""
     Path(db_path).parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(db_path)
     try:
         conn.executescript(SCHEMA)
+        for table, column, decl in _COLUMN_MIGRATIONS:
+            _add_column_if_missing(conn, table, column, decl)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_signups_unsub_token ON signups(unsub_token)"
+        )
         conn.commit()
     finally:
         conn.close()

@@ -36,27 +36,35 @@ NEARBY_REGIONS = {"North America", "Latin America", "Caribbean"}
 
 
 def build_hub(conn, origin: str, nights: int = pairings.DEFAULT_NIGHTS,
-              display_names: dict = DISPLAY_NAMES) -> dict:
+              display_names: dict = DISPLAY_NAMES, since: Optional[str] = None) -> dict:
     """Assemble the full hub content for one origin.
 
     Returns {origin, origin_city, hero, trips}. `trips` is every reachable
     destination with fare data, each a dict ready for the template, sorted by
     all-in cost ascending. `hero` is the verified pairing headline or None.
+
+    `since` (an ISO date) restricts the airfare to observations on/after that
+    day — used by the weekly digest for trailing-window pricing so "this week"
+    reflects recent fares, not the all-time floor. None = all-time (the hubs).
     """
     arow = conn.execute(
         "SELECT city FROM airports WHERE iata=?", (origin,)
     ).fetchone()
     origin_city = arow[0] if arow else origin
 
-    rows = conn.execute(
+    sql = (
         "SELECT d.iata, d.city, d.country, d.region, d.vibes, d.best_months, "
         "       d.avg_daily_cost_usd AS daily, MIN(ph.cheapest_price_usd) AS air "
         "FROM destinations d "
         "JOIN price_history ph ON ph.dest_iata = d.iata "
         "WHERE ph.origin_iata = ? AND ph.trip_nights = ? "
-        "GROUP BY d.iata",
-        (origin, nights),
-    ).fetchall()
+    )
+    params = [origin, nights]
+    if since:
+        sql += "AND ph.observed_date >= ? "
+        params.append(since)
+    sql += "GROUP BY d.iata"
+    rows = conn.execute(sql, params).fetchall()
 
     trips = []
     for iata, city, country, region, vibes, best_months, daily, air in rows:
