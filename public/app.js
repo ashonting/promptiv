@@ -9,10 +9,13 @@
   // (city, cheapest marquee destination, recognizable splurge anchor). All three
   // flip in the headline. Each pairing is verified true (cheap week < anchor week
   // all-in) at authoring time; the engine will re-verify against live data later.
-  // lat/lng (airport coords) + slug power geo personalization: nearest served
-  // city within ~150mi gets pinned as the hero. cheap/anchor are the punchy
-  // homepage display names (the hubs use the fuller catalog names).
-  var PAIRINGS = [
+  // The pairings (origin city + verified cheap/anchor) drive the rotating hero
+  // and geo personalization. The authoritative list is generated from the
+  // VERIFIED city_pairings into /pairings.js (window.PROMPTIV_PAIRINGS) so the
+  // homepage tracks the fact monitor and never shows an unverified claim. This
+  // built-in copy is only a fallback if that file fails to load, so the hero
+  // never goes blank. lat/lng = airport coords; cheap/anchor = punchy display.
+  var FALLBACK_PAIRINGS = [
     { city: 'Nashville',     slug: 'nashville',     lat: 36.124, lng:  -86.678, cheap: 'Medellín',       anchor: 'Vegas' },
     { city: 'New York',      slug: 'new-york',      lat: 40.641, lng:  -73.778, cheap: 'Mexico City',    anchor: 'Honolulu' },
     { city: 'Los Angeles',   slug: 'los-angeles',   lat: 33.942, lng: -118.409, cheap: 'Oaxaca',         anchor: 'Cabo' },
@@ -26,6 +29,8 @@
     { city: 'San Francisco', slug: 'san-francisco', lat: 37.621, lng: -122.379, cheap: 'Sofia',          anchor: 'Jackson Hole' },
     { city: 'Boston',        slug: 'boston',        lat: 42.366, lng:  -71.010, cheap: 'Cairo',          anchor: 'Honolulu' }
   ];
+  var PAIRINGS = (window.PROMPTIV_PAIRINGS && window.PROMPTIV_PAIRINGS.length)
+    ? window.PROMPTIV_PAIRINGS : FALLBACK_PAIRINGS;
 
   // Returns a controller { pinTo(index) } so geo personalization can stop the
   // rotation and settle the hero on the visitor's city. Returns null off-homepage.
