@@ -1,0 +1,19 @@
+[Unit]
+Description=Promptiv regenerate static hubs + pairings.js + sitemap from the live DB
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory=/srv/promptiv
+Environment=DATABASE_PATH=/var/lib/promptiv/teaser.sqlite
+Environment=PYTHONPATH=/srv/promptiv
+EnvironmentFile=/srv/promptiv/.env
+ExecStart=/srv/promptiv/.venv/bin/python -m scripts.generate_hubs --db /var/lib/promptiv/teaser.sqlite --public /srv/promptiv/public
+StandardOutput=append:/var/log/promptiv/regen.log
+StandardError=append:/var/log/promptiv/regen.log
+TimeoutSec=600
+
+[Install]
+WantedBy=multi-user.target

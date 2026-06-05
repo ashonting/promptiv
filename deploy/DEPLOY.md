@@ -234,7 +234,9 @@ echo "30 3 * * * sqlite3 /var/lib/promptiv/teaser.sqlite \".backup /root/backups
 ## Incremental v1 deploy
 
 ```bash
-# 1. From local: ship code + data + deploy configs (NOT tests/, docs/, scripts/)
+# 1. From local: ship code + data + deploy configs (NOT tests/, docs/, spikes)
+# NOTE: scripts/generate_hubs.py DOES deploy — the droplet's promptiv-regen.timer
+# runs it nightly. Only the spike_* throwaways are excluded.
 cd ~/promptiv && rsync -avz --delete \
   --exclude '.git/' --exclude '.venv/' --exclude '.env' \
   --exclude '__pycache__/' --exclude '.pytest_cache/' \
@@ -242,7 +244,7 @@ cd ~/promptiv && rsync -avz --delete \
   --exclude 'PRODUCT-BRIEF.md' \
   --exclude '*.egg-info/' --exclude '.gitignore' \
   --exclude 'public/vendor/' --exclude 'teaser.dev.sqlite' \
-  --exclude 'scripts/' \
+  --exclude 'scripts/spike_*' \
   ./ root@promptiv.io:/srv/promptiv/
 
 # 2. If pyproject.toml changed, install new deps
