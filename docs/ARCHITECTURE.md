@@ -82,6 +82,9 @@ comparison pages (robust-flip gate).
 07:00 UTC  promptiv-refresh.timer  -> price_refresh: scan 1,200 routes via fli (~5-6h),
                                       write price_snapshots + price_history +
                                       fare_observations, then re-verify pairings + alert.
+                                      Bad-scrape guard: fares outside $40-$3,500 are
+                                      dropped before any write (catches fli error/
+                                      business-class fares, e.g. a $7k Bratislava price).
 14:00 UTC  promptiv-regen.timer    -> scripts.generate_hubs: rebuild ALL static pages
                                       (hubs, budget, comparison, pairings.js, sitemap)
                                       from the live DB. Self-fresh; broken claims drop.
@@ -111,6 +114,13 @@ droplet (the exposed box holds no keys to the hub).
 anti-staleness levers (trailing-7-day pricing, rotating weekly lens, gated deal-alerts
 that auto-appear once a route has ≥14 days of history). Unsubscribe via
 `/unsubscribe?token=`.
+
+**Editorial:** `/blog/<slug>` — hand-authored data-story posts (NOT auto-generated;
+dated snapshots, "figures as of <month>"). First post: `/blog/cheap-flight-trap` ("The
+cheap flight is a trap"), the digital-PR link asset. `BlogPosting` schema. Linked from the
+homepage; listed in the sitemap via `BLOG_POSTS` in the generator. Built with `comparison_render`-
+style static HTML, not the daily-regenerated lattice (narrative prose can't safely
+auto-update against live data).
 
 **Utility:** `/privacy`, `/terms`, `/thanks` (noindex), styled `/404.html`.
 
