@@ -27,6 +27,17 @@ TRIP_LENGTHS = (7,)  # v1: 7-night only to stay under 12h timeout. v1.1: re-add 
                      # rate-limiting from Google.
 RATE_LIMIT_BACKOFF_SECONDS = 60.0
 
+# Plausibility band for a cheapest-economy round-trip from a US city. Fares
+# outside this are bad scrapes (error/business-class prices, e.g. a $7k Bratislava
+# "economy" fare) and are dropped before they pollute the durable archive. The
+# real observed range is ~$110-$1,700, so this is generous.
+MIN_FARE_USD = 40
+MAX_FARE_USD = 3500
+
+
+def _plausible(price) -> bool:
+    return price is not None and MIN_FARE_USD <= price <= MAX_FARE_USD
+
 
 def _is_rate_limit_error(err: Exception) -> bool:
     """Detect HTTP 429 / rate-limit signals in an FliError message."""
@@ -61,6 +72,16 @@ def refresh_route(
         )
         time.sleep(rate_limit_backoff)
         results = fli.search_dates(origin, dest, start_date, end_date, trip_nights)
+
+    # Drop implausible fares (bad scrapes) before any write, so one error fare
+    # can't skew the archive or a hub/comparison ranking.
+    if results:
+        kept = [r for r in results if _plausible(r.total_price_usd)]
+        if len(kept) != len(results):
+            log.warning("%s->%s %dn: dropped %d implausible fare(s) outside $%d-$%d",
+                        origin, dest, trip_nights, len(results) - len(kept),
+                        MIN_FARE_USD, MAX_FARE_USD)
+        results = kept
 
     if not results:
         return 0

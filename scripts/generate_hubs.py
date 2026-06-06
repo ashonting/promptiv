@@ -37,6 +37,12 @@ CORE_PAGES = [
     ("/terms", "yearly", "0.2"),
 ]
 
+# Hand-authored editorial posts (static, not generated). Listed here so the
+# daily-regenerated sitemap keeps including them.
+BLOG_POSTS = [
+    "blog/cheap-flight-trap",
+]
+
 
 def generate(db_path: str, public_dir: Path) -> list:
     init_schema(db_path)
@@ -149,10 +155,12 @@ def _write_sitemap(public_dir: Path, hub_slugs: list, budget_paths: list = None,
         parts += _url(f"{CANONICAL_BASE}/{path}", today, "weekly", "0.6")
     for path in vs_paths:
         parts += _url(f"{CANONICAL_BASE}/{path}", today, "weekly", "0.6")
+    for path in BLOG_POSTS:
+        parts += _url(f"{CANONICAL_BASE}/{path}", today, "monthly", "0.7")
     parts.append("</urlset>")
     (public_dir / "sitemap.xml").write_text("\n".join(parts) + "\n", encoding="utf-8")
     print(f"  sitemap.xml: {len(CORE_PAGES)} core + {len(hub_slugs)} hubs + "
-          f"{len(budget_paths)} budget + {len(vs_paths)} vs")
+          f"{len(budget_paths)} budget + {len(vs_paths)} vs + {len(BLOG_POSTS)} blog")
 
 
 def _url(loc: str, lastmod: str, changefreq: str, priority: str) -> list:

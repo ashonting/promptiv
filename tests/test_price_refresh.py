@@ -150,6 +150,40 @@ def test_refresh_route_retries_on_rate_limit(seeded_db):
     assert count > 0
 
 
+class _BadFareClient:
+    """Test double: returns a mix of plausible and implausible (bad-scrape) fares."""
+
+    def search_dates(self, *args, **kwargs):
+        from types import SimpleNamespace
+
+        def fare(price, dep):
+            return SimpleNamespace(
+                origin_iata="BNA", dest_iata="MEX", departure_date=dep,
+                return_date="2026-06-08", trip_nights=7, total_price_usd=price,
+                stops=0, carrier_codes=None)
+        # 2 real fares, 1 error fare ($7,137), 1 zero — only the real ones survive.
+        return [fare(450, "2026-06-01"), fare(7137, "2026-06-02"),
+                fare(380, "2026-06-03"), fare(0, "2026-06-04")]
+
+
+def test_refresh_route_drops_implausible_fares(seeded_db):
+    refresh_route(seeded_db, _BadFareClient(), origin="BNA", dest="MEX", trip_nights=7,
+                  start_date=date(2026, 6, 1), end_date=date(2026, 8, 30))
+    conn = sqlite3.connect(seeded_db)
+    try:
+        snaps = sorted(p[0] for p in conn.execute(
+            "SELECT total_price_usd FROM price_snapshots WHERE dest_iata='MEX'"))
+        hist = conn.execute(
+            "SELECT cheapest_price_usd FROM price_history WHERE dest_iata='MEX'").fetchone()[0]
+        obs = sorted(p[0] for p in conn.execute(
+            "SELECT total_price_usd FROM fare_observations WHERE dest_iata='MEX'"))
+    finally:
+        conn.close()
+    assert snaps == [380, 450]   # $7,137 and $0 dropped from every table
+    assert hist == 380           # cheapest of the PLAUSIBLE fares, not the $0
+    assert obs == [380, 450]
+
+
 def test_refresh_route_does_not_retry_on_non_rate_limit_error(seeded_db):
     """A non-rate-limit error propagates immediately without retry."""
     from server.fli_client import FliError
