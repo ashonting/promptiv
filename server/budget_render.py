@@ -11,7 +11,7 @@ from typing import Optional
 
 from server import schema_ld
 
-CANONICAL_BASE = "https://promptiv.io"
+CANONICAL_BASE = "https://dashaway.io"
 
 
 def _esc(s) -> str:
@@ -28,7 +28,7 @@ def render_budget_page(page: dict, sibling_bands: Optional[list] = None,
     slug = page["slug"]
     budget = page["budget"]
     canonical = f"{canonical_base}/{slug}/under-{budget}"
-    title = f"Trips under {_money(budget)} from {city} | Promptiv"
+    title = f"Trips under {_money(budget)} from {city} | DashAway"
     meta_desc = (
         f"{page['count']} trips from {city} that fit a full week under {_money(budget)}, "
         f"airfare plus a week on the ground. Total cost, not just the fare. Updated weekly."
@@ -106,7 +106,7 @@ def render_budget_page(page: dict, sibling_bands: Optional[list] = None,
   <div class="aurora"></div>
   <div class="frame">
     <header class="top-bar">
-      <div class="brand">Promptiv<span class="brand-dot"></span></div>
+      <div class="brand">DashAway<span class="brand-dot"></span></div>
     </header>
 
     <main>
@@ -138,7 +138,7 @@ def render_budget_page(page: dict, sibling_bands: Optional[list] = None,
       </div>
     </main>
 
-    <footer class="footer">&copy; 2026 Promptiv &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
+    <footer class="footer">&copy; 2026 DashAway &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
   </div>
 
   <script src="/app.js"></script>

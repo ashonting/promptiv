@@ -30,7 +30,7 @@ from server.hub_render import slugify
 
 log = logging.getLogger(__name__)
 
-BASE_URL = "https://promptiv.io"
+BASE_URL = "https://dashaway.io"
 TRAILING_DAYS = 7      # "this week" = fares observed in the last 7 days
 N_FEATURE = 6          # trips in the week's lens section
 N_REACH = 2            # trips in the recurring "farther than you think" section
@@ -264,7 +264,7 @@ def _render_html(city, hero, lens, feature, reach, deals, month, hub_url, unsub_
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;background:{CARD};border-radius:14px;border:1px solid {BORDER};">
         <tr><td style="padding:34px 36px 4px 36px;">
           <div style="font-family:Georgia,'Times New Roman',serif;font-size:23px;font-weight:400;color:{INK};letter-spacing:-0.01em;">
-            Promptiv<span style="display:inline-block;width:6px;height:6px;background:{ACCENT};border-radius:50%;margin-left:5px;vertical-align:middle;transform:translateY(-6px);"></span>
+            DashAway<span style="display:inline-block;width:6px;height:6px;background:{ACCENT};border-radius:50%;margin-left:5px;vertical-align:middle;transform:translateY(-6px);"></span>
           </div>
           <p style="margin:14px 0 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:{MUTE};font-weight:600;">Cheap trips from {_esc(city)}</p>
         </td></tr>
@@ -284,7 +284,7 @@ def _render_html(city, hero, lens, feature, reach, deals, month, hub_url, unsub_
         <tr><td style="padding:18px 36px;border-top:1px solid {BORDER};color:{MUTE};font-size:11.5px;line-height:1.6;">
           You're getting this because you asked for {_esc(city)}'s cheapest trips.
           <a href="{_esc(unsub_url)}" style="color:{MUTE};text-decoration:underline;">Unsubscribe</a>.<br />
-          &copy; 2026 Promptiv &middot; <a href="{_esc(base_url)}/privacy" style="color:{MUTE};text-decoration:underline;">Privacy</a>
+          &copy; 2026 DashAway &middot; <a href="{_esc(base_url)}/privacy" style="color:{MUTE};text-decoration:underline;">Privacy</a>
         </td></tr>
       </table>
     </td></tr>

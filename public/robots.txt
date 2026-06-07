@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://promptiv.io/sitemap.xml
+Sitemap: https://dashaway.io/sitemap.xml

@@ -1,4 +1,4 @@
-"""Schema initialization for the Promptiv teaser database."""
+"""Schema initialization for the DashAway teaser database."""
 import sqlite3
 from pathlib import Path
 

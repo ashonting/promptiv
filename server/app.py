@@ -1,4 +1,4 @@
-"""Promptiv teaser Flask app."""
+"""DashAway teaser Flask app."""
 import hashlib
 import hmac
 import os
@@ -62,7 +62,7 @@ def _unsub_page(ok: bool) -> str:
     """Minimal styled confirmation page for the unsubscribe link."""
     if ok:
         head = "You&rsquo;re unsubscribed."
-        body = "You won&rsquo;t get any more weekly emails from Promptiv. Changed your mind? You can sign up again any time."
+        body = "You won&rsquo;t get any more weekly emails from DashAway. Changed your mind? You can sign up again any time."
     else:
         head = "Link not recognized."
         body = "That unsubscribe link didn&rsquo;t match anything. If you keep getting emails, just reply to one and we&rsquo;ll sort it out."
@@ -70,14 +70,14 @@ def _unsub_page(ok: bool) -> str:
         '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" />'
         '<meta name="viewport" content="width=device-width,initial-scale=1.0" />'
         '<meta name="robots" content="noindex" />'
-        '<title>Unsubscribe &middot; Promptiv</title>'
+        '<title>Unsubscribe &middot; DashAway</title>'
         '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />'
         '<link rel="stylesheet" href="/styles.css" /></head>'
         '<body><div class="frame"><header class="top-bar">'
-        '<div class="brand">Promptiv<span class="brand-dot"></span></div></header>'
+        '<div class="brand">DashAway<span class="brand-dot"></span></div></header>'
         f'<main class="hero"><h1 class="display">{head}</h1>'
         f'<p class="lede">{body}</p>'
-        '<div class="cta-row"><a class="btn primary-cta" href="/">Back to Promptiv &rarr;</a></div>'
+        '<div class="cta-row"><a class="btn primary-cta" href="/">Back to DashAway &rarr;</a></div>'
         '</main></div></body></html>'
     )
 

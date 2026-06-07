@@ -85,8 +85,8 @@ def test_render_has_seo_freshness_and_internal_links(conn):
     p = budget_pages.build_budget_page(conn, "BNA", 1000)
     html = budget_render.render_budget_page(
         p, sibling_bands=[1000, 1500], freshness="2026-06-05")
-    assert 'rel="canonical" href="https://promptiv.io/nashville/under-1000"' in html
-    assert "<title>Trips under $1,000 from Nashville | Promptiv</title>" in html
+    assert 'rel="canonical" href="https://dashaway.io/nashville/under-1000"' in html
+    assert "<title>Trips under $1,000 from Nashville | DashAway</title>" in html
     assert "Prices updated 2026-06-05." in html
     assert '/nashville/under-1500' in html          # sibling-band internal link
     assert 'href="/nashville"' in html              # link back to the hub
@@ -97,9 +97,9 @@ def test_render_has_seo_freshness_and_internal_links(conn):
 
 def test_schema_ld_is_valid_json_and_carries_no_offers():
     s = schema_ld.page_ld(
-        crumbs=[("Home", "https://promptiv.io/"),
-                ("Nashville", "https://promptiv.io/nashville"),
-                ("Trips under $1,000", "https://promptiv.io/nashville/under-1000")],
+        crumbs=[("Home", "https://dashaway.io/"),
+                ("Nashville", "https://dashaway.io/nashville"),
+                ("Trips under $1,000", "https://dashaway.io/nashville/under-1000")],
         list_name="Trips under $1,000 from Nashville",
         item_names=["Guatemala City, Guatemala", "Medellín, Colombia"],
     )

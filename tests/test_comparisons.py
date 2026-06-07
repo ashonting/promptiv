@@ -71,7 +71,7 @@ def test_false_flip_is_gated(conn):
 def test_render_has_seo_breakdown_proof_and_breadcrumb_no_offers(conn):
     cmp = comparisons.build_comparison(conn, "CHP", "ANC", "Cheap beats dear.")
     html = comparison_render.render_comparison(cmp, others=[], freshness="2026-06-05")
-    assert 'rel="canonical" href="https://promptiv.io/vs/cheapville-vs-anchorton"' in html
+    assert 'rel="canonical" href="https://dashaway.io/vs/cheapville-vs-anchorton"' in html
     assert "which week costs less?" in html
     assert "Cheaper from <b>3 of 3</b>" in html       # the robustness proof
     assert "Prices updated 2026-06-05." in html

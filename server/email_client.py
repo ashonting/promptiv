@@ -1,4 +1,4 @@
-"""Resend email wrapper for Promptiv teaser confirmations.
+"""Resend email wrapper for DashAway teaser confirmations.
 
 Failures are logged but never raised — a transient email failure must not
 block signup.
@@ -19,7 +19,7 @@ CONFIRMATION_HTML = """\
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>You're on the Promptiv list</title>
+<title>You're on the DashAway list</title>
 </head>
 <body style="margin:0;padding:0;background:#f5f3ee;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f5f3ee;">
@@ -29,7 +29,7 @@ CONFIRMATION_HTML = """\
           <tr>
             <td style="padding:36px 36px 8px 36px;">
               <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:400;color:#1a1a1f;letter-spacing:-0.01em;">
-                Promptiv<span style="display:inline-block;width:6px;height:6px;background:#a78bfa;border-radius:50%;margin-left:5px;vertical-align:middle;transform:translateY(-6px);"></span>
+                DashAway<span style="display:inline-block;width:6px;height:6px;background:#a78bfa;border-radius:50%;margin-left:5px;vertical-align:middle;transform:translateY(-6px);"></span>
               </div>
             </td>
           </tr>
@@ -39,12 +39,12 @@ CONFIRMATION_HTML = """\
                 You're on the list.
               </p>
               <p style="margin:0 0 18px;color:#3a3a42;">
-                Promptiv finds trips hiding in your budget. Tell us what you have to spend and how many days you have, and we'll surface 5–8 ideas with the catch on each.
+                DashAway finds trips hiding in your budget. Tell us what you have to spend and how many days you have, and we'll surface 5–8 ideas with the catch on each.
               </p>
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 14px;">
                 <tr>
                   <td bgcolor="#a78bfa" style="border-radius:10px;">
-                    <a href="https://promptiv.io/go" style="display:inline-block;padding:13px 26px;color:#0a0a0e;text-decoration:none;font-weight:600;font-size:14.5px;letter-spacing:0.01em;">Try it now &rarr;</a>
+                    <a href="https://dashaway.io/go" style="display:inline-block;padding:13px 26px;color:#0a0a0e;text-decoration:none;font-weight:600;font-size:14.5px;letter-spacing:0.01em;">Try it now &rarr;</a>
                   </td>
                 </tr>
               </table>
@@ -59,7 +59,7 @@ CONFIRMATION_HTML = """\
           <tr>
             <td style="padding:18px 36px;border-top:1px solid #ece9e1;color:#8a8a92;font-size:11.5px;line-height:1.55;">
               To unsubscribe, reply with the word UNSUBSCRIBE.<br />
-              &copy; 2026 Promptiv &middot; <a href="https://promptiv.io/privacy" style="color:#8a8a92;text-decoration:underline;">Privacy</a>
+              &copy; 2026 DashAway &middot; <a href="https://dashaway.io/privacy" style="color:#8a8a92;text-decoration:underline;">Privacy</a>
             </td>
           </tr>
         </table>
@@ -71,12 +71,12 @@ CONFIRMATION_HTML = """\
 """
 
 CONFIRMATION_TEXT = """\
-You're on the Promptiv list.
+You're on the DashAway list.
 
-Promptiv finds trips hiding in your budget. Tell us what you have to spend and
+DashAway finds trips hiding in your budget. Tell us what you have to spend and
 how many days you have, and we'll surface 5-8 ideas with the catch on each.
 
-Try it now: https://promptiv.io/go
+Try it now: https://dashaway.io/go
 
 We'll email you when new features ship. No spam, no inbox noise.
 
@@ -91,7 +91,7 @@ def compose_welcome_email(to_email: str) -> dict:
     return {
         "to": [to_email],
         "from": os.environ.get("RESEND_FROM", "team@mail.distillworks.com"),
-        "subject": "You're on the Promptiv list",
+        "subject": "You're on the DashAway list",
         "html": CONFIRMATION_HTML,
         "text": CONFIRMATION_TEXT,
     }
@@ -162,7 +162,7 @@ def send_pairing_alert(at_risk_list: list, to_email: Optional[str] = None) -> Op
     payload = {
         "from": sender,
         "to": [recipient],
-        "subject": f"Promptiv: {len(at_risk_list)} pairing claim(s) need review",
+        "subject": f"DashAway: {len(at_risk_list)} pairing claim(s) need review",
         "text": body,
     }
     try:

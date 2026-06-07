@@ -32,9 +32,9 @@ def test_send_confirmation_includes_body(monkeypatch):
         email_client.send_confirmation("bob@example.com")
 
     assert "html" in captured or "text" in captured
-    # Must mention Promptiv somewhere
+    # Must mention the brand somewhere
     body = (captured.get("html", "") + captured.get("text", "")).lower()
-    assert "promptiv" in body
+    assert "dashaway" in body
 
 
 def test_send_confirmation_returns_none_on_failure(monkeypatch):
@@ -52,5 +52,5 @@ def test_compose_welcome_email_body_contains_subject_and_unsubscribe(monkeypatch
     msg = email_client.compose_welcome_email(to_email="adam@example.com")
     assert msg["to"] == ["adam@example.com"]
     assert "subject" in msg
-    assert "promptiv" in msg["subject"].lower()
+    assert "dashaway" in msg["subject"].lower()
     assert "unsubscribe" in (msg.get("text", "") + msg.get("html", "")).lower()

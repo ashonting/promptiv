@@ -1,4 +1,4 @@
-"""SQLite access layer for Promptiv teaser."""
+"""SQLite access layer for DashAway teaser."""
 import json
 import os
 import secrets

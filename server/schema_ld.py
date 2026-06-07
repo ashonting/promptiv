@@ -8,7 +8,7 @@ content. Organization + WebSite are hand-placed in index.html (homepage only).
 """
 import json
 
-BASE = "https://promptiv.io"
+BASE = "https://dashaway.io"
 
 
 def _ld_script(graph: list) -> str:

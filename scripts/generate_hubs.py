@@ -23,7 +23,7 @@ from server import pairings, hubs, hub_render, budget_pages, budget_render
 from server import comparisons, comparison_render
 from server.migrations import init_schema
 
-CANONICAL_BASE = "https://promptiv.io"
+CANONICAL_BASE = "https://dashaway.io"
 
 # Punchy homepage display names that differ from the catalog (the hubs use the
 # fuller catalog names). Applied on top of hubs.DISPLAY_NAMES by IATA.

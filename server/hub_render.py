@@ -13,7 +13,7 @@ from typing import Optional
 
 from server import hubs, schema_ld
 
-CANONICAL_BASE = "https://promptiv.io"
+CANONICAL_BASE = "https://dashaway.io"
 
 # How many entries each section shows.
 N_CHEAPEST = 10
@@ -49,7 +49,7 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
     canonical = f"{canonical_base}/{slug}"
     hero = hub["hero"]
 
-    title = f"Cheap trips from {origin_city} | Promptiv"
+    title = f"Cheap trips from {origin_city} | DashAway"
     if hero:
         meta_desc = (
             f"A week in {hero['cheap_city']} costs less than a week in "
@@ -134,7 +134,7 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
   <div class="aurora"></div>
   <div class="frame">
     <header class="top-bar">
-      <div class="brand">Promptiv<span class="brand-dot"></span></div>
+      <div class="brand">DashAway<span class="brand-dot"></span></div>
     </header>
 
     <main>
@@ -158,7 +158,7 @@ def render_hub(hub: dict, canonical_base: str = CANONICAL_BASE) -> str:
       {_vibe_section(hub)}
     </main>
 
-    <footer class="footer">&copy; 2026 Promptiv &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
+    <footer class="footer">&copy; 2026 DashAway &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
   </div>
 
   <script src="/app.js"></script>
