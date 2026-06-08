@@ -1,12 +1,20 @@
-# Promptiv — System Architecture & Current State
+# DashAway — System Architecture & Current State
 
-**Last updated:** 2026-06-05 · Single source of truth for how Promptiv works today.
+**Last updated:** 2026-06-07 · Single source of truth for how DashAway works today.
 For the product *why*, read `PRODUCT-BRIEF.md`. For the strategic pivot narrative,
 `docs/plans/2026-06-04-cheap-trips-pivot.md`. For deploy mechanics, `deploy/DEPLOY.md`.
 
+> **Rebrand (2026-06-07):** the product is now **DashAway** at **https://dashaway.io**
+> (was "Promptiv" at promptiv.io). promptiv.io now serves a separate "Promptiv coming soon"
+> placeholder (`/srv/promptiv-comingsoon/`). **Only the user-facing brand + domain flipped** —
+> the local dir (`~/promptiv`), server path (`/srv/promptiv`), GitHub repo (`ashonting/promptiv`),
+> systemd units (`promptiv-*`), and the `PROMPTIV_PAIRINGS` JS global kept their old names. nginx
+> now serves two vhosts from one droplet (`deploy/nginx-dashaway.conf`). Some older references
+> below + in `DEPLOY.md` still say "promptiv.io" — stale, update opportunistically.
+
 ---
 
-## 1. What Promptiv is
+## 1. What DashAway is
 
 A curated **"cheap trips, not cheap flights"** product for **12 U.S. departure cities**.
 It answers the question flight search doesn't: *from your city, where does your budget
@@ -37,7 +45,7 @@ never bookable quotes.
 | Web | static `public/` + Flask | nginx serves `public/`, proxies `/api/*` + `/unsubscribe` to gunicorn `:8000` |
 
 Email via **Resend** (`team@mail.distillworks.com`). nginx config lives at
-`/etc/nginx/sites-enabled/promptiv` (the repo's `deploy/nginx-promptiv.conf` is the
+`/etc/nginx/sites-enabled/dashaway` (the repo's `deploy/nginx-dashaway.conf` is the
 source; **it had diverged once — keep them in sync**).
 
 ---
@@ -165,7 +173,7 @@ self-refreshes and any broken claim auto-suppresses. Renderers: `hub_render.py`,
 
 `rsync ./ root@promptiv.io:/srv/promptiv/` (excludes tests/docs/spikes; **includes**
 `scripts/generate_hubs.py`). Then: re-swap GSAP CDN→vendor in `index.html` (rsync clobbers
-it), `init_schema` if migrations changed, copy nginx config to `sites-enabled/promptiv` +
+it), `init_schema` if migrations changed, copy nginx config to `sites-enabled/dashaway` +
 `nginx -t` + reload if it changed, restart `promptiv.service` if Python changed, run the
 regen for fresh static pages. 120 tests (`.venv/bin/pytest`); commit only when asked.
 
@@ -177,7 +185,7 @@ regen for fresh static pages. 120 tests (`.venv/bin/pytest`); commit only when a
 - **More lattice tiers** (seasonal, vibe, destination) — deliberately held until Search
   Console shows what ranks (~4-8 weeks). Selectivity over volume.
 - **Deal-alerts in the digest** auto-activate ~mid-June (≥14 days of `price_history`).
-- `team@promptiv.io` sender (digest is from `team@mail.distillworks.com`).
+- `team@dashaway.io` sender (digest is from `team@mail.distillworks.com`).
 - Organization logo (no wordmark image asset yet).
 - Origin expansion beyond 12 (decided: not now).
 - Wiring a richer content pipeline / LLM into the budget-page intro slot (seam exists).
