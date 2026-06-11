@@ -111,7 +111,7 @@ Existing tools require the user to already know the destination (Google Flights)
 ### New components
 
 ```
-~/promptiv/
+~/dashaway/
 ├── server/
 │   ├── app.py                   (existing, gains /go route + /api/go endpoint)
 │   ├── db.py                    (existing, gains queries for new tables)
@@ -490,7 +490,7 @@ No spam. Unsubscribe one-click.
 
 ### Authoring format: YAML in repo
 
-Adam edits two files in `~/promptiv/data/`:
+Adam edits two files in `~/dashaway/data/`:
 
 **airports.yaml** (12 entries, written once)
 ```yaml

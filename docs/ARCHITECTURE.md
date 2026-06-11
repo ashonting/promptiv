@@ -7,7 +7,7 @@ For the product *why*, read `PRODUCT-BRIEF.md`. For the strategic pivot narrativ
 > **Rebrand (2026-06-07):** the product is now **DashAway** at **https://dashaway.io**
 > (was "Promptiv" at promptiv.io). promptiv.io now serves a separate "Promptiv coming soon"
 > placeholder (`/srv/promptiv-comingsoon/`). **Only the user-facing brand + domain flipped** —
-> the local dir (`~/promptiv`), server path (`/srv/promptiv`), GitHub repo (`ashonting/promptiv`),
+> the local dir (`~/dashaway`), server path (`/srv/promptiv`), GitHub repo (`ashonting/promptiv`),
 > systemd units (`promptiv-*`), and the `PROMPTIV_PAIRINGS` JS global kept their old names. nginx
 > now serves two vhosts from one droplet (`deploy/nginx-dashaway.conf`). Some older references
 > below + in `DEPLOY.md` still say "promptiv.io" — stale, update opportunistically.
@@ -39,7 +39,7 @@ never bookable quotes.
 
 | | Local | Production |
 |---|---|---|
-| Code | `~/promptiv/` (git, master) | `/srv/promptiv/` on `root@promptiv.io` (159.65.161.102, 1 GB RAM) |
+| Code | `~/dashaway/` (git, master) | `/srv/promptiv/` on `root@promptiv.io` (159.65.161.102, 1 GB RAM) |
 | Python | `.venv/` (3.11) | `.venv/` (3.10) |
 | DB | `teaser.dev.sqlite` | `/var/lib/promptiv/teaser.sqlite` (SQLite; `sqlite3` CLI NOT installed — use the venv python) |
 | Web | static `public/` + Flask | nginx serves `public/`, proxies `/api/*` + `/unsubscribe` to gunicorn `:8000` |

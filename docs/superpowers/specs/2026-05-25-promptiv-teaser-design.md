@@ -4,7 +4,7 @@
 **Author:** Adam (with Claude Code, superpowers:brainstorming)
 **Status:** Design approved, awaiting user review before implementation plan
 **Replaces:** the existing placeholder page at promptiv.io
-**Product brief:** `~/promptiv/PRODUCT-BRIEF.md`
+**Product brief:** `~/dashaway/PRODUCT-BRIEF.md`
 
 ---
 

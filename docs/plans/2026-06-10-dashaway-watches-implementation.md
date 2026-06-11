@@ -16,7 +16,7 @@
 - Tests: `tests/conftest.py` provides `temp_db_path`, `app`, `client` fixtures; run `python -m pytest` (in `.venv`).
 - Tokens: `secrets.token_urlsafe(24)`; unsubscribe-style flows return RFC-8058-ish responses.
 
-**Run command for every test step:** `cd ~/promptiv && .venv/bin/python -m pytest <file> -q`
+**Run command for every test step:** `cd ~/dashaway && .venv/bin/python -m pytest <file> -q`
 
 ---
 

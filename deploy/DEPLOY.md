@@ -33,14 +33,14 @@ chown -R www-data:www-data /var/log/promptiv /var/lib/promptiv
 
 ### 4. Initial code deploy from local
 
-Run from your laptop (`~/promptiv/`):
+Run from your laptop (`~/dashaway/`):
 
 ```bash
 rsync -avz --delete \
     --exclude='.venv' --exclude='.git' --exclude='*.sqlite' \
     --exclude='__pycache__' --exclude='.env' --exclude='.superpowers' \
     --exclude='node_modules' \
-    ~/promptiv/ root@promptiv.io:/srv/promptiv/
+    ~/dashaway/ root@promptiv.io:/srv/promptiv/
 ```
 
 ### 5. Server-side: install deps and create venv
@@ -160,12 +160,12 @@ sqlite3 /var/lib/promptiv/teaser.sqlite "DELETE FROM signups WHERE email = 'depl
 
 ```bash
 # From laptop:
-cd ~/promptiv
+cd ~/dashaway
 rsync -avz \
     --exclude='.venv' --exclude='.git' --exclude='*.sqlite' \
     --exclude='__pycache__' --exclude='.env' --exclude='.superpowers' \
     --exclude='node_modules' \
-    ~/promptiv/ root@promptiv.io:/srv/promptiv/
+    ~/dashaway/ root@promptiv.io:/srv/promptiv/
 
 # Then on the server:
 ssh root@promptiv.io "systemctl restart promptiv.service && systemctl reload nginx"
@@ -237,7 +237,7 @@ echo "30 3 * * * sqlite3 /var/lib/promptiv/teaser.sqlite \".backup /root/backups
 # 1. From local: ship code + data + deploy configs (NOT tests/, docs/, spikes)
 # NOTE: scripts/generate_hubs.py DOES deploy — the droplet's promptiv-regen.timer
 # runs it nightly. Only the spike_* throwaways are excluded.
-cd ~/promptiv && rsync -avz --delete \
+cd ~/dashaway && rsync -avz --delete \
   --exclude '.git/' --exclude '.venv/' --exclude '.env' \
   --exclude '__pycache__/' --exclude '.pytest_cache/' \
   --exclude 'tests/' --exclude 'docs/' --exclude '.superpowers/' \

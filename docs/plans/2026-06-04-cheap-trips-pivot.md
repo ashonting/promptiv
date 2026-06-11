@@ -64,7 +64,7 @@ Phased so each phase ships something real and de-risks the next. Readiness gates
 
 ## 5. Workstreams (buildable units)
 
-Each is a self-contained build with its own detailed task plan when we start it. Files are in the existing `~/promptiv` repo (Flask + SQLite; deploy via rsync to `/srv/promptiv`).
+Each is a self-contained build with its own detailed task plan when we start it. Files are in the existing `~/dashaway` repo (Flask + SQLite; deploy via rsync to `/srv/promptiv`).
 
 ### W1 — Pairing engine + fact monitor (Phase 0, foundation)
 - **New:** `server/pairings.py` — the 12 curated pairings (`CURATED_PAIRINGS`), `total_cost(conn, origin, dest)` (best `fare_observations`/`price_history` fare + 7×`avg_daily_cost`), `seed_pairings()` (idempotent), `verify_all()` (recompute facts → set `verified`/`margin`/`last_checked`), `get_headline(origin)` (verified gate → dict or None), `at_risk()` (broken or thin-margin).

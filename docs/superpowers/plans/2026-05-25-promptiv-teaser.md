@@ -8,14 +8,14 @@
 
 **Tech Stack:** Python 3.11+, Flask, SQLite (stdlib), Resend Python SDK, pytest, Playwright (for E2E), GSAP 3.x, General Sans font (self-hosted), nginx, systemd.
 
-**Spec:** `~/promptiv/docs/superpowers/specs/2026-05-25-promptiv-teaser-design.md`
+**Spec:** `~/dashaway/docs/superpowers/specs/2026-05-25-promptiv-teaser-design.md`
 
 ---
 
 ## File Structure
 
 ```
-~/promptiv/
+~/dashaway/
 ├── PRODUCT-BRIEF.md                              # existing
 ├── README.md                                      # NEW — short setup notes
 ├── .gitignore                                     # existing
@@ -67,20 +67,20 @@
 ## Task 1: Scaffold project structure
 
 **Files:**
-- Create: `~/promptiv/server/__init__.py` (empty)
-- Create: `~/promptiv/server/requirements.txt`
-- Create: `~/promptiv/.env.example`
-- Create: `~/promptiv/public/` (directory)
-- Create: `~/promptiv/public/fonts/` (directory)
-- Create: `~/promptiv/tests/__init__.py` (empty)
-- Create: `~/promptiv/tests/conftest.py`
-- Create: `~/promptiv/deploy/` (directory)
-- Create: `~/promptiv/README.md`
+- Create: `~/dashaway/server/__init__.py` (empty)
+- Create: `~/dashaway/server/requirements.txt`
+- Create: `~/dashaway/.env.example`
+- Create: `~/dashaway/public/` (directory)
+- Create: `~/dashaway/public/fonts/` (directory)
+- Create: `~/dashaway/tests/__init__.py` (empty)
+- Create: `~/dashaway/tests/conftest.py`
+- Create: `~/dashaway/deploy/` (directory)
+- Create: `~/dashaway/README.md`
 
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-cd ~/promptiv
+cd ~/dashaway
 mkdir -p server public/fonts tests/e2e deploy
 touch server/__init__.py tests/__init__.py
 ```
@@ -201,14 +201,14 @@ See `deploy/DEPLOY.md`.
 
 - [ ] **Step 6: Verify structure**
 
-Run: `find ~/promptiv -maxdepth 3 -type d ! -path '*/\.*' | sort`
+Run: `find ~/dashaway -maxdepth 3 -type d ! -path '*/\.*' | sort`
 
-Expected output includes: `~/promptiv/server`, `~/promptiv/public`, `~/promptiv/tests`, `~/promptiv/deploy`, `~/promptiv/docs/superpowers/{plans,specs}`.
+Expected output includes: `~/dashaway/server`, `~/dashaway/public`, `~/dashaway/tests`, `~/dashaway/deploy`, `~/dashaway/docs/superpowers/{plans,specs}`.
 
 - [ ] **Step 7: Commit**
 
 ```bash
-cd ~/promptiv
+cd ~/dashaway
 git add server/ tests/ deploy/ public/ .env.example README.md
 git commit -m "feat: scaffold project structure for teaser implementation
 
@@ -220,12 +220,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 2: SQLite schema and migrations
 
 **Files:**
-- Create: `~/promptiv/server/migrations.py`
-- Create: `~/promptiv/tests/test_migrations.py`
+- Create: `~/dashaway/server/migrations.py`
+- Create: `~/dashaway/tests/test_migrations.py`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `~/promptiv/tests/test_migrations.py`:
+Create `~/dashaway/tests/test_migrations.py`:
 
 ```python
 """Tests for schema initialization."""
@@ -296,7 +296,7 @@ def test_email_uniqueness_enforced(temp_db_path):
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-cd ~/promptiv
+cd ~/dashaway
 source .venv/bin/activate  # if not already active
 pytest tests/test_migrations.py -v
 ```
@@ -305,7 +305,7 @@ Expected: all tests FAIL with `ModuleNotFoundError: No module named 'server.migr
 
 - [ ] **Step 3: Write minimal implementation**
 
-Create `~/promptiv/server/migrations.py`:
+Create `~/dashaway/server/migrations.py`:
 
 ```python
 """Schema initialization for the Promptiv teaser database."""
@@ -371,12 +371,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 3: Database access layer
 
 **Files:**
-- Create: `~/promptiv/server/db.py`
-- Create: `~/promptiv/tests/test_db.py`
+- Create: `~/dashaway/server/db.py`
+- Create: `~/dashaway/tests/test_db.py`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `~/promptiv/tests/test_db.py`:
+Create `~/dashaway/tests/test_db.py`:
 
 ```python
 """Tests for db access layer."""
@@ -456,7 +456,7 @@ Expected: tests FAIL with `ImportError` or `AttributeError` on `db.insert_signup
 
 - [ ] **Step 3: Write minimal implementation**
 
-Create `~/promptiv/server/db.py`:
+Create `~/dashaway/server/db.py`:
 
 ```python
 """SQLite access layer for Promptiv teaser."""
@@ -591,12 +591,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 4: Resend email client wrapper
 
 **Files:**
-- Create: `~/promptiv/server/email_client.py`
-- Create: `~/promptiv/tests/test_email_client.py`
+- Create: `~/dashaway/server/email_client.py`
+- Create: `~/dashaway/tests/test_email_client.py`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `~/promptiv/tests/test_email_client.py`:
+Create `~/dashaway/tests/test_email_client.py`:
 
 ```python
 """Tests for the Resend email wrapper."""
@@ -658,7 +658,7 @@ Expected: FAIL with `ModuleNotFoundError`.
 
 - [ ] **Step 3: Write minimal implementation**
 
-Create `~/promptiv/server/email_client.py`:
+Create `~/dashaway/server/email_client.py`:
 
 ```python
 """Resend email wrapper for Promptiv teaser confirmations."""
@@ -737,12 +737,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 5: Flask app entry + /api/signup endpoint
 
 **Files:**
-- Create: `~/promptiv/server/app.py`
-- Create: `~/promptiv/tests/test_signup_endpoint.py`
+- Create: `~/dashaway/server/app.py`
+- Create: `~/dashaway/tests/test_signup_endpoint.py`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `~/promptiv/tests/test_signup_endpoint.py`:
+Create `~/dashaway/tests/test_signup_endpoint.py`:
 
 ```python
 """Tests for /api/signup endpoint."""
@@ -817,7 +817,7 @@ Expected: FAIL — `server.app` doesn't exist yet.
 
 - [ ] **Step 3: Write minimal implementation**
 
-Create `~/promptiv/server/app.py`:
+Create `~/dashaway/server/app.py`:
 
 ```python
 """Promptiv teaser Flask app."""
@@ -912,12 +912,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 6: /api/qualifiers/<id> endpoint
 
 **Files:**
-- Modify: `~/promptiv/server/app.py` (add route)
-- Create: `~/promptiv/tests/test_qualifiers_endpoint.py`
+- Modify: `~/dashaway/server/app.py` (add route)
+- Create: `~/dashaway/tests/test_qualifiers_endpoint.py`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `~/promptiv/tests/test_qualifiers_endpoint.py`:
+Create `~/dashaway/tests/test_qualifiers_endpoint.py`:
 
 ```python
 """Tests for /api/qualifiers/<signup_id> endpoint."""
@@ -1049,7 +1049,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 7: Self-host General Sans fonts
 
 **Files:**
-- Add to: `~/promptiv/public/fonts/`
+- Add to: `~/dashaway/public/fonts/`
 
 - [ ] **Step 1: Download font files**
 
@@ -1058,7 +1058,7 @@ Fontshare doesn't expose a direct woff2 URL on their CDN; we need to download fr
 1. Open https://www.fontshare.com/fonts/general-sans in a browser
 2. Click "Download Family", get `General_Sans.zip`
 3. Extract; locate the `Fonts/WEB/woff2/` subdirectory
-4. Copy these four files into `~/promptiv/public/fonts/`:
+4. Copy these four files into `~/dashaway/public/fonts/`:
    - `GeneralSans-Regular.woff2`
    - `GeneralSans-Medium.woff2`
    - `GeneralSans-Semibold.woff2`
@@ -1069,7 +1069,7 @@ Fontshare doesn't expose a direct woff2 URL on their CDN; we need to download fr
 - [ ] **Step 2: Verify files exist**
 
 ```bash
-ls -la ~/promptiv/public/fonts/
+ls -la ~/dashaway/public/fonts/
 ```
 
 Expected: four `.woff2` files, each 20–40 KB.
@@ -1088,7 +1088,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 8: Build index.html structure
 
 **Files:**
-- Create: `~/promptiv/public/index.html`
+- Create: `~/dashaway/public/index.html`
 
 - [ ] **Step 1: Write `public/index.html`**
 
@@ -1200,9 +1200,9 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 2: Verify file is well-formed**
 
 ```bash
-python3 -c "import html.parser as h; p = h.HTMLParser(); open('~/promptiv/public/index.html').read()" 2>&1 || true
+python3 -c "import html.parser as h; p = h.HTMLParser(); open('~/dashaway/public/index.html').read()" 2>&1 || true
 # Or just visually inspect:
-head -20 ~/promptiv/public/index.html
+head -20 ~/dashaway/public/index.html
 ```
 
 - [ ] **Step 3: Commit**
@@ -1219,7 +1219,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 9: Stylesheet (styles.css)
 
 **Files:**
-- Create: `~/promptiv/public/styles.css`
+- Create: `~/dashaway/public/styles.css`
 
 - [ ] **Step 1: Write `public/styles.css`**
 
@@ -1515,7 +1515,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 10: Client-side JavaScript (app.js)
 
 **Files:**
-- Create: `~/promptiv/public/app.js`
+- Create: `~/dashaway/public/app.js`
 
 - [ ] **Step 1: Write `public/app.js`**
 
@@ -1680,8 +1680,8 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 11: Privacy and Terms stub pages
 
 **Files:**
-- Create: `~/promptiv/public/privacy.html`
-- Create: `~/promptiv/public/terms.html`
+- Create: `~/dashaway/public/privacy.html`
+- Create: `~/dashaway/public/terms.html`
 
 - [ ] **Step 1: Write `public/privacy.html`**
 
@@ -1795,7 +1795,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Create local venv and install deps**
 
 ```bash
-cd ~/promptiv
+cd ~/dashaway
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r server/requirements.txt
@@ -1824,7 +1824,7 @@ Expected output: `schema ready at ./teaser.dev.sqlite`
 Per user CLAUDE.md, the agent does not launch dev servers. The user runs:
 
 ```bash
-cd ~/promptiv
+cd ~/dashaway
 source .venv/bin/activate
 export $(grep -v '^#' .env | xargs)
 flask run --port 5000
@@ -1858,19 +1858,19 @@ If user finds issues in Step 4, return to the relevant task and fix. Otherwise p
 ## Task 13: Playwright end-to-end test
 
 **Files:**
-- Create: `~/promptiv/tests/e2e/test_teaser_flow.py`
+- Create: `~/dashaway/tests/e2e/test_teaser_flow.py`
 
 - [ ] **Step 1: Install Playwright browsers**
 
 ```bash
-cd ~/promptiv
+cd ~/dashaway
 source .venv/bin/activate
 playwright install chromium
 ```
 
 - [ ] **Step 2: Write the E2E test**
 
-Create `~/promptiv/tests/e2e/test_teaser_flow.py`:
+Create `~/dashaway/tests/e2e/test_teaser_flow.py`:
 
 ```python
 """End-to-end smoke test for the teaser page.
@@ -1978,12 +1978,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 14: Production nginx + systemd configs
 
 **Files:**
-- Create: `~/promptiv/deploy/nginx-promptiv.conf`
-- Create: `~/promptiv/deploy/promptiv.service`
+- Create: `~/dashaway/deploy/nginx-promptiv.conf`
+- Create: `~/dashaway/deploy/promptiv.service`
 
 - [ ] **Step 1: Write nginx config**
 
-Create `~/promptiv/deploy/nginx-promptiv.conf`:
+Create `~/dashaway/deploy/nginx-promptiv.conf`:
 
 ```nginx
 # /etc/nginx/sites-available/promptiv.io
@@ -2060,7 +2060,7 @@ server {
 
 - [ ] **Step 2: Write systemd unit**
 
-Create `~/promptiv/deploy/promptiv.service`:
+Create `~/dashaway/deploy/promptiv.service`:
 
 ```ini
 [Unit]
@@ -2089,7 +2089,7 @@ WantedBy=multi-user.target
 
 - [ ] **Step 3: Add gunicorn to requirements**
 
-Append to `~/promptiv/server/requirements.txt`:
+Append to `~/dashaway/server/requirements.txt`:
 
 ```
 gunicorn==23.0.0
@@ -2109,11 +2109,11 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 15: Deployment runbook
 
 **Files:**
-- Create: `~/promptiv/deploy/DEPLOY.md`
+- Create: `~/dashaway/deploy/DEPLOY.md`
 
 - [ ] **Step 1: Write the runbook**
 
-Create `~/promptiv/deploy/DEPLOY.md`:
+Create `~/dashaway/deploy/DEPLOY.md`:
 
 ````markdown
 # Promptiv Teaser — Deployment Runbook
@@ -2151,14 +2151,14 @@ chown -R www-data:www-data /var/log/promptiv /var/lib/promptiv
 
 ### 4. Initial code deploy from local
 
-Run from your laptop (`~/promptiv/`):
+Run from your laptop (`~/dashaway/`):
 
 ```bash
 rsync -avz --delete \
     --exclude='.venv' --exclude='.git' --exclude='*.sqlite' \
     --exclude='__pycache__' --exclude='.env' --exclude='.superpowers' \
     --exclude='node_modules' \
-    ~/promptiv/ root@promptiv.io:/srv/promptiv/
+    ~/dashaway/ root@promptiv.io:/srv/promptiv/
 ```
 
 ### 5. Server-side: install deps and create venv
@@ -2257,12 +2257,12 @@ sqlite3 /var/lib/promptiv/teaser.sqlite "DELETE FROM signups WHERE email = 'depl
 
 ```bash
 # From laptop:
-cd ~/promptiv
+cd ~/dashaway
 rsync -avz \
     --exclude='.venv' --exclude='.git' --exclude='*.sqlite' \
     --exclude='__pycache__' --exclude='.env' --exclude='.superpowers' \
     --exclude='node_modules' \
-    ~/promptiv/ root@promptiv.io:/srv/promptiv/
+    ~/dashaway/ root@promptiv.io:/srv/promptiv/
 
 # Then on the server:
 ssh root@promptiv.io "systemctl restart promptiv.service && systemctl reload nginx"
@@ -2367,7 +2367,7 @@ ssh root@promptiv.io "sqlite3 /var/lib/promptiv/teaser.sqlite \"DELETE FROM sign
 - [ ] **Step 5: Final commit (mark deployment done)**
 
 ```bash
-cd ~/promptiv
+cd ~/dashaway
 echo "Deployed to production: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> deploy/DEPLOYMENTS.log
 git add deploy/DEPLOYMENTS.log
 git commit -m "deploy: initial production rollout
