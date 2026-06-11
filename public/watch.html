@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watch a trip — DashAway</title>
+  <meta name="description" content="Tell us the trip you're dreaming about. We watch it every night and email you when it's time to book." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .watch-main { max-width: 560px; margin: 0 auto; padding: 24px 18px 64px; }
+    .watch-form { display: flex; flex-direction: column; gap: 14px; margin-top: 26px; }
+    .watch-form label { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); }
+    .watch-form label .hint { font-weight: 400; color: var(--color-text-muted); }
+    .watch-form input {
+      width: 100%; box-sizing: border-box; padding: 11px 12px; font: inherit; font-size: 16px;
+      color: var(--color-text-primary); background: #fff;
+      border: 1px solid var(--color-border); border-radius: 9px; outline: none;
+    }
+    .watch-form input:focus { border-color: var(--color-accent); }
+    .watch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 480px) { .watch-row { grid-template-columns: 1fr; } }
+    .watch-submit {
+      margin-top: 8px; padding: 13px; font: inherit; font-size: 15.5px; font-weight: 600;
+      color: #fff; background: var(--color-accent); border: none; border-radius: 10px; cursor: pointer;
+    }
+    .watch-submit:hover { background: var(--color-accent-bright); }
+    .watch-submit:disabled { background: var(--color-text-muted); cursor: default; }
+    .watch-error { color: #bd463c; font-size: 13.5px; display: none; }
+    .watch-note { font-size: 12.5px; color: var(--color-text-muted); margin-top: 14px; line-height: 1.5; }
+    .watch-done { display: none; margin-top: 32px; padding: 22px;
+      background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="frame">
+    <header class="top-bar">
+      <div class="brand"><a href="/" class="brand-link">DashAway<span class="brand-dot"></span></a></div>
+      <div class="top-status">Watch — Beta</div>
+    </header>
+    <main class="watch-main">
+      <div class="eyebrow"><span>Fare Watch</span></div>
+      <h1 class="display">Dreaming about a trip? <em>We'll watch it.</em></h1>
+      <p class="lede">Tell us the route and roughly when. Every night we price your whole window, and we email you only when it's genuinely time to book.</p>
+
+      <form id="watch-form" class="watch-form" action="/api/watch" method="POST" novalidate>
+        <div class="watch-row">
+          <div>
+            <label for="w-origin">From <span class="hint">· airport code</span></label>
+            <input id="w-origin" name="origin" placeholder="BNA" autocapitalize="characters" autocomplete="off" required />
+          </div>
+          <div>
+            <label for="w-dest">To <span class="hint">· airport code</span></label>
+            <input id="w-dest" name="dest" placeholder="PLS" autocapitalize="characters" autocomplete="off" required />
+          </div>
+        </div>
+        <div class="watch-row">
+          <div>
+            <label for="w-start">Anytime from</label>
+            <input id="w-start" name="window_start" type="date" required />
+          </div>
+          <div>
+            <label for="w-end">Until</label>
+            <input id="w-end" name="window_end" type="date" required />
+          </div>
+        </div>
+        <div class="watch-row">
+          <div>
+            <label for="w-nights">Trip length <span class="hint">· nights</span></label>
+            <input id="w-nights" name="nights" type="number" min="3" max="14" value="7" required />
+          </div>
+          <div>
+            <label for="w-ceiling">Alert me under <span class="hint">· $ optional</span></label>
+            <input id="w-ceiling" name="ceiling" type="number" min="50" placeholder="450" />
+          </div>
+        </div>
+        <div>
+          <label for="w-email">Email</label>
+          <input id="w-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+        <button class="watch-submit" type="submit">Watch this trip</button>
+        <div class="watch-error" id="w-error"></div>
+        <p class="watch-note">One watch per email for now (more coming soon). We check nightly and
+        email at most once a week per watch unless something dramatic happens. Prices are observed,
+        never predicted — and always verify before booking.</p>
+      </form>
+
+      <div class="watch-done" id="watch-done">
+        <h2 style="margin:0 0 6px;font-size:1.2rem">Check your email.</h2>
+        <p style="margin:0;color:var(--color-text-secondary);font-size:14.5px">
+          We sent a confirmation link. Click it and the watching starts tonight.</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var form = document.getElementById('watch-form');
+      var err = document.getElementById('w-error');
+      form.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        err.style.display = 'none';
+        var btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true; btn.textContent = '…';
+        var payload = {
+          origin: document.getElementById('w-origin').value,
+          dest: document.getElementById('w-dest').value,
+          window_start: document.getElementById('w-start').value,
+          window_end: document.getElementById('w-end').value,
+          nights: parseInt(document.getElementById('w-nights').value || '7', 10),
+          ceiling: document.getElementById('w-ceiling').value || null,
+          email: document.getElementById('w-email').value
+        };
+        fetch(location.origin + '/api/watch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+        .then(function (res) {
+          btn.disabled = false; btn.textContent = 'Watch this trip';
+          if (!res.ok) {
+            err.textContent = res.body.error || 'something went wrong';
+            err.style.display = 'block';
+            return;
+          }
+          form.style.display = 'none';
+          document.getElementById('watch-done').style.display = 'block';
+        })
+        .catch(function () {
+          btn.disabled = false; btn.textContent = 'Watch this trip';
+          err.textContent = 'network error — try again';
+          err.style.display = 'block';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
