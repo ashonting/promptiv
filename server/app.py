@@ -13,6 +13,8 @@ from flask import Flask, jsonify, make_response, redirect, request, send_from_di
 
 from server import catch as catchmod
 from server import db, email_client
+from server import watches as watches_mod
+from server import watch_emails
 from server import ranking as rankmod
 from server.migrations import init_schema
 
@@ -82,6 +84,24 @@ def _unsub_page(ok: bool) -> str:
     )
 
 
+def _watch_page(head: str, body_html: str) -> str:
+    """Minimal styled page for watch confirm/manage (mirrors _unsub_page)."""
+    return (
+        '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" />'
+        '<meta name="viewport" content="width=device-width,initial-scale=1.0" />'
+        '<meta name="robots" content="noindex" />'
+        '<title>Watch &middot; DashAway</title>'
+        '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />'
+        '<link rel="stylesheet" href="/styles.css" /></head>'
+        '<body><div class="frame"><header class="top-bar">'
+        '<div class="brand">DashAway<span class="brand-dot"></span></div></header>'
+        f'<main class="hero"><h1 class="display">{head}</h1>'
+        f'<div class="lede">{body_html}</div>'
+        '<div class="cta-row"><a class="btn primary-cta" href="/">Back to DashAway &rarr;</a></div>'
+        '</main></div></body></html>'
+    )
+
+
 def create_app() -> Flask:
     public_dir = Path(__file__).resolve().parent.parent / "public"
     app = Flask(__name__, static_folder=str(public_dir), static_url_path="")
@@ -119,6 +139,97 @@ def create_app() -> Flask:
         if request.method == "POST":
             return ("", 200) if ok else ("", 404)
         return (_unsub_page(ok), 200 if ok else 404)
+
+    @app.route("/api/watch", methods=["POST"])
+    def create_watch():
+        data = request.get_json(silent=True) or request.form.to_dict() or {}
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr or "")
+        ip_hash = _hash_ip(ip.split(",")[0].strip()) if ip else None
+        if not db_path:
+            return jsonify({"error": "database not configured"}), 500
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        try:
+            try:
+                w = watches_mod.create_watch(
+                    conn,
+                    email=data.get("email"),
+                    origin=data.get("origin"),
+                    dest=data.get("dest"),
+                    window_start=data.get("window_start"),
+                    window_end=data.get("window_end"),
+                    trip_nights=data.get("nights") or 7,
+                    ceiling_usd=data.get("ceiling"),
+                    ip_hash=ip_hash,
+                )
+            except ValueError as e:
+                return jsonify({"error": str(e)}), 400
+            row = watches_mod.get_by_token(conn, w["manage_token"])
+            base = request.host_url.rstrip("/")
+            confirm_url = f"{base}/watch/confirm?token={w['manage_token']}"
+            watch_emails.send_watch_confirm(row["email"], row, confirm_url)
+            return jsonify({"status": "pending",
+                            "message": "check your email to confirm"})
+        finally:
+            conn.close()
+
+    @app.route("/watch/confirm")
+    def watch_confirm():
+        if not db_path:
+            return jsonify({"error": "database not configured"}), 500
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        try:
+            ok = watches_mod.confirm_watch(conn, request.args.get("token", ""))
+        finally:
+            conn.close()
+        if ok:
+            page = _watch_page(
+                "You&rsquo;re watching.",
+                "We&rsquo;ll price this trip every night and email you when it&rsquo;s "
+                "time to book. Your first weekly pulse arrives Sunday.")
+            return page, 200
+        return _watch_page(
+            "Link not found.",
+            "This confirmation link is invalid or the watch was deleted."), 404
+
+    @app.route("/watch/manage", methods=["GET", "POST"])
+    def watch_manage():
+        if not db_path:
+            return jsonify({"error": "database not configured"}), 500
+        token = (request.args.get("token") or request.form.get("token") or "").strip()
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        try:
+            row = watches_mod.get_by_token(conn, token)
+            if not row or row["status"] == "deleted":
+                return _watch_page("Not found.",
+                                   "This manage link is invalid."), 404
+            if request.method == "POST":
+                action = request.form.get("action", "")
+                new = {"pause": "paused", "resume": "active",
+                       "delete": "deleted"}.get(action)
+                if not new:
+                    return _watch_page("Unknown action.", ""), 400
+                watches_mod.set_status(conn, token, new)
+                row = watches_mod.get_by_token(conn, token)
+        finally:
+            conn.close()
+        status = row["status"]
+        if status == "deleted":
+            return _watch_page("Watch deleted.",
+                               "You can create a new one any time."), 200
+        body = (f"<p>{row['origin_iata']} &rarr; {row['dest_iata']} &middot; "
+                f"{row['window_start']} to {row['window_end']} &middot; "
+                f"{row['trip_nights']} nights &middot; status: <b>{status}</b></p>")
+        actions = "".join(
+            f'<form method="POST" style="display:inline-block;margin-right:8px">'
+            f'<input type="hidden" name="token" value="{token}">'
+            f'<button class="btn" name="action" value="{a}">{label}</button></form>'
+            for a, label in (
+                [("pause", "Pause"), ("delete", "Delete")] if status == "active"
+                else [("resume", "Resume"), ("delete", "Delete")]))
+        return _watch_page("Your watch", body + actions), 200
 
     @app.route("/api/healthz")
     def healthz():
