@@ -1,6 +1,6 @@
 # DashAway — System Architecture & Current State
 
-**Last updated:** 2026-06-07 · Single source of truth for how DashAway works today.
+**Last updated:** 2026-06-11 · Single source of truth for how DashAway works today.
 For the product *why*, read `PRODUCT-BRIEF.md`. For the strategic pivot narrative,
 `docs/plans/2026-06-04-cheap-trips-pivot.md`. For deploy mechanics, `deploy/DEPLOY.md`.
 
@@ -178,6 +178,20 @@ it), `init_schema` if migrations changed, copy nginx config to `sites-enabled/da
 regen for fresh static pages. 120 tests (`.venv/bin/pytest`); commit only when asked.
 
 ---
+
+
+## Watches (LIVE 2026-06-11)
+
+Fare-watch tier: users define route + flexible window at `/watch` (double opt-in,
+no accounts, tokenized manage links). Nightly `promptiv-watches.timer` (03:00 UTC,
+before the 07:00 refresh) makes ONE paced SearchDates request per distinct watched
+route, writes `fare_observations` (`source='watch'`), and the brain
+(`server/watch_brain.py`: drop >=12% vs trailing-14 low from night 2; bottom-15%
+percentile from night 14; user ceiling; <=1 alert/watch/week covenant) decides
+alerts. Sunday pulse via `promptiv-watch-pulse.timer` (15:00 UTC). Any 429 aborts
+the night + ops alert (`OPS_EMAIL`). Modules: `watches.py`, `watch_brain.py`,
+`watch_runner.py`, `watch_emails.py`, `watch_pulse.py`. Spec:
+`docs/plans/2026-06-10-dashaway-watches-design.md`.
 
 ## 10. What's NOT built / deferred
 
