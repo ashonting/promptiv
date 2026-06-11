@@ -143,6 +143,39 @@ CREATE INDEX IF NOT EXISTS idx_searches_session ON searches(session_id, created_
 CREATE INDEX IF NOT EXISTS idx_price_history_route ON price_history(origin_iata, dest_iata, trip_nights, observed_date);
 CREATE INDEX IF NOT EXISTS idx_fare_obs_route_day ON fare_observations(origin_iata, dest_iata, trip_nights, observed_date);
 CREATE INDEX IF NOT EXISTS idx_fare_obs_day ON fare_observations(observed_date);
+
+-- Fare watches: one user-defined route+window watched nightly (Watches v1).
+CREATE TABLE IF NOT EXISTS watches (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    email         TEXT NOT NULL,
+    origin_iata   TEXT NOT NULL,
+    dest_iata     TEXT NOT NULL,
+    window_start  TEXT NOT NULL,
+    window_end    TEXT NOT NULL,
+    trip_nights   INTEGER NOT NULL,
+    ceiling_usd   INTEGER,
+    status        TEXT NOT NULL DEFAULT 'pending',  -- pending|active|paused|deleted
+    manage_token  TEXT NOT NULL UNIQUE,
+    ip_hash       TEXT,
+    created_at    TEXT NOT NULL,
+    confirmed_at  TEXT,
+    last_alert_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_watches_status ON watches(status);
+CREATE INDEX IF NOT EXISTS idx_watches_email ON watches(email);
+
+-- Watch event log: powers the 1-alert-per-week covenant + auditing.
+CREATE TABLE IF NOT EXISTS watch_events (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    watch_id    INTEGER NOT NULL REFERENCES watches(id),
+    kind        TEXT NOT NULL,            -- confirm|alert|pulse
+    sent_at     TEXT NOT NULL,
+    best_price  INTEGER,
+    best_depart TEXT,
+    best_return TEXT,
+    trigger     TEXT                       -- drop|percentile|ceiling
+);
+CREATE INDEX IF NOT EXISTS idx_watch_events_watch ON watch_events(watch_id, kind, sent_at);
 """
 
 
