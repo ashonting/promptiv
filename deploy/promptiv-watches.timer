@@ -1,0 +1,10 @@
+[Unit]
+Description=Trigger DashAway Watches scan nightly at 03:00 UTC (finishes before the 07:00 refresh)
+
+[Timer]
+OnCalendar=*-*-* 03:00:00 UTC
+Persistent=true
+RandomizedDelaySec=600
+
+[Install]
+WantedBy=timers.target

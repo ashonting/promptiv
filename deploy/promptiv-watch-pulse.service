@@ -1,0 +1,19 @@
+[Unit]
+Description=DashAway Watches weekly pulse email
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory=/srv/promptiv
+Environment=DATABASE_PATH=/var/lib/promptiv/teaser.sqlite
+EnvironmentFile=/srv/promptiv/.env
+ExecStart=/srv/promptiv/.venv/bin/python -m server.watch_pulse
+StandardOutput=append:/var/log/promptiv/watch-pulse.log
+StandardError=append:/var/log/promptiv/watch-pulse.log
+TimeoutSec=1800
+
+[Install]
+WantedBy=multi-user.target

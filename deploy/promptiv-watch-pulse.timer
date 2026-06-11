@@ -1,0 +1,10 @@
+[Unit]
+Description=Trigger DashAway Watches weekly pulse Sundays 15:00 UTC (10:00 CT)
+
+[Timer]
+OnCalendar=Sun *-*-* 15:00:00 UTC
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target
