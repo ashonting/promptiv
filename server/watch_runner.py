@@ -55,7 +55,8 @@ def run(conn, fli=None, sleep_s: float = SLEEP_BETWEEN_CALLS,
 
     t0 = time.monotonic()
     summary = {"watches": len(active), "routes": len(groups), "scanned": 0,
-               "errors": 0, "alerts": 0, "aborted_429": False}
+               "errors": 0, "alerts": 0, "obs_written": 0, "empty_routes": 0,
+               "aborted_429": False}
 
     for i, ((origin, dest, ws, we, nights), members) in enumerate(groups.items()):
         try:
@@ -89,6 +90,10 @@ def run(conn, fli=None, sleep_s: float = SLEEP_BETWEEN_CALLS,
                  observed, fetched_at))
         conn.commit()
         summary["scanned"] += 1
+        summary["obs_written"] += len(kept)
+        if not kept:
+            summary["empty_routes"] += 1
+            log.warning("%s->%s returned EMPTY (possible soft-block)", origin, dest)
 
         for w in members:
             best = watch_brain.nightly_best(conn, w, observed)
@@ -125,6 +130,9 @@ def run(conn, fli=None, sleep_s: float = SLEEP_BETWEEN_CALLS,
         tripwires.append(f"runtime {runtime / 3600:.1f}h > 3h")
     if summary["scanned"] and summary["errors"] / summary["scanned"] > ERROR_RATE_TRIPWIRE:
         tripwires.append(f"error rate {summary['errors']}/{summary['scanned']}")
+    if summary["scanned"] and summary["empty_routes"] == summary["scanned"]:
+        tripwires.append(
+            f"ALL {summary['scanned']} route(s) returned empty (possible soft-block)")
     body = json.dumps(summary, indent=2)
     subject = ("WATCHES tripwire: " + "; ".join(tripwires)) if tripwires else \
               (f"watches nightly: {summary['scanned']} routes, "

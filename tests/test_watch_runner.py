@@ -127,3 +127,37 @@ def test_non_429_error_skips_route_and_continues(conn):
         summary = watch_runner.run(conn, fli=Flaky(), sleep_s=0,
                                    today=date(2026, 6, 10), base_url="http://x")
     assert summary["errors"] == 1 and summary["scanned"] == 2
+
+
+def test_summary_reports_observations_written(conn):
+    _watch(conn)
+    fli = FakeFli([FakeResult("2026-12-09", "2026-12-16", 325),
+                   FakeResult("2026-11-04", "2026-11-11", 460)])
+    with patch.object(watch_runner.email_client, "send_digest_email"):
+        summary = watch_runner.run(conn, fli=fli, sleep_s=0,
+                                   today=date(2026, 6, 10), base_url="http://x")
+    assert summary["obs_written"] == 2
+    assert summary["empty_routes"] == 0
+
+
+def test_all_empty_routes_is_a_tripwire(conn):
+    _watch(conn)
+    fli = FakeFli([])                      # Google returns an empty grid
+    with patch.object(watch_runner.email_client, "send_digest_email") as send:
+        summary = watch_runner.run(conn, fli=fli, sleep_s=0,
+                                   today=date(2026, 6, 10), base_url="http://x")
+    assert summary["obs_written"] == 0
+    assert summary["empty_routes"] == 1
+    subject = send.call_args[0][1]
+    assert "tripwire" in subject.lower()
+    assert "empty" in subject.lower()
+
+
+def test_error_routes_do_not_count_as_empty(conn):
+    _watch(conn)
+    fli = FakeFli(raises=RuntimeError("boom"))
+    with patch.object(watch_runner.email_client, "send_digest_email"):
+        summary = watch_runner.run(conn, fli=fli, sleep_s=0,
+                                   today=date(2026, 6, 10), base_url="http://x")
+    assert summary["errors"] == 1
+    assert summary["empty_routes"] == 0
