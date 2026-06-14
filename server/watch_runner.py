@@ -12,7 +12,7 @@ import logging
 import os
 import sqlite3
 import time
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from server import email_client, watches, watch_brain, watch_emails
 from server.price_refresh import _plausible
@@ -54,15 +54,29 @@ def run(conn, fli=None, sleep_s: float = SLEEP_BETWEEN_CALLS,
         groups.setdefault(key, []).append(w)
 
     t0 = time.monotonic()
+    tomorrow = today + timedelta(days=1)
     summary = {"watches": len(active), "routes": len(groups), "scanned": 0,
                "errors": 0, "alerts": 0, "obs_written": 0, "empty_routes": 0,
-               "aborted_429": False}
+               "expired": 0, "aborted_429": False}
 
     for i, ((origin, dest, ws, we, nights), members) in enumerate(groups.items()):
+        # Windows age: a stored window_start that has slipped into the past is
+        # an invalid departure date. Clamp the query to tomorrow; if the whole
+        # window is gone, the trip can't happen — expire the watch.
+        search_start = max(date.fromisoformat(ws), tomorrow)
+        search_end = date.fromisoformat(we)
+        if search_start > search_end:
+            for w in members:
+                conn.execute("UPDATE watches SET status='expired' WHERE id=?",
+                             (w["id"],))
+            conn.commit()
+            summary["expired"] += len(members)
+            log.info("%s->%s window fully past; expired %d watch(es)",
+                     origin, dest, len(members))
+            continue
         try:
-            results = fli.search_dates(origin, dest,
-                                       date.fromisoformat(ws),
-                                       date.fromisoformat(we), nights)
+            results = fli.search_dates(origin, dest, search_start,
+                                       search_end, nights)
         except Exception as e:
             if _is_429(e):
                 summary["aborted_429"] = True

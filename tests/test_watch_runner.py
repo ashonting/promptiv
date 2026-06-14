@@ -161,3 +161,27 @@ def test_error_routes_do_not_count_as_empty(conn):
                                    today=date(2026, 6, 10), base_url="http://x")
     assert summary["errors"] == 1
     assert summary["empty_routes"] == 0
+
+
+def test_clamps_past_window_start_to_tomorrow(conn):
+    # window 11-01..01-31; "today" is 11-15 so window_start is in the PAST
+    _watch(conn)
+    fli = FakeFli([FakeResult("2026-12-09", "2026-12-16", 325)])
+    with patch.object(watch_runner.email_client, "send_digest_email"):
+        summary = watch_runner.run(conn, fli=fli, sleep_s=0,
+                                   today=date(2026, 11, 15), base_url="http://x")
+    # fli must be asked to start from tomorrow (11-16), never the stale 11-01
+    assert fli.calls[0][2] == date(2026, 11, 16)
+    assert summary["errors"] == 0 and summary["obs_written"] == 1
+
+
+def test_fully_past_window_expires_watch(conn):
+    w = _watch(conn)
+    fli = FakeFli([FakeResult("2026-12-09", "2026-12-16", 325)])
+    with patch.object(watch_runner.email_client, "send_digest_email"):
+        summary = watch_runner.run(conn, fli=fli, sleep_s=0,
+                                   today=date(2027, 2, 15), base_url="http://x")
+    assert len(fli.calls) == 0            # nothing left to search
+    assert summary["expired"] == 1 and summary["errors"] == 0
+    assert conn.execute("SELECT status FROM watches WHERE id=?",
+                        (w["id"],)).fetchone()[0] == "expired"
